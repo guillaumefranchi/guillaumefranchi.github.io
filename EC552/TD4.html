@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>TD2 : Les matrices – EC552 : Introduction au langage R</title>
+<title>TD4 : Manipulations de data-frames avec dplyr – EC552 : Introduction au langage R</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -114,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TD2.html">TD2 : Les matrices</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TD4.html">TD4 : Manipulations de data-frames avec <code>dplyr</code></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -153,8 +153,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./TD2.html" class="sidebar-item-text sidebar-link active">
+  <a href="./TD2.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">TD2 : Les matrices</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TD3 : Les data-frames</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD4.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">TD4 : Manipulations de data-frames avec <code>dplyr</code></span></a>
   </div>
 </li>
     </ul>
@@ -167,13 +179,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Sur cette page</h2>
    
   <ul>
-  <li><a href="#définition" id="toc-définition" class="nav-link active" data-scroll-target="#définition"><span class="header-section-number">1</span> Définition</a></li>
-  <li><a href="#indexation-des-éléments-dune-matrice" id="toc-indexation-des-éléments-dune-matrice" class="nav-link" data-scroll-target="#indexation-des-éléments-dune-matrice"><span class="header-section-number">2</span> Indexation des éléments d’une matrice</a></li>
-  <li><a href="#opérations-sur-les-matrices" id="toc-opérations-sur-les-matrices" class="nav-link" data-scroll-target="#opérations-sur-les-matrices"><span class="header-section-number">3</span> Opérations sur les matrices</a></li>
-  <li><a href="#exercices" id="toc-exercices" class="nav-link" data-scroll-target="#exercices"><span class="header-section-number">4</span> Exercices</a>
+  <li><a href="#les-packages-dplyr-et-tidyverse" id="toc-les-packages-dplyr-et-tidyverse" class="nav-link active" data-scroll-target="#les-packages-dplyr-et-tidyverse"><span class="header-section-number">1</span> Les packages <code>dplyr</code> et <code>tidyverse</code></a></li>
+  <li><a href="#le-format-tibble" id="toc-le-format-tibble" class="nav-link" data-scroll-target="#le-format-tibble"><span class="header-section-number">2</span> Le format <code>tibble</code></a></li>
+  <li><a href="#le-pipe" id="toc-le-pipe" class="nav-link" data-scroll-target="#le-pipe"><span class="header-section-number">3</span> Le “pipe”</a>
   <ul class="collapse">
-  <li><a href="#exercice-1" id="toc-exercice-1" class="nav-link" data-scroll-target="#exercice-1"><span class="header-section-number">4.1</span> Exercice 1</a></li>
-  <li><a href="#exercice-2" id="toc-exercice-2" class="nav-link" data-scroll-target="#exercice-2"><span class="header-section-number">4.2</span> Exercice 2</a></li>
+  <li><a href="#un-exemple" id="toc-un-exemple" class="nav-link" data-scroll-target="#un-exemple"><span class="header-section-number">3.1</span> Un exemple</a></li>
+  <li><a href="#un-exercice" id="toc-un-exercice" class="nav-link" data-scroll-target="#un-exercice"><span class="header-section-number">3.2</span> Un exercice</a></li>
+  </ul></li>
+  <li><a href="#quelques-fonctions-utiles" id="toc-quelques-fonctions-utiles" class="nav-link" data-scroll-target="#quelques-fonctions-utiles"><span class="header-section-number">4</span> Quelques fonctions utiles</a>
+  <ul class="collapse">
+  <li><a href="#la-fonction-mutate" id="toc-la-fonction-mutate" class="nav-link" data-scroll-target="#la-fonction-mutate"><span class="header-section-number">4.1</span> La fonction <code>mutate()</code></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -183,7 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">TD2 : Les matrices</h1>
+<h1 class="title">TD4 : Manipulations de data-frames avec <code>dplyr</code></h1>
 </div>
 
 
@@ -200,235 +215,144 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Les matrices sont, comme en mathématiques, des tableaux de données. <strong><em>Attention</em></strong>, comme pour les vecteurs les matrices ne contiendront que des éléments du même type (numérique, texte, booléen).</p>
-<p>Toutes les commandes seront enregistrées dans un fichier script nommé TD2.R.</p>
-<section id="définition" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Définition</h1>
+<section id="les-packages-dplyr-et-tidyverse" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Les packages <code>dplyr</code> et <code>tidyverse</code></h1>
 <ul>
-<li>Une matrice se définit simplement avec la fonction <code>matrix()</code>.</li>
+<li><p>Le package <code>dplyr</code> permet de manipuler facilement les données, notamment les data-frames.</p></li>
+<li><p>Il fait partie de l’ensemble de packages <code>tidyverse</code>, regroupant également le package <code>ggplot2</code>. Ce dernier permet de réaliser des graphiques sophistiqués à l’esthétique soignée <em>(voir TD5)</em>.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>           <span class="dv">2</span>,<span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>           <span class="sc">-</span><span class="dv">3</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="dv">1</span>),<span class="at">nrow=</span><span class="dv">3</span>)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>A</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    2   -3
-[2,]    2    1   -1
-[3,]    3   -1    1</code></pre>
-</div>
-</div>
-<ul>
-<li>Les matrices diagonales peuvent se définir avec la fonction <code>diag()</code>.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>B <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="at">x=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>B</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    0    0
-[2,]    0    2    0
-[3,]    0    0    3</code></pre>
-</div>
-</div>
-<ul>
-<li>La dimension d’une matrice est donnée par <code>dim()</code>.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(A)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3 3</code></pre>
-</div>
-</div>
-<p>Le résultat est un vecteur ayant deux éléments : le nombre de lignes et le nombre de colonnes.</p>
-</section>
-<section id="indexation-des-éléments-dune-matrice" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Indexation des éléments d’une matrice</h1>
-<ul>
-<li>Les éléments d’une matrice sont identifiés par un numéro de ligne et de colonne entre crochets <em>A[i,j]</em>.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">1</span>,<span class="dv">2</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># première ligne de A </span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">1</span>,]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1]  1  2 -3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># première colonne de A</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>A[,<span class="dv">1</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1 2 3</code></pre>
-</div>
-</div>
-<ul>
-<li>Comme pour les vecteurs, on peut alors modifier un ou plusieurs coefficient de la matrice.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">1</span>,<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">1</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>A</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]   -1    2   -3
-[2,]    2    1   -1
-[3,]    3   -1    1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">2</span>,] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">10</span>,<span class="sc">-</span><span class="dv">20</span>,<span class="sc">-</span><span class="dv">30</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>A</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]   -1    2   -3
-[2,]  -10  -20  -30
-[3,]    3   -1    1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>A[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>,<span class="dv">3</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1000</span>,<span class="dv">2000</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>A</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]   -1    2 1000
-[2,]  -10  -20 2000
-[3,]    3   -1    1</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 </div>
 </section>
-<section id="opérations-sur-les-matrices" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Opérations sur les matrices</h1>
+<section id="le-format-tibble" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Le format <code>tibble</code></h1>
 <ul>
-<li>Si deux matrices sont de même dimension, on peut naturellement effectuer des opérations terme à terme <em>(addition, multiplication, puissance,…)</em>.</li>
+<li>Il s’agit là d’une version plus moderne du format <code>data.frame</code>. N’importe quel data-frame peut naturellement être converti en format <code>tibble</code>.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>A1 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>,<span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                <span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>),<span class="at">nrow =</span> <span class="dv">3</span>)</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>A1</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"iris"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(iris)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1   -1    2
-[2,]    1   -1    2
-[3,]    1   -1    2</code></pre>
+<pre><code>[1] "data.frame"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>A2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>               <span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>               <span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>),<span class="at">nrow =</span> <span class="dv">3</span>,<span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>A2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>iris_tibble <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(iris)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(iris_tibble)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    2    3
-[2,]    4    5    6
-[3,]    7    8    9</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>A1<span class="sc">+</span>A2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    2    1    5
-[2,]    5    4    8
-[3,]    8    7   11</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>A1<span class="sc">*</span>A2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1   -2    6
-[2,]    4   -5   12
-[3,]    7   -8   18</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>A1<span class="sc">^</span>A2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    1    8
-[2,]    1   -1   64
-[3,]    1    1  512</code></pre>
+<pre><code>[1] "tbl_df"     "tbl"        "data.frame"</code></pre>
 </div>
 </div>
 <ul>
-<li>La transposée d’une matrice s’obtient avec la fonction <code>t()</code>.</li>
+<li>La création d’un <code>tibble</code> se fait assez naturellement :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(A1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]    1    1    1
-[2,]   -1   -1   -1
-[3,]    2    2    2</code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Notes <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="st">"Nom"</span><span class="ot">=</span><span class="fu">c</span>(<span class="st">"Alice"</span>,<span class="st">"Bob"</span>,<span class="st">"Charles"</span>),</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Notes"</span><span class="ot">=</span><span class="fu">c</span>(<span class="dv">16</span>,<span class="dv">8</span>,<span class="dv">9</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
-<li>La multiplication de deux matrices, au sens mathématique du terme, s’effectue avec <code>%*%</code>.</li>
+<li>Contrairement au format <code>data.frame</code>, l’extraction d’une colonne ne renvoie pas un vecteur, mais un <code>tibble</code> :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>A1<span class="sc">%*%</span>A2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(Notes[,<span class="st">"Notes"</span>])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     [,1] [,2] [,3]
-[1,]   11   13   15
-[2,]   11   13   15
-[3,]   11   13   15</code></pre>
-</div>
-</div>
-<ul>
-<li>Les fonctions <code>colSums()</code> et <code>rowSums()</code> permettent de calculer la somme sur les colonnes et sur les lignes d’une matrice.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(A1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1]  3 -3  6</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rowSums</span>(A1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 2 2 2</code></pre>
-</div>
-</div>
-<ul>
-<li>Enfin, comme avec les vecteurs, on peut effectuer des tests sur les matrices.</li>
-</ul>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>B<span class="sc">==</span><span class="dv">0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      [,1]  [,2]  [,3]
-[1,] FALSE  TRUE  TRUE
-[2,]  TRUE FALSE  TRUE
-[3,]  TRUE  TRUE FALSE</code></pre>
+<pre><code>[1] "tbl_df"     "tbl"        "data.frame"</code></pre>
 </div>
 </div>
 </section>
-<section id="exercices" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Exercices</h1>
-<section id="exercice-1" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="exercice-1"><span class="header-section-number">4.1</span> Exercice 1</h2>
-<ol type="1">
-<li><p>Générer un vecteur <em>fillmat</em> contenant 250 valeurs tirées selon une loi uniforme continue de paramètres 0 et 10 grâce à la fonction <code>runif()</code>.</p></li>
-<li><p>Créer une matrice <em>Mesures</em> de 50 lignes et 5 colonnes contenant les valeurs de <em>fillmat</em>. Les colonnes seront nommées Mesure1,…, Mesure5 <em>(on utilisera la fonction <code>colnames()</code>)</em>.</p></li>
-<li><p>Créer un vecteur <em>Groupe</em> de taille 50 contenant des valeurs entières aléatoires entre 1 et 5 <em>(fonction <code>sample()</code>)</em>. On interprétera <em>Groupe</em> comme le groupe d’appartenance des 50 lignes de Mesures. Ajouter cette colonne à la matrice <em>Mesures</em>.</p></li>
-<li><p>Combien de lignes appartiennent au groupe n°2 ?</p></li>
-<li><p>Afficher le numéro des lignes appartenant au groupe n°2.</p></li>
-<li><p>Afficher les lignes de <em>Mesures</em> correspondant au groupe n°2.</p></li>
-<li><p>Déterminer combien <em>Mesures</em> contient de valeurs inférieures à 5 (on exclura la colonne <em>Groupe</em> du comptage).</p></li>
-<li><p>Calculer la moyenne des valeurs de <em>Mesures</em> correspondant au groupe n°4.</p></li>
-<li><p>Même question, mais pour les 3 premières colonnes uniquement.</p></li>
-<li><p>Appliquer à <em>Mesures</em> les fonctions <code>dim()</code>, <code>ncol()</code> et <code>nrow()</code>. A quoi correspondent ces nombres ?</p></li>
-</ol>
+<section id="le-pipe" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Le “pipe”</h1>
+<ul>
+<li><p>Il s’agit de la commande <code>%&gt;%</code>, qui ouvre un canal d’instructions séquentielles.</p></li>
+<li><p>Le pipe est notamment utilisé pour effectuer une sucession d’instructions données, en particulier afin de manipuler les données.</p></li>
+</ul>
+<section id="un-exemple" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="un-exemple"><span class="header-section-number">3.1</span> Un exemple</h2>
+<ul>
+<li>Utilisons le jeu de données <code>diamonds</code>, dont on affiche ici les premières lignes.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"diamonds"</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diamonds)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 10
+  carat cut       color clarity depth table price     x     y     z
+  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63
+5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</code></pre>
+</div>
+</div>
+<ul>
+<li>Supposons que l’on souhaite calculer le prix moyen des diamants dont la coupe satisfait <code>cut==Good</code> et la couleur satisfait <code>color=="E"</code>.</li>
+</ul>
+<p>On peut effectuer la succession d’instructions suivante :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>cond <span class="ot">&lt;-</span> diamonds<span class="sc">$</span>cut <span class="sc">==</span> <span class="st">"Good"</span> <span class="sc">&amp;</span> diamonds<span class="sc">$</span>color <span class="sc">==</span> <span class="st">"E"</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>sub_diamonds <span class="ot">&lt;-</span> diamonds[cond,]</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(sub_diamonds<span class="sc">$</span>price)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3423.644</code></pre>
+</div>
+</div>
+<p>Ce qui peut aussi s’écrire en une ligne :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(diamonds[diamonds<span class="sc">$</span>cut<span class="sc">==</span><span class="st">"Good"</span> <span class="sc">&amp;</span> diamonds<span class="sc">$</span>color<span class="sc">==</span><span class="st">"E"</span>,]<span class="sc">$</span>price)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3423.644</code></pre>
+</div>
+</div>
+<ul>
+<li>Le “pipe” permet d’effectuer cette succesion d’instruction de façon plus lisible en utilisant les fonctions <code>filter()</code> et <code>select()</code> du package <code>dplyr</code> :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">%&gt;%</span> <span class="fu">filter</span>(cut <span class="sc">==</span> <span class="st">"Good"</span> <span class="sc">&amp;</span> color <span class="sc">==</span> <span class="st">"E"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pull</span>(price) <span class="sc">%&gt;%</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3423.644</code></pre>
+</div>
+</div>
+<ul>
+<li>En résumé, pour une fonction <code>f()</code> :
+<ul>
+<li><code>x %&gt;% f()</code> est équivalent à <code>f(x)</code>;</li>
+<li><code>x %&gt;% f(y)</code>est équivalent à <code>f(x,y)</code>.</li>
+</ul></li>
+</ul>
 </section>
-<section id="exercice-2" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="exercice-2"><span class="header-section-number">4.2</span> Exercice 2</h2>
-<ol type="1">
-<li>Créer la matrice <em>mat</em> avec les instructions</li>
-</ol>
+<section id="un-exercice" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="un-exercice"><span class="header-section-number">3.2</span> Un exercice</h2>
+<p>En utilisant les fonctions <code>select()</code>, <code>filter()</code>, et <code>rename()</code>, créer un nouveau data-frame issu de <code>diamonds</code> ne contenant que les diamants dont le carat est supérieur à 0.5, la coupe égale à “Premium” et la couleur égale à “D”. On ne conservera que les colonnes <em>carat</em> et <em>price</em>, et on renommera les colonnes en Français.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>values <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(values,<span class="at">nrow=</span><span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>diamonds_small <span class="ot">&lt;-</span> diamonds <span class="sc">%&gt;%</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(carat <span class="sc">&gt;</span> <span class="fl">0.5</span> <span class="sc">&amp;</span> cut<span class="sc">==</span><span class="st">"Premium"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(carat,price) <span class="sc">%&gt;%</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Carat=</span>carat,<span class="at">Prix=</span>price)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
-<ol start="2" type="1">
-<li><p>Créer le vecteur <em>vec</em> composé des éléments diagonaux de <em>mat</em>.</p></li>
-<li><p>Créer la matrice <em>submat</em> contenant les 2 premières ligens de <em>mat</em>, et la matrice <em>submat2</em> contenant les deux dernières colonnes de <em>mat</em>. Quelles sont les dimensions de ces matrices ?</p></li>
-<li><p>Créer la matrice <em>smallmat</em> composée des colonnes de <em>mat</em> dont <strong><em>tous</em></strong> les éléments sont strictement inférieurs à 5.</p></li>
-<li><p>Créer ensuite la matrice <em>notzero</em> composée des lignes de <em>mat</em> dont <strong><em>tous</em></strong> les éléments sont non nuls.</p></li>
-<li><p>Créer une matrice <em>mat2</em> avec l’instruction :</p></li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>mat2 <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">16</span>,<span class="at">nrow =</span> <span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>puis comparer les instructions <code>mat * mat2</code>et <code>mat %*% mat2</code>.</p>
+</section>
+</section>
+<section id="quelques-fonctions-utiles" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Quelques fonctions utiles</h1>
+<section id="la-fonction-mutate" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="la-fonction-mutate"><span class="header-section-number">4.1</span> La fonction <code>mutate()</code></h2>
 
 
 </section>

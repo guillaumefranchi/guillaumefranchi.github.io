@@ -81,7 +81,7 @@
     "href": "TD1.html#les-calculs-de-base-avec-un-vecteur",
     "title": "TD1 : Premiers pas dans R",
     "section": "3.3 Les calculs de base avec un vecteur",
-    "text": "3.3 Les calculs de base avec un vecteur\n\nOn peut ajouter, soustraire, multiplier des vecteurs entre eux à condition qu’ils soient de même longeur et qu’ils soient numériques.\n\nLes opérations sont alors effectuées terme à terme.\n\na1 &lt;- seq(10,20,by=1)\na2 &lt;- seq(20,30,by=1)\na1+a2\n\n [1] 30 32 34 36 38 40 42 44 46 48 50\n\na2-a1\n\n [1] 10 10 10 10 10 10 10 10 10 10 10\n\na1*a2\n\n [1] 200 231 264 299 336 375 416 459 504 551 600\n\na2/a1\n\n [1] 2.000000 1.909091 1.833333 1.769231 1.714286 1.666667 1.625000 1.588235\n [9] 1.555556 1.526316 1.500000\n\na1^2*log(a2)\n\n [1]  299.5732  368.3872  445.1101  529.8985  622.8986  724.2471  834.0727\n [8]  952.4969 1079.6343 1215.5938 1360.4790\n\n\n\nAttention : si les vecteurs ne sont pas de la même longueur, les éléments du vecteur le plus court sont recyclés.\n\n\na1 &lt;- c(1,2,3)\na2 &lt;- 1:10\na1+a2\n\nWarning in a1 + a2: la taille d'un objet plus long n'est pas multiple de la\ntaille d'un objet plus court\n\n\n [1]  2  4  6  5  7  9  8 10 12 11",
+    "text": "3.3 Les calculs de base avec un vecteur\n\nOn peut ajouter, soustraire, multiplier des vecteurs entre eux à condition qu’ils soient de même longeur et qu’ils soient numériques.\n\nLes opérations sont alors effectuées terme à terme.\n\na1 &lt;- seq(10,20,by=1)\na2 &lt;- seq(20,30,by=1)\na1+a2\n\n [1] 30 32 34 36 38 40 42 44 46 48 50\n\na2-a1\n\n [1] 10 10 10 10 10 10 10 10 10 10 10\n\na1*a2\n\n [1] 200 231 264 299 336 375 416 459 504 551 600\n\na2/a1\n\n [1] 2.000000 1.909091 1.833333 1.769231 1.714286 1.666667 1.625000 1.588235\n [9] 1.555556 1.526316 1.500000\n\na1^2*log(a2)\n\n [1]  299.5732  368.3872  445.1101  529.8985  622.8986  724.2471  834.0727\n [8]  952.4969 1079.6343 1215.5938 1360.4790\n\n\n\nAttention : si les vecteurs ne sont pas de la même longueur, les éléments du vecteur le plus court sont recyclés.\n\n\na1 &lt;- c(1,2,3)\na2 &lt;- 1:10\na1+a2\n\nWarning in a1 + a2: la taille d'un objet plus long n'est pas multiple de la\ntaille d'un objet plus court\n\n\n [1]  2  4  6  5  7  9  8 10 12 11\n\n\n\nOn peut calculer la somme ou la moyenne des éléments d’un vecteur.\n\n\nsum(a1)\n\n[1] 6\n\nmean(a1)\n\n[1] 2",
     "crumbs": [
       "TD1 : Premiers pas dans R"
     ]
@@ -91,7 +91,7 @@
     "href": "TD1.html#exercice-1",
     "title": "TD1 : Premiers pas dans R",
     "section": "6.1 Exercice 1",
-    "text": "6.1 Exercice 1\n\nCréer le vecteur x contenant le nom des villes suivantes Nantes, Brest, Rennes, Angers, Le Mans.\nAfficher le premier élément de x.\nAfficher tous les éléments de x sauf le premier.\nAfficher les trois premiers éléments de x.\nAfficher le deuxième et le quatrième élément de x.\nClasser les éléments de x dans l’ordre alphabétique puis anti-alphabétique grâce aux fonctions sort et rev.",
+    "text": "6.1 Exercice 1\n\nCréer le vecteur x contenant le nom des villes suivantes Nantes, Brest, Rennes, Angers, Le Mans.\nAfficher le premier élément de x.\nAfficher tous les éléments de x sauf le premier.\nAfficher les trois premiers éléments de x.\nAfficher le deuxième et le quatrième élément de x.\nClasser les éléments de x dans l’ordre alphabétique puis anti-alphabétique grâce aux fonctions sort() et rev().",
     "crumbs": [
       "TD1 : Premiers pas dans R"
     ]
@@ -111,9 +111,159 @@
     "href": "TD1.html#exercice-3",
     "title": "TD1 : Premiers pas dans R",
     "section": "6.3 Exercice 3",
-    "text": "6.3 Exercice 3\n\nGénérer un vecteur x de taille 100 de valeurs tirées selon une loi normale centrée réduite (i.e. de paramètre 0 et 1) grâce à la fonction rnorm().\nCalculer la somme et la moyenne de x à l’aide des fonctions dédiées.\nCalculer le minimum, le premier quartile, la médiane, le troisième quartile et le maximum de x. La fonction quantile() bien utilisée vous donnera toutes ces informations directement…\nGénérer le vecteur booléen indiquant si les nombres contenus dans x sont positifs (TRUE) ou non (FALSE).\nMême question pour indiquer si les nombres sont compris entre -1 et 1.\nAfficher les indices des valeurs négatives de x.\nAfficher la valeur absolue des valeurs de x.\nAfficher la partie entière des valeurs de x.\nAfficher uniquement les valeurs positives de x.\nRemplacer les valeurs négatives de x par 0. Vérifier le remplacement.",
+    "text": "6.3 Exercice 3\n\nGénérer un vecteur x de taille 100 de valeurs tirées selon une loi normale centrée réduite (i.e. de paramètres 0 et 1) grâce à la fonction rnorm().\nCalculer la somme et la moyenne de x à l’aide des fonctions dédiées.\nCalculer le minimum, le premier quartile, la médiane, le troisième quartile et le maximum de x. La fonction quantile() bien utilisée vous donnera toutes ces informations directement…\nGénérer le vecteur booléen indiquant si les nombres contenus dans x sont positifs (TRUE) ou non (FALSE). Combien de ces nombres sont-ils positifs ?\nMême question pour indiquer si les nombres sont compris entre -1 et 1.\nAfficher les indices des valeurs négatives de x.\nAfficher la valeur absolue des valeurs de x avec la fonction.\nAfficher la partie entière des valeurs de x .\nAfficher uniquement les valeurs positives de x.\nRemplacer les valeurs négatives de x par 0. Vérifier le remplacement.",
     "crumbs": [
       "TD1 : Premiers pas dans R"
+    ]
+  },
+  {
+    "objectID": "TD2.html",
+    "href": "TD2.html",
+    "title": "TD2 : Les matrices",
+    "section": "",
+    "text": "Les matrices sont, comme en mathématiques, des tableaux de données. Attention, comme pour les vecteurs les matrices ne contiendront que des éléments du même type (numérique, texte, booléen).\nToutes les commandes seront enregistrées dans un fichier script nommé TD2.R.",
+    "crumbs": [
+      "TD2 : Les matrices"
+    ]
+  },
+  {
+    "objectID": "TD2.html#exercice-1",
+    "href": "TD2.html#exercice-1",
+    "title": "TD2 : Les matrices",
+    "section": "4.1 Exercice 1",
+    "text": "4.1 Exercice 1\n\nGénérer un vecteur fillmat contenant 250 valeurs tirées selon une loi uniforme continue de paramètres 0 et 10 grâce à la fonction runif().\nCréer une matrice Mesures de 50 lignes et 5 colonnes contenant les valeurs de fillmat. Les colonnes seront nommées Mesure1,…, Mesure5 (on utilisera la fonction colnames()).\nCréer un vecteur Groupe de taille 50 contenant des valeurs entières aléatoires entre 1 et 5 (fonction sample()). On interprétera Groupe comme le groupe d’appartenance des 50 lignes de Mesures. Ajouter cette colonne à la matrice Mesures.\nCombien de lignes appartiennent au groupe n°2 ?\nAfficher le numéro des lignes appartenant au groupe n°2.\nAfficher les lignes de Mesures correspondant au groupe n°2.\nDéterminer combien Mesures contient de valeurs inférieures à 5 (on exclura la colonne Groupe du comptage).\nCalculer la moyenne des valeurs de Mesures correspondant au groupe n°4.\nMême question, mais pour les 3 premières colonnes uniquement.\nAppliquer à Mesures les fonctions dim(), ncol() et nrow(). A quoi correspondent ces nombres ?",
+    "crumbs": [
+      "TD2 : Les matrices"
+    ]
+  },
+  {
+    "objectID": "TD2.html#exercice-2",
+    "href": "TD2.html#exercice-2",
+    "title": "TD2 : Les matrices",
+    "section": "4.2 Exercice 2",
+    "text": "4.2 Exercice 2\n\nCréer la matrice mat avec les instructions\n\n\nvalues &lt;- c(1,0,3,4,5,5,0,4,5,6,3,4,0,1,3,2)\nmat &lt;- matrix(values,nrow=4)\n\n\nCréer le vecteur vec composé des éléments diagonaux de mat.\nCréer la matrice submat contenant les 2 premières ligens de mat, et la matrice submat2 contenant les deux dernières colonnes de mat. Quelles sont les dimensions de ces matrices ?\nCréer la matrice smallmat composée des colonnes de mat dont tous les éléments sont strictement inférieurs à 5.\nCréer ensuite la matrice notzero composée des lignes de mat dont tous les éléments sont non nuls.\nCréer une matrice mat2 avec l’instruction :\n\n\nmat2 &lt;- matrix(1:16,nrow = 4)\n\npuis comparer les instructions mat * mat2et mat %*% mat2.",
+    "crumbs": [
+      "TD2 : Les matrices"
+    ]
+  },
+  {
+    "objectID": "TD3.html",
+    "href": "TD3.html",
+    "title": "TD3 : Les data-frames",
+    "section": "",
+    "text": "C’est peut-être l’objet le plus important et le plus utilisé dans R. Il s’agit d’un tableau de données, mais contrairement aux matrices, on peut avoir différents types de données dans un même data-frame.",
+    "crumbs": [
+      "TD3 : Les data-frames"
+    ]
+  },
+  {
+    "objectID": "TD3.html#la-fonction-summary",
+    "href": "TD3.html#la-fonction-summary",
+    "title": "TD3 : Les data-frames",
+    "section": "4.1 La fonction summary()",
+    "text": "4.1 La fonction summary()\nCette fonction permet de résumer l’ensemble des variables du data-frame.\n\nsummary(df)\n\n     NoteF            NoteM             gr           \n Min.   : 0.200   Min.   : 0.100   Length:100        \n 1st Qu.: 5.375   1st Qu.: 3.875   Class :character  \n Median :10.100   Median : 7.950   Mode  :character  \n Mean   : 9.743   Mean   : 8.994                     \n 3rd Qu.:14.025   3rd Qu.:13.450                     \n Max.   :19.700   Max.   :19.800",
+    "crumbs": [
+      "TD3 : Les data-frames"
+    ]
+  },
+  {
+    "objectID": "TD3.html#la-fonction-apply",
+    "href": "TD3.html#la-fonction-apply",
+    "title": "TD3 : Les data-frames",
+    "section": "4.2 La fonction apply()",
+    "text": "4.2 La fonction apply()\nLa fonction apply() permet d’appliquer une fonction sur les lignes (MARGIN=1) ou les colonnes (MARGIN=2) d’un data-frame. Par exemple si on souhaite appliquer la fonction moyenne (mean()) sur les colonnes du data frame df, on utilise :\n\napply(df[,1:2],MARGIN=2,mean)\n\nNoteF NoteM \n9.743 8.994 \n\n\nRemarque : on n’a utilisé que les deux premières colonnes du data-frame car la troisième n’est pas numérique (donc on ne peut pas calculer sa moyenne).",
+    "crumbs": [
+      "TD3 : Les data-frames"
+    ]
+  },
+  {
+    "objectID": "TD3.html#la-fonction-factor",
+    "href": "TD3.html#la-fonction-factor",
+    "title": "TD3 : Les data-frames",
+    "section": "4.3 La fonction factor()",
+    "text": "4.3 La fonction factor()\nCette fonction va être très importante pour la suite, et en particulier lorsque l’on va manipuler des jeux de donnnées en statistique.\n\nUn facteur est une variable qualitative (i.e. non numérique). Les valeurs prises par cette variable sont appelées modalités.\n\nExemples :\n\nUne variable qualitative peut décrire, pour un aliment, le type de nourriture (modalités : Confiserie, Viande, Fruit, Légume,…).\nDans un sondage, une variable qualitative peut décrire le sexe de l’individu (modalités : Homme, Femme, Non binaire).\nIl peut arriver que ces modalités soient codées. Par exemple dans certains jeux de données, on connaîtra le statut professionnel des participants (modalités : en activité, en recherche d’emploi, étudiant, à la retraite) mais on peut avoir choisi de coder les modalités par des nombres (ici de 1 à 4) mais cette variable demeure un facteur.\n\n\nstatut_pro&lt;-sample(1:4,100,replace=TRUE)\n## R ne voit pas qu'il s'agit d'un facteur car les modalités sont numériques\nclass(statut_pro)\n\n[1] \"integer\"\n\ntable(statut_pro)\n\nstatut_pro\n 1  2  3  4 \n29 20 21 30 \n\n\n\nOn utilise la fonction factor() pour spécifier à R qu’il s’agit d’une variable qualitative. On voit le changement à travers class() ou levels() :\n\n\nstatut_pro&lt;-factor(statut_pro)\nclass(statut_pro)\n\n[1] \"factor\"\n\nlevels(statut_pro)\n\n[1] \"1\" \"2\" \"3\" \"4\"\n\nlevels(statut_pro)&lt;-c(\"en activité\", \"en recherche d'emploi\",\n                      \"étudiant\", \"à la retraite\")\ntable(statut_pro)\n\nstatut_pro\n          en activité en recherche d'emploi              étudiant \n                   29                    20                    21 \n        à la retraite \n                   30 \n\n\nRemarque : Les variables binaires (facteurs à deux modalités) sont souvent codées 0/1.\n\nOn peut être amené à vouloir avoir les modalités d’un facteur classées dans un certain ordre. Pour ce faire, on va utiliser la fonction labels() avec l’ordre choisi :\n\n\nstatut_pro&lt;-factor(statut_pro,labels=c(\"étudiants\",\"en activité\",\n                                       \"en recherche d'emploi\",\"à la retraite\"))\ntable(statut_pro)\n\nstatut_pro\n            étudiants           en activité en recherche d'emploi \n                   29                    20                    21 \n        à la retraite \n                   30 \n\n\nAttention les labels doivent être exactement écrits de la même façon que les levels si les modalités sont déjà écrites et sinon on peut directement agir sur les modalités via labels :\n\ndata(\"mtcars\")\nhelp(\"mtcars\")\nmtcars$vs&lt;-factor(mtcars$vs,levels=0:1,labels=c(\"V-shaped\",\"straight\"))\nmtcars$am&lt;-factor(mtcars$am,levels=0:1,labels=c(\"automatic\",\"manual\"))",
+    "crumbs": [
+      "TD3 : Les data-frames"
+    ]
+  },
+  {
+    "objectID": "TD3.html#exercice-sur-le-data-frame-iris",
+    "href": "TD3.html#exercice-sur-le-data-frame-iris",
+    "title": "TD3 : Les data-frames",
+    "section": "5.1 Exercice sur le data frame iris",
+    "text": "5.1 Exercice sur le data frame iris\n\nCharger le fichier de données iris. Lire l’aide de iris pour comprendre le jeu de données.\n\n\n\nVoir la correction\ndata(\"iris\")\nhelp(\"iris\")\n\n\n\nQuel est le type de iris ? Quelles sont les dimensions de iris ?\n\n\n\nVoir la correction\nclass(iris)\ndim(iris)\n\n\n\nAppliquer la fonction str à iris. A quoi correspondent les informations renvoyées ?\n\n\n\nVoir la correction\nstr(iris)\n\n\n\nAppliquer la fonction summary à iris. A quoi correspondent les informations renvoyées ?\n\n\n\nVoir la correction\nsummary(iris)\n\n\n\nUtiliser les fonctions colnames() et rownames(). Quelles sont les informations renvoyées ?\n\n\n\nVoir la correction\nrownames(iris)\n# Le nom des lignes de iris\ncolnames(iris)\n# Le nom des colonnes de iris\n\n\n\nA l’aide la fonction de texte paste remplacer le nom des lignes par fleur 1, …, fleur 150.\n\n\n\nVoir la correction\nrownames(iris)&lt;-paste(\"fleur\",1:150,sep=\" \")\n\n\n\nPour un data frame on peut appeler une colonne par son nom en utilisant $ : iris$Sepal.Length. En utilisant cette information donner la classe de la colonne Species.\n\n\n\nVoir la correction\nclass(iris$Species)\n\n\n\nQuels sont les niveaux du facteur “Species” (fonction levels) ?\n\n\n\nVoir la correction\nlevels(iris$Species)\n\n\n\nCréer une nouvelle colonne nommée groupe (on pensera à $) dans le data frame iris identique à la colonne Species. Quelle est la classe de cette nouvelle colonne ?\n\n\n\nVoir la correction\niris$groupe=iris$Species\nclass(iris$groupe)\n\n\n\nRenommer les niveaux de la colonne groupe en A, B, C (A pour setosa, B pour versicolor, C pour virginica). Afficher les indices des lignes de iris correspondant au groupe B.\n\n\n\nVoir la correction\nlevels(iris$groupe)=c(\"A\",\"B\",\"C\")\nwhich(iris$groupe==\"B\")\n\n\n\nCréer l’ensemble des numéros de lignes correspondantes aux fleurs du groupe A. Afficher les lignes de iris correspondant au groupe A. Proposer une solution alternative.\n\n\n\nVoir la correction\nI=which(iris$groupe==\"A\")\niris[I,]\niris[iris$groupe==\"A\",]\n\n\n\nEn adoptant la même logique que la question précédente, afficher uniquement les lignes de iris où « Sepal.Length » est inférieur à 5.\n\n\n\nVoir la correction\niris[iris$Sepal.Length&lt;=5,]\n\n\n\nCombien y a-t-il d’individus ayant la longueur des sépales inférieure à 5 ?\n\n\n\nVoir la correction\nsum(iris$Sepal.Length&lt;=5)",
+    "crumbs": [
+      "TD3 : Les data-frames"
+    ]
+  },
+  {
+    "objectID": "TD3.html#exercice-sur-le-data-frame-mtcars",
+    "href": "TD3.html#exercice-sur-le-data-frame-mtcars",
+    "title": "TD3 : Les data-frames",
+    "section": "5.2 Exercice sur le data frame mtcars",
+    "text": "5.2 Exercice sur le data frame mtcars\n\nCharger le data frame mtcars. Combien de véhicules et de caractéristiques sur les véhicules sont contenus dans le data frame ?\n\n\n\nVoir la correction\ndata(\"mtcars\")\nhelp(\"mtcars\")\ndim(mtcars)\n\n\n\nDeux caractéristiques sont mal identifiées dans le data frame car ce sont des variables qualitatives (facteurs), rectifier en utilisant la fonction as.factor.\n\n\n\nVoir la correction\nstr(mtcars)\nmtcars$vs=as.factor(mtcars$vs)\nmtcars$am=as.factor(mtcars$am)\n\n\n\nEn utilisant l’aide du data frame mtcars renommer les niveaux des deux facteurs précédents.\n\n\n\nVoir la correction\nlevels(mtcars$vs)=c(\"V\",\"droit\")\nlevels(mtcars$am)=c(\"Auto\",\"Manu\")\n\n\n\nEtablir la table de contingence de ces deux facteurs (fonction table)\n\n\n\nVoir la correction\ntable(mtcars$vs,mtcars$am)\n\n\n\nCalculer la moyenne des 7 premières variables (on utilisera les fonctions mean et apply).\n\n\n\nVoir la correction\napply(mtcars[,1:7],2,mean)\n\n\n\nReprendre la question pour les voitures avec un moteur à plat. De même pour les voitures ayant un moteur en V et qui sont automatiques.\n\n\n\nVoir la correction\napply(mtcars[mtcars$vs==\"V\",1:7],2,mean)\napply(mtcars[mtcars$vs==\"droit\" & mtcars$am==\"Auto\",1:7],2,mean)\n\n\n\nCalculer le nombre de voitures ayant un moteur en V qui ont au moins 3 carburateurs.\n\n#| code-fold: true #| code-summary: “Voir la correction” sum(mtcars\\(vs==\"V\" & mtcars\\)carb&gt;=3)",
+    "crumbs": [
+      "TD3 : Les data-frames"
+    ]
+  },
+  {
+    "objectID": "TD3.html#exercice-1",
+    "href": "TD3.html#exercice-1",
+    "title": "TD3 : Les data-frames",
+    "section": "5.1 Exercice 1",
+    "text": "5.1 Exercice 1\n\nCharger le fichier de données iris. Lire l’aide de iris pour comprendre le jeu de données.\nQuel est le type de iris ? Quelles sont les dimensions de iris ?\nAppliquer la fonction str() à iris. A quoi correspondent les informations renvoyées ?\nAppliquer la fonction summary() à iris. A quoi correspondent les informations renvoyées ?\nUtiliser les fonctions colnames() et rownames(). Quelles sont les informations renvoyées ?\nA l’aide la fonction de texte paste() remplacer le nom des lignes par fleur_1, …, fleur_150.\nPour un data-frame on peut appeler une colonne par son nom en utilisant $ : iris$Sepal.Length. En utilisant cette information donner la classe de la colonne Species.\nQuels sont les niveaux du facteur Species (fonction levels()) ?\nCréer une nouvelle colonne nommée groupe (on pensera à $) dans le data frame iris identique à la colonne Species. Quelle est la classe de cette nouvelle colonne ?\nRenommer les niveaux de la colonne groupe en A, B, C (A pour setosa, B pour versicolor, C pour virginica). Afficher les indices des lignes de iris correspondant au groupe B.\nCréer l’ensemble des numéros de lignes correspondant aux fleurs du groupe A. Afficher les lignes de iris correspondant au groupe A.\nEn adoptant la même logique que la question précédente, afficher uniquement les lignes de iris où Sepal.Length est inférieur à 5.\nCombien y a-t-il d’individus ayant la longueur des sépales inférieure à 5 ?",
+    "crumbs": [
+      "TD3 : Les data-frames"
+    ]
+  },
+  {
+    "objectID": "TD3.html#exercice-2",
+    "href": "TD3.html#exercice-2",
+    "title": "TD3 : Les data-frames",
+    "section": "5.2 Exercice 2",
+    "text": "5.2 Exercice 2\n\nCharger le data-frame mtcars. Combien de véhicules et de caractéristiques sur les véhicules sont contenus dans le data frame ?\nDeux caractéristiques sont mal identifiées dans le data-frame car ce sont des variables qualitatives (facteurs). Rectifier en utilisant la fonction as.factor().\nEn utilisant l’aide du data-frame mtcars renommer les niveaux des deux facteurs précédents.\nEtablir la table de contingence de ces deux facteurs (fonction table())\nCalculer la moyenne des 7 premières variables (on utilisera les fonctions mean() et apply()).\nReprendre la question précédente pour les voitures avec un moteur à plat. De même pour les voitures ayant un moteur en V et qui sont automatiques.\nCalculer le nombre de voitures ayant un moteur en V qui ont au moins 3 carburateurs.",
+    "crumbs": [
+      "TD3 : Les data-frames"
+    ]
+  },
+  {
+    "objectID": "TD4.html",
+    "href": "TD4.html",
+    "title": "TD4 : Manipulations de data-frames avec dplyr",
+    "section": "",
+    "text": "Le package dplyr permet de manipuler facilement les données, notamment les data-frames.\nIl fait partie de l’ensemble de packages tidyverse, regroupant également le package ggplot2. Ce dernier permet de réaliser des graphiques sophistiqués à l’esthétique soignée (voir TD5).\n\n\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.1.4     ✔ readr     2.1.5\n✔ forcats   1.0.0     ✔ stringr   1.5.1\n✔ ggplot2   3.5.1     ✔ tibble    3.2.1\n✔ lubridate 1.9.3     ✔ tidyr     1.3.1\n✔ purrr     1.0.2     \n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors",
+    "crumbs": [
+      "TD4 : Manipulations de data-frames avec `dplyr`"
+    ]
+  },
+  {
+    "objectID": "TD4.html#un-exemple",
+    "href": "TD4.html#un-exemple",
+    "title": "TD4 : Manipulations de data-frames avec dplyr",
+    "section": "3.1 Un exemple",
+    "text": "3.1 Un exemple\n\nUtilisons le jeu de données diamonds, dont on affiche ici les premières lignes.\n\n\ndata(\"diamonds\")\nhead(diamonds)\n\n# A tibble: 6 × 10\n  carat cut       color clarity depth table price     x     y     z\n  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;\n1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43\n2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31\n3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31\n4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63\n5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75\n6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48\n\n\n\nSupposons que l’on souhaite calculer le prix moyen des diamants dont la coupe satisfait cut==Good et la couleur satisfait color==\"E\".\n\nOn peut effectuer la succession d’instructions suivante :\n\ncond &lt;- diamonds$cut == \"Good\" & diamonds$color == \"E\"\nsub_diamonds &lt;- diamonds[cond,]\nmean(sub_diamonds$price)\n\n[1] 3423.644\n\n\nCe qui peut aussi s’écrire en une ligne :\n\nmean(diamonds[diamonds$cut==\"Good\" & diamonds$color==\"E\",]$price)\n\n[1] 3423.644\n\n\n\nLe “pipe” permet d’effectuer cette succesion d’instruction de façon plus lisible en utilisant les fonctions filter() et select() du package dplyr :\n\n\ndiamonds %&gt;% filter(cut == \"Good\" & color == \"E\") %&gt;%\n  pull(price) %&gt;%\n  mean()\n\n[1] 3423.644\n\n\n\nEn résumé, pour une fonction f() :\n\nx %&gt;% f() est équivalent à f(x);\nx %&gt;% f(y)est équivalent à f(x,y).",
+    "crumbs": [
+      "TD4 : Manipulations de data-frames avec `dplyr`"
+    ]
+  },
+  {
+    "objectID": "TD4.html#un-exercice",
+    "href": "TD4.html#un-exercice",
+    "title": "TD4 : Manipulations de data-frames avec dplyr",
+    "section": "3.2 Un exercice",
+    "text": "3.2 Un exercice\nEn utilisant les fonctions select(), filter(), et rename(), créer un nouveau data-frame issu de diamonds ne contenant que les diamants dont le carat est supérieur à 0.5, la coupe égale à “Premium” et la couleur égale à “D”. On ne conservera que les colonnes carat et price, et on renommera les colonnes en Français.\n\n\nVoir la correction\ndiamonds_small &lt;- diamonds %&gt;%\n  filter(carat &gt; 0.5 & cut==\"Premium\") %&gt;%\n  select(carat,price) %&gt;%\n  rename(Carat=carat,Prix=price)",
+    "crumbs": [
+      "TD4 : Manipulations de data-frames avec `dplyr`"
+    ]
+  },
+  {
+    "objectID": "TD4.html#la-fonction-mutate",
+    "href": "TD4.html#la-fonction-mutate",
+    "title": "TD4 : Manipulations de data-frames avec dplyr",
+    "section": "4.1 La fonction mutate()",
+    "text": "4.1 La fonction mutate()",
+    "crumbs": [
+      "TD4 : Manipulations de data-frames avec `dplyr`"
     ]
   }
 ]

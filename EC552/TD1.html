@@ -157,6 +157,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">TD2 : Les matrices</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TD3 : Les data-frames</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TD4 : Manipulations de data-frames avec <code>dplyr</code></span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -507,6 +519,19 @@ taille d'un objet plus court</code></pre>
 <pre><code> [1]  2  4  6  5  7  9  8 10 12 11</code></pre>
 </div>
 </div>
+<ul>
+<li>On peut calculer la somme ou la moyenne des éléments d’un vecteur.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(a1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(a1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
 </section>
 </section>
 <section id="ouvrir-laide" class="level1" data-number="4">
@@ -516,7 +541,7 @@ taille d'un objet plus court</code></pre>
 </ul>
 <p><strong><em>Exemple : Décrire la fonction sample</em></strong></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>?sample</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>?sample</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li><p>Une fonction comporte plusieurs arguments. Par exemple <code>sample(x, size, replace = FALSE, prob = NULL)</code></p></li>
@@ -528,13 +553,13 @@ taille d'un objet plus court</code></pre>
 <li><p>D’autres sont facultatifs (ils ont des valeurs par défaut), ici <em>replace</em> et <em>prob</em>.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="sc">-</span><span class="dv">10</span><span class="sc">:</span><span class="dv">10</span>,<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="sc">-</span><span class="dv">10</span><span class="sc">:</span><span class="dv">10</span>,<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -2</code></pre>
+<pre><code>[1] 4</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="sc">-</span><span class="dv">10</span><span class="sc">:</span><span class="dv">10</span>,<span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sample</span>(<span class="sc">-</span><span class="dv">10</span><span class="sc">:</span><span class="dv">10</span>,<span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 6 0 5</code></pre>
+<pre><code>[1] 7 3 6</code></pre>
 </div>
 </div>
 </section>
@@ -549,10 +574,10 @@ taille d'un objet plus court</code></pre>
 <li>On définit un vecteur <em>x</em>:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="st">"44"</span>)</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Permet de fixer la "graine", qui génère les nombres pseudo-aléatoires.</span></span>
-<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>x<span class="ot">=</span><span class="fu">sample</span>(<span class="sc">-</span><span class="dv">20</span><span class="sc">:</span><span class="dv">20</span>,<span class="dv">40</span>,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
-<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="st">"44"</span>)</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Permet de fixer la "graine", qui génère les nombres pseudo-aléatoires.</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>x<span class="ot">=</span><span class="fu">sample</span>(<span class="sc">-</span><span class="dv">20</span><span class="sc">:</span><span class="dv">20</span>,<span class="dv">40</span>,<span class="at">replace=</span><span class="cn">TRUE</span>)</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  -4  12  -4 -16 -20 -12  13   9 -15 -13 -20 -20   0 -15  -1  18  -7  19  -7
 [20]   0   1  13 -14  16 -14  16  19 -20 -15  17  -4   7  20 -16  11  -8 -19 -19
@@ -563,7 +588,7 @@ taille d'un objet plus court</code></pre>
 <li>On veut savoir quelles valeurs de <em>x</em> sont positives :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>x<span class="sc">&gt;</span><span class="dv">0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>x<span class="sc">&gt;</span><span class="dv">0</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1] FALSE  TRUE FALSE FALSE FALSE FALSE  TRUE  TRUE FALSE FALSE FALSE FALSE
 [13] FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE FALSE  TRUE
@@ -575,7 +600,7 @@ taille d'un objet plus court</code></pre>
 <li>On veut savoir combien de valeurs de <em>x</em> sont postives:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x<span class="sc">&gt;</span><span class="dv">0</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(x<span class="sc">&gt;</span><span class="dv">0</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15</code></pre>
 </div>
@@ -584,7 +609,7 @@ taille d'un objet plus court</code></pre>
 <li>Quelles sont les positions de ces valeurs ?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(x<span class="sc">&gt;</span><span class="dv">0</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(x<span class="sc">&gt;</span><span class="dv">0</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  2  7  8 16 18 21 22 24 26 27 30 32 33 35 39</code></pre>
 </div>
@@ -593,7 +618,7 @@ taille d'un objet plus court</code></pre>
 <li>Quels sont les indices des valeurs supérieure à 5 ou inférieure à 0 ?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(x<span class="sc">&gt;</span><span class="dv">5</span> <span class="sc">|</span> x<span class="sc">&lt;</span><span class="dv">0</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(x<span class="sc">&gt;</span><span class="dv">5</span> <span class="sc">|</span> x<span class="sc">&lt;</span><span class="dv">0</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10 11 12 14 15 16 17 18 19 22 23 24 25 26 27 28
 [26] 29 30 31 32 33 34 35 36 37 38 39 40</code></pre>
@@ -603,7 +628,7 @@ taille d'un objet plus court</code></pre>
 <li>Quels sont les indices des valeurs dans [5,10] ?</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(x<span class="sc">&gt;=</span><span class="dv">5</span> <span class="sc">&amp;</span> x<span class="sc">&lt;=</span><span class="dv">10</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(x<span class="sc">&gt;=</span><span class="dv">5</span> <span class="sc">&amp;</span> x<span class="sc">&lt;=</span><span class="dv">10</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  8 32 39</code></pre>
 </div>
@@ -619,7 +644,7 @@ taille d'un objet plus court</code></pre>
 <li><p>Afficher tous les éléments de <em>x</em> sauf le premier.</p></li>
 <li><p>Afficher les trois premiers éléments de <em>x</em>.</p></li>
 <li><p>Afficher le deuxième et le quatrième élément de <em>x</em>.</p></li>
-<li><p>Classer les éléments de <em>x</em> dans l’ordre alphabétique puis anti-alphabétique grâce aux fonctions sort et rev.</p></li>
+<li><p>Classer les éléments de <em>x</em> dans l’ordre alphabétique puis anti-alphabétique grâce aux fonctions <code>sort()</code> et <code>rev()</code>.</p></li>
 </ol>
 </section>
 <section id="exercice-2" class="level2" data-number="6.2">
@@ -636,14 +661,14 @@ taille d'un objet plus court</code></pre>
 <section id="exercice-3" class="level2" data-number="6.3">
 <h2 data-number="6.3" class="anchored" data-anchor-id="exercice-3"><span class="header-section-number">6.3</span> Exercice 3</h2>
 <ol type="1">
-<li><p>Générer un vecteur <em>x</em> de taille 100 de valeurs tirées selon une loi normale centrée réduite (i.e.&nbsp;de paramètre 0 et 1) grâce à la fonction <code>rnorm()</code>.</p></li>
+<li><p>Générer un vecteur <em>x</em> de taille 100 de valeurs tirées selon une loi normale centrée réduite (i.e.&nbsp;de paramètres 0 et 1) grâce à la fonction <code>rnorm()</code>.</p></li>
 <li><p>Calculer la somme et la moyenne de <em>x</em> à l’aide des fonctions dédiées.</p></li>
 <li><p>Calculer le minimum, le premier quartile, la médiane, le troisième quartile et le maximum de x. La fonction <code>quantile()</code> bien utilisée vous donnera toutes ces informations directement…</p></li>
-<li><p>Générer le vecteur booléen indiquant si les nombres contenus dans x sont positifs (<code>TRUE</code>) ou non (<code>FALSE</code>).</p></li>
+<li><p>Générer le vecteur booléen indiquant si les nombres contenus dans x sont positifs (<code>TRUE</code>) ou non (<code>FALSE</code>). Combien de ces nombres sont-ils positifs ?</p></li>
 <li><p>Même question pour indiquer si les nombres sont compris entre -1 et 1.</p></li>
 <li><p>Afficher les indices des valeurs négatives de <em>x</em>.</p></li>
-<li><p>Afficher la valeur absolue des valeurs de <em>x</em>.</p></li>
-<li><p>Afficher la partie entière des valeurs de <em>x</em>.</p></li>
+<li><p>Afficher la valeur absolue des valeurs de <em>x</em> avec la fonction.</p></li>
+<li><p>Afficher la partie entière des valeurs de <em>x</em> .</p></li>
 <li><p>Afficher uniquement les valeurs positives de <em>x</em>.</p></li>
 <li><p>Remplacer les valeurs négatives de <em>x</em> par 0. Vérifier le remplacement.</p></li>
 </ol>
