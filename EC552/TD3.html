@@ -192,6 +192,12 @@ window.Quarto = {
  <span class="menu-text">TD3 : Les data-frames</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TD4 : Manipulations de data-frames</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -260,7 +266,7 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>,<span class="dv">1</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.4</code></pre>
+<pre><code>[1] 7.4</code></pre>
 </div>
 </div>
 <ul>
@@ -269,13 +275,13 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>NoteF</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  [1]  1.4 17.7 16.3 16.5  0.8 17.7  9.3  1.5  0.3  9.0 13.7 11.9  9.0  5.9  7.9
- [16]  6.0 14.2 18.2 16.5  4.0  2.2  7.0  0.9 12.4  0.2  3.8  0.7 13.6 18.3  4.0
- [31]  8.8 18.6 12.9 11.6 11.0 16.6  7.6  6.4 18.6 14.1 13.4  2.1 19.6  7.7 14.0
- [46] 17.4 18.5 14.3 10.8  0.2 10.0 12.0 12.9  5.5  8.4  7.0 11.2  2.0  5.0  9.9
- [61] 13.6  8.6  9.5  1.0  2.4 12.7  6.8 10.6 12.2  3.2 10.2 15.0  0.7 11.2  7.7
- [76]  0.6 15.5 16.5 13.9  9.1 19.7  5.0  1.8 16.6 12.9  1.2  4.1 10.5  9.8  8.9
- [91]  6.2 12.2 16.7 14.5 12.5 14.7  0.5  5.7 13.8 17.0</code></pre>
+<pre><code>  [1]  7.4 18.5  6.5 18.4 18.7  0.3 10.4  7.5  4.6 17.4 13.7 12.0 18.0 17.5  0.6
+ [16] 19.2 16.7 11.8  1.4 14.9 16.5  4.6 11.9  3.3  3.3 17.3 17.2  1.9 16.8  0.7
+ [31] 13.6 17.5  3.8 19.0 15.1  7.7  8.3 11.2 11.0 14.1  7.6  4.9  0.9 10.4  7.0
+ [46] 14.7 14.3 13.1  3.4 17.7 11.1 16.9 16.7  4.7 10.1  3.2 15.1  5.7 16.5  9.7
+ [61] 17.3  7.6  1.4  0.5 18.8 19.1  8.9  9.8  0.0  7.5 13.0  0.3  8.7 16.2  2.0
+ [76]  8.2  4.5  2.1 17.3 19.0  9.5  1.0 13.0 14.3  3.6 19.1  8.1 16.6 11.9  6.8
+ [91]  7.0 10.7 19.0 19.6 18.2 12.3  8.3  1.0 16.2 19.2</code></pre>
 </div>
 </div>
 </section>
@@ -341,13 +347,13 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>     NoteF            NoteM             gr           
- Min.   : 0.200   Min.   : 0.100   Length:100        
- 1st Qu.: 5.375   1st Qu.: 3.875   Class :character  
- Median :10.100   Median : 7.950   Mode  :character  
- Mean   : 9.743   Mean   : 8.994                     
- 3rd Qu.:14.025   3rd Qu.:13.450                     
- Max.   :19.700   Max.   :19.800                     </code></pre>
+<pre><code>     NoteF           NoteM             gr           
+ Min.   : 0.00   Min.   : 0.000   Length:100        
+ 1st Qu.: 5.50   1st Qu.: 4.375   Class :character  
+ Median :11.05   Median :11.900   Mode  :character  
+ Mean   :10.72   Mean   :10.918                     
+ 3rd Qu.:16.70   3rd Qu.:16.475                     
+ Max.   :19.60   Max.   :19.900                     </code></pre>
 </div>
 </div>
 </section>
@@ -357,8 +363,8 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(df[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>],<span class="at">MARGIN=</span><span class="dv">2</span>,mean)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>NoteF NoteM 
-9.743 8.994 </code></pre>
+<pre><code> NoteF  NoteM 
+10.716 10.918 </code></pre>
 </div>
 </div>
 <p><strong><em>Remarque :</em></strong> on n’a utilisé que les deux premières colonnes du data-frame car la troisième n’est pas numérique (donc on ne peut pas calculer sa moyenne).</p>
@@ -386,7 +392,7 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>statut_pro
  1  2  3  4 
-29 20 21 30 </code></pre>
+17 32 22 29 </code></pre>
 </div>
 </div>
 <ul>
@@ -408,9 +414,9 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>statut_pro
           en activité en recherche d'emploi              étudiant 
-                   29                    20                    21 
+                   17                    32                    22 
         à la retraite 
-                   30 </code></pre>
+                   29 </code></pre>
 </div>
 </div>
 <p><strong><em>Remarque :</em></strong> Les variables binaires (facteurs à deux modalités) sont souvent codées 0/1.</p>
@@ -424,9 +430,9 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>statut_pro
             étudiants           en activité en recherche d'emploi 
-                   29                    20                    21 
+                   17                    32                    22 
         à la retraite 
-                   30 </code></pre>
+                   29 </code></pre>
 </div>
 </div>
 <p><strong><em>Attention</em></strong> les labels doivent être exactement écrits de la même façon que les levels si les modalités sont déjà écrites et sinon on peut directement agir sur les modalités via labels :</p>
