@@ -101,6 +101,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -169,6 +198,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">TD4 : Manipulations de data-frames avec <code>dplyr</code></span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TD5 : Graphiques avec <code>ggplot2</code></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD6.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TD6 : Programmer sur R</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -189,6 +230,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#quelques-fonctions-utiles" id="toc-quelques-fonctions-utiles" class="nav-link" data-scroll-target="#quelques-fonctions-utiles"><span class="header-section-number">4</span> Quelques fonctions utiles</a>
   <ul class="collapse">
   <li><a href="#la-fonction-mutate" id="toc-la-fonction-mutate" class="nav-link" data-scroll-target="#la-fonction-mutate"><span class="header-section-number">4.1</span> La fonction <code>mutate()</code></a></li>
+  <li><a href="#les-fonctions-group_by-et-summarise" id="toc-les-fonctions-group_by-et-summarise" class="nav-link" data-scroll-target="#les-fonctions-group_by-et-summarise"><span class="header-section-number">4.2</span> Les fonctions <code>group_by()</code> et <code>summarise()</code></a></li>
+  </ul></li>
+  <li><a href="#nettoyage-des-données" id="toc-nettoyage-des-données" class="nav-link" data-scroll-target="#nettoyage-des-données"><span class="header-section-number">5</span> Nettoyage des données</a>
+  <ul class="collapse">
+  <li><a href="#un-exemple-1" id="toc-un-exemple-1" class="nav-link" data-scroll-target="#un-exemple-1"><span class="header-section-number">5.1</span> Un exemple</a>
+  <ul class="collapse">
+  <li><a href="#séparer-les-colonnes-avec-separate" id="toc-séparer-les-colonnes-avec-separate" class="nav-link" data-scroll-target="#séparer-les-colonnes-avec-separate">Séparer les colonnes avec <code>separate()</code></a></li>
+  <li><a href="#rassembler-les-colonnes-avec-pivot_longer" id="toc-rassembler-les-colonnes-avec-pivot_longer" class="nav-link" data-scroll-target="#rassembler-les-colonnes-avec-pivot_longer">Rassembler les colonnes avec <code>pivot_longer()</code></a></li>
+  </ul></li>
+  <li><a href="#un-exercice-1" id="toc-un-exercice-1" class="nav-link" data-scroll-target="#un-exercice-1"><span class="header-section-number">5.2</span> Un exercice</a></li>
+  </ul></li>
+  <li><a href="#traitement-des-données-manquantes" id="toc-traitement-des-données-manquantes" class="nav-link" data-scroll-target="#traitement-des-données-manquantes"><span class="header-section-number">6</span> Traitement des données manquantes</a>
+  <ul class="collapse">
+  <li><a href="#compléter-un-data-frame-avec-complete" id="toc-compléter-un-data-frame-avec-complete" class="nav-link" data-scroll-target="#compléter-un-data-frame-avec-complete"><span class="header-section-number">6.1</span> Compléter un data-frame avec <code>complete()</code></a></li>
+  <li><a href="#remplacer-les-na-avec-replace_na" id="toc-remplacer-les-na-avec-replace_na" class="nav-link" data-scroll-target="#remplacer-les-na-avec-replace_na"><span class="header-section-number">6.2</span> Remplacer les <code>NA</code> avec <code>replace_na()</code></a></li>
+  </ul></li>
+  <li><a href="#exercices" id="toc-exercices" class="nav-link" data-scroll-target="#exercices"><span class="header-section-number">7</span> Exercices</a>
+  <ul class="collapse">
+  <li><a href="#exercice-1" id="toc-exercice-1" class="nav-link" data-scroll-target="#exercice-1"><span class="header-section-number">7.1</span> Exercice 1</a></li>
+  <li><a href="#exercice-2" id="toc-exercice-2" class="nav-link" data-scroll-target="#exercice-2"><span class="header-section-number">7.2</span> Exercice 2</a></li>
+  <li><a href="#exercice-3" id="toc-exercice-3" class="nav-link" data-scroll-target="#exercice-3"><span class="header-section-number">7.3</span> Exercice 3</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -353,6 +415,358 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1 data-number="4"><span class="header-section-number">4</span> Quelques fonctions utiles</h1>
 <section id="la-fonction-mutate" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="la-fonction-mutate"><span class="header-section-number">4.1</span> La fonction <code>mutate()</code></h2>
+<ul>
+<li><p>Elle permet de définir de nouvelles colonnes (<em>ou de modifier des colonnes existantes</em>) dans un data-frame, qui seront le résultat d’un calcul.</p></li>
+<li><p>Par exemple dans le data-frame <code>mtcars</code>, la consommation des voitures est exprimée en <em>mpg</em> (miles per galon). Si on veut l’exprimer en <em>L/100km</em>, alors on utilise <em>L/100 km</em> = <em>282.48/mpg</em> :</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"mtcars"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>mtcars <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">"L/100km"</span> <span class="ot">=</span> <span class="fl">282.48</span><span class="sc">/</span>mpg) <span class="sc">%&gt;%</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">1</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="les-fonctions-group_by-et-summarise" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="les-fonctions-group_by-et-summarise"><span class="header-section-number">4.2</span> Les fonctions <code>group_by()</code> et <code>summarise()</code></h2>
+<ul>
+<li><p>De façon régulière, on est amené à calculer certaines statistiques dépendant de groupes. La fonction <code>group_by()</code> permet ce regroupement.</p></li>
+<li><p>La fonction <code>summarise()</code> permet quant à elle de créer un <code>tibble</code> à partir des opérations effectuées.</p></li>
+</ul>
+<p><strong><em>Exemple</em></strong></p>
+<p>A partir du data-frame <code>mtcars</code>, on souhaite calculer la consommation moyenne des véhicules ainsi que l’écart-type de ces consommations, en fonction de la cylindrée et du mode de transmission des véhicules.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> mtcars <span class="sc">%&gt;%</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cyl,am) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">M =</span> <span class="fu">mean</span>(<span class="st">`</span><span class="at">L/100km</span><span class="st">`</span>),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">SD =</span> <span class="fu">sd</span>(<span class="st">`</span><span class="at">L/100km</span><span class="st">`</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'cyl'. You can override using the `.groups`
+argument.</code></pre>
+</div>
+</div>
+<p><strong><em>Remarque :</em></strong> Il est important de “dégrouper” le <code>tibble</code> une fois les manipulations effectuées avec la fonction <code>ungroup()</code>. Dans le cas contraire, tous les calculs suivants effectués sur le <code>tibble</code> se feraient selon les groupes effectués.</p>
+<p><strong><em>Exercice</em></strong></p>
+<p>A partir du jeu de données <code>diamonds</code> :</p>
+<ol type="1">
+<li>Renommer les variables <em>x</em>, <em>y</em> et <em>z</em> par <em>length</em>, <em>width</em> et <em>height</em>;</li>
+<li>Convertir ces valeurs en cm, et non en mm;</li>
+<li>Créer un objet <code>diamonds_modif</code> contenant ces trois colonnes ainsi que les colonnes <em>color</em>, <em>cut</em>, <em>carat</em> et <em>price</em>, où l’on ne conserve que les découpes <em>Premium</em> ou <em>Ideal</em>.</li>
+<li>Pour chaque combinaison <em>cut/color</em>, calculer la moyenne des trois variables <em>length</em>, <em>width</em> et <em>height</em>. Stocker ce résumé dans un objet <code>diam_summary</code>.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>diamonds_modif <span class="ot">&lt;-</span> diamonds <span class="sc">%&gt;%</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">length=</span>x,<span class="at">width=</span>y,<span class="at">height=</span>z) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">length =</span> length<span class="sc">/</span><span class="dv">10</span>,<span class="at">width=</span>width<span class="sc">/</span><span class="dv">10</span>,<span class="at">height=</span>height<span class="sc">/</span><span class="dv">10</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(height,width,length,color,cut,carat,price) <span class="sc">%&gt;%</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cut<span class="sc">==</span><span class="st">"Premium"</span> <span class="sc">|</span> cut<span class="sc">==</span><span class="st">"Ideal"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>diam_summary <span class="ot">&lt;-</span> diamonds_modif <span class="sc">%&gt;%</span> </span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cut,color) <span class="sc">%&gt;%</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_length =</span> <span class="fu">mean</span>(length),</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_width =</span> <span class="fu">mean</span>(width),</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean_height =</span> <span class="fu">mean</span>(height)) <span class="sc">%&gt;%</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="nettoyage-des-données" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Nettoyage des données</h1>
+<p>Un jeu de données peut être considéré comme “propre” s’il satisfait les 3 règles suivantes :</p>
+<ul>
+<li>chaque variable possède sa propre colonne ;</li>
+<li>chaque observation possède sa propre ligne ;</li>
+<li>chaque valeur possède sa propre cellule.</li>
+</ul>
+<section id="un-exemple-1" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="un-exemple-1"><span class="header-section-number">5.1</span> Un exemple</h2>
+<p>Considérons le jeu de données ci-dessous.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>grades <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Name =</span> <span class="fu">c</span>(<span class="st">"Tommy"</span>, <span class="st">"Mary"</span>, <span class="st">"Gary"</span>, <span class="st">"Cathy"</span>),</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Sex_Age =</span> <span class="fu">c</span>(<span class="st">"m_15"</span>, <span class="st">"f_15"</span>, <span class="st">"m_16"</span>, <span class="st">"f_14"</span>),</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Test1 =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">15</span>, <span class="dv">16</span>, <span class="dv">14</span>),</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Test2 =</span> <span class="fu">c</span>(<span class="dv">11</span>, <span class="dv">13</span>, <span class="dv">10</span>, <span class="dv">12</span>),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Test3 =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">17</span>, <span class="dv">10</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ce jeu de données n’est pas “propre”. La colonne <code>Sex_Age</code> réunit deux variables. D’autre part, il y a trois colonnes <em>tests</em>, ce qui peut être le résultat souhaité, mais on pourrait aussi vouloir une variable <em>Grade</em> donnant la note obtenue, dépendant du test effectué.</p>
+<section id="séparer-les-colonnes-avec-separate" class="level3">
+<h3 class="anchored" data-anchor-id="séparer-les-colonnes-avec-separate">Séparer les colonnes avec <code>separate()</code></h3>
+<p>La colonne Sex_Age doit être séparée en deux.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>grades_s_a <span class="ot">&lt;-</span> grades <span class="sc">%&gt;%</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">separate</span>(<span class="at">col=</span>Sex_Age,<span class="at">into=</span><span class="fu">c</span>(<span class="st">"Sex"</span>,<span class="st">"Age"</span>),<span class="at">sep=</span><span class="st">"_"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong><em>Remarque :</em></strong> l’inverse de la fonction <code>separate()</code>est la fonction <code>unite()</code>.</p>
+</section>
+<section id="rassembler-les-colonnes-avec-pivot_longer" class="level3">
+<h3 class="anchored" data-anchor-id="rassembler-les-colonnes-avec-pivot_longer">Rassembler les colonnes avec <code>pivot_longer()</code></h3>
+<p>Supposons que la variable d’intérêt soit la note obtenue aux différents contrôles.</p>
+<p>Dans <code>grades_s_a</code>, cette variable est encodée dans trois colonnes. On préfère ici les rassembler en une seule colonne, et spécifier le numéro du test dans une autre colonne. Le jeu de données obtenu aura alors un format plus long, mais qui sera peut-être plus adapté à nos besoins.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>grades_long <span class="ot">&lt;-</span> grades_s_a <span class="sc">%&gt;%</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="fu">starts_with</span>(<span class="st">"Test"</span>), <span class="co"># On sélectionne les colonnes à assembler</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Test"</span>,        <span class="co"># Nom de la colonne rassemblant les anciens noms</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"Grade"</span>)      <span class="co"># Nom de la collone rassemblant les valeurs</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong><em>Remarque :</em></strong> l’inverse de la fonction <code>pivot_longer()</code>est <code>pivot_wider()</code>.</p>
+<p>Un format plus long comme obtenu précédemment est souvent plus adapté pour résumer les données. Par exemple, si on veut la moyenne des notes obtenues par test et pour chaque sexe :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>grades_summary <span class="ot">&lt;-</span> grades_long <span class="sc">%&gt;%</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sex,Test) <span class="sc">%&gt;%</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Mean =</span> <span class="fu">mean</span>(Grade)) <span class="sc">%&gt;%</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'Sex'. You can override using the `.groups`
+argument.</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="un-exercice-1" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="un-exercice-1"><span class="header-section-number">5.2</span> Un exercice</h2>
+<ol type="1">
+<li>Importer le data-frame contenu dans le fichier <strong>tauxchomage.csv</strong> disponible sur Connect <em>(à télécharger, et à placer dans le bon répertoire)</em>.</li>
+<li>Ce fichier contient les taux de chômage par département en 2001, 2006 et 2011. A l’aide de la fonction <code>pivot_longer()</code>, créer un objet <code>taux_chomage_long</code> avec une colonne contenant tous les taux de chômage, et une colonne précisant les années pour chaque département.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>taux_chomage <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"tauxchomage.csv"</span>,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">sep=</span><span class="st">";"</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>taux_chomage_long <span class="ot">&lt;-</span> taux_chomage <span class="sc">%&gt;%</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols =</span> <span class="fu">starts_with</span>(<span class="st">"TCHOM"</span>),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"Année"</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">values_to =</span> <span class="st">"Taux_Chômage"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(Année<span class="ot">=</span> <span class="fu">fct_recode</span>(Année,          <span class="co"># Recodage de la variable Année pour plus de lisibilité</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"2001"</span><span class="ot">=</span><span class="st">"TCHOMB1T01"</span>,</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"2006"</span><span class="ot">=</span><span class="st">"TCHOMB1T06"</span>,</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"2011"</span><span class="ot">=</span><span class="st">"TCHOMB1T11"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="traitement-des-données-manquantes" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Traitement des données manquantes</h1>
+<p>Il arrive parfois que certaines données soient manquantes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>notes <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Nom =</span> <span class="fu">c</span>(<span class="st">"Alain"</span>, <span class="st">"Alain"</span>, <span class="st">"Benoît"</span>, <span class="st">"Claire"</span>),</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">Discipline =</span> <span class="fu">c</span>(<span class="st">"Maths"</span>, <span class="st">"Francais"</span>, <span class="st">"Maths"</span>, <span class="st">"Francais"</span>),</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">Note =</span> <span class="fu">c</span>(<span class="dv">16</span>, <span class="dv">9</span>, <span class="dv">17</span>, <span class="dv">11</span>),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">Present =</span> <span class="fu">rep</span>(<span class="st">"oui"</span>, <span class="dv">4</span>))</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>notes</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4 × 4
+  Nom    Discipline  Note Present
+  &lt;chr&gt;  &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;  
+1 Alain  Maths         16 oui    
+2 Alain  Francais       9 oui    
+3 Benoît Maths         17 oui    
+4 Claire Francais      11 oui    </code></pre>
+</div>
+</div>
+<p>Ici par exemple, Benoît n’a pas de note en Français.</p>
+<section id="compléter-un-data-frame-avec-complete" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="compléter-un-data-frame-avec-complete"><span class="header-section-number">6.1</span> Compléter un data-frame avec <code>complete()</code></h2>
+<p>On peut vouloir compléter les données de manière à ce que chaque couple <em>Nom/Discipline</em> ait une note.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>notes <span class="ot">&lt;-</span> notes <span class="sc">%&gt;%</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(Nom,Discipline)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>La valeur d’attribtution par défaut est alors <code>NA</code>, mais on peut choisir ces valeurs.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>notes <span class="ot">&lt;-</span> notes <span class="sc">%&gt;%</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">complete</span>(Nom,Discipline,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">fill =</span> <span class="fu">list</span>(<span class="at">Note=</span><span class="dv">0</span>,<span class="at">Present=</span><span class="st">"non"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="remplacer-les-na-avec-replace_na" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="remplacer-les-na-avec-replace_na"><span class="header-section-number">6.2</span> Remplacer les <code>NA</code> avec <code>replace_na()</code></h2>
+<p>Considérons le tableau suivant qui possède des données manquantes, codées comme <code>NA</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>donnees_na <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">Groupe =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>), <span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">Nom =</span> <span class="fu">c</span>(<span class="st">"Al"</span>, <span class="st">"Bob"</span>, <span class="cn">NA</span>, <span class="st">"Dave"</span>, <span class="st">"Elle"</span>, <span class="st">"Fanch"</span>),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">Note =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">8</span>, <span class="dv">7</span>, <span class="fl">4.5</span>, <span class="dv">1</span>, <span class="dv">4</span>))</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>donnees_na</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  Groupe Nom    Note
+  &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt;
+1 A      Al     NA  
+2 A      Bob     8  
+3 A      &lt;NA&gt;    7  
+4 B      Dave    4.5
+5 B      Elle    1  
+6 B      Fanch   4  </code></pre>
+</div>
+</div>
+<p>On peut utiliser la fonction <code>replace_na()</code>pour remplacer les données manquantes par les valeurs souhaitées.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>donnees_na1 <span class="ot">&lt;-</span> donnees_na <span class="sc">%&gt;%</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">replace_na</span>(<span class="at">replace =</span> <span class="fu">list</span>(<span class="at">Nom =</span> <span class="st">"Inconnu"</span>,</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">Note=</span><span class="dv">0</span>))</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>donnees_na1</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  Groupe Nom      Note
+  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;
+1 A      Al        0  
+2 A      Bob       8  
+3 A      Inconnu   7  
+4 B      Dave      4.5
+5 B      Elle      1  
+6 B      Fanch     4  </code></pre>
+</div>
+</div>
+<p>Il est à noter que la fonction <code>replace_na()</code> peut servir pour remplacer les <code>NA</code> d’une colonne spécifique. Pour les des valeurs numériques, il est assez courant de remplacer les valeurs manquantes par la moyenne de la colonne.</p>
+<p>Reprenons l’exemple précédent.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>donnees_na2 <span class="ot">&lt;-</span> donnees_na <span class="sc">%&gt;%</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Nom=</span><span class="fu">replace_na</span>(Nom,<span class="at">replace=</span><span class="st">"Inconnu"</span>),</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Note=</span><span class="fu">replace_na</span>(Note,<span class="at">replace =</span> <span class="fu">mean</span>(Note,<span class="at">na.rm=</span><span class="cn">TRUE</span>))) </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="co"># On retire ici les valeurs NA pour calculer la moyenne</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>donnees_na2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 3
+  Groupe Nom      Note
+  &lt;chr&gt;  &lt;chr&gt;   &lt;dbl&gt;
+1 A      Al        4.9
+2 A      Bob       8  
+3 A      Inconnu   7  
+4 B      Dave      4.5
+5 B      Elle      1  
+6 B      Fanch     4  </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="exercices" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Exercices</h1>
+<section id="exercice-1" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="exercice-1"><span class="header-section-number">7.1</span> Exercice 1</h2>
+<p><strong><em>Remarque :</em></strong> Dans la mesure du possible, on s’efforcera d’effectuer l’ensemble des manipulations ci-dessous via un seul canal d’instructions <em>(pipe)</em>.</p>
+<ol type="1">
+<li><p>Importer le data-frame contenu dans le fichier <strong>birds_scandinavia.csv</strong> disponible sur Connect. Ce jeu de données provient de l’article <em>Species composition and population fluctuations of alpine bird communities during 38 years in the scandinavian mountain range</em> de S. Svensson (2006). Dans cette étude, on compte le nombre d’oiseaux migrateurs revenant chaque année à certaines locations.</p></li>
+<li><p>Modifier le data-frame afin qu’il contienne uniquement l’année, le nombre d’oiseaux comptés, le nom de l’espèce, la latitude et la longitude des observations. On renommera l’espèce par <code>SPECIES == GENUS_SPECIES</code>, et avec la fonction <code>arrange()</code>, on triera le data-frame en fonction des années.</p></li>
+<li><p>Certaines espèces peuvent être aperçues à différents endroits. Modifier la colonne <em>ABUNDANCE</em> afin qu’elle contienne uniquement le nombre total d’individus observé par année pour chaque espèce.</p></li>
+<li><p>Pour chaque année, créer une colonne <em>TOTAL_ABUNDANCE</em> donnant le nombre total d’oiseaux observés.</p></li>
+<li><p>Créer ensuite une colonne <em>ABUNDANCE_REL</em> donnant par année l’<strong>abondance relative</strong> de chaque espèce, i.e.&nbsp;le pourcentage de chaque espèce dans la population totale <em>(on arrondira à 2 chiffres après la virgule)</em>.</p></li>
+<li><p>Dans un obet <code>birds_summary</code>, donner pour chaque espèce le nombre moyen d’oiseaux observés chaque année, ainsi que l’abondance relative moyenne. On triera ce jeu de données en fonction de l’abondance relative, dans un ordre décroissant.</p></li>
+</ol>
+</section>
+<section id="exercice-2" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="exercice-2"><span class="header-section-number">7.2</span> Exercice 2</h2>
+<p><strong><em>Remarque :</em></strong> Dans la mesure du possible, on s’efforcera d’effectuer l’ensemble des manipulations ci-dessous via un seul canal d’instructions <em>(pipe)</em>.</p>
+<ol type="1">
+<li>Importer le data-frame contenu dans le fichier <strong>cirrhosis.csv</strong> disponible sur Connect. Il est également disponible sur <a href="https://archive.ics.uci.edu/dataset/878/cirrhosis+patient+survival+prediction+dataset-1" target="_blank"> cette page </a> <em>(Source : Fleming, Thomas R., and David P. Harrington. Counting processes and survival analysis. Vol. 625. John Wiley &amp; Sons, 2013)</em>, où l’on trouvera une description des variables d’intérêt.</li>
+</ol>
+<p>De façon générale, ce jeu de données recense des informations médicales sur 418 patients souffrant d’une cirrhose, ayant reçu un traitement expérimental, un placebo, ou n’ayant rien reçu.</p>
+<p>Combien de valeurs manquantes le data-frame compte-t-il ?</p>
+<ol start="2" type="1">
+<li><p>A l’aide des fonctions <code>mutate()</code>et <code>mutate_if()</code>, transformer toutes les colonnes nécessaires en facteurs, ainsi que la colonne <em>Stage</em>.</p></li>
+<li><p>Remplacer les valeurs manquantes de la colonne <em>Drug</em> par la valeur <code>"None"</code>. <em>On pourra utiliser la fonction <code>fct_na_value_to_level()</code></em>.</p></li>
+<li><p>Remplacer toutes les valeurs manquantes des autres variables catégorielles <em>(i.e.&nbsp;facteurs)</em> par <code>"Unknown"</code>.</p></li>
+<li><p>Efectuer un résumé statistique du data-frame.</p></li>
+</ol>
+<p>Afin d’éviter de compter des valeurs <code>Unknown</code> dans les variables n’en présentant aucune <em>(par exemple <code>Drug</code>)</em>, on re-transformera en facteurs toutes les variables catégorielles.</p>
+<p>Effectuer à nouveau un résumé statistique du data-frame, et comparer avec le résumé précédent.</p>
+<ol start="6" type="1">
+<li><p>Remplacer ensuite les valeurs manquantes des variables numériques par les moyennes de ces variables <em>(plus difficile, chercher des solutions sur le web si nécessaire)</em>.</p></li>
+<li><p>Vérifier que le data-frame ne contient plus aucune valeur manquante.</p></li>
+<li><p>Créer un data-frame donnant les moyennes de la concentration en Bilirubine, ainsi que la quantité quotidienne moyenne de cuivre dans les urines pour chaque type de traitement et chaque stade de la maladie.</p></li>
+<li><p>Commenter les effets du traitement proposé sur ces valeurs.</p></li>
+</ol>
+</section>
+<section id="exercice-3" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="exercice-3"><span class="header-section-number">7.3</span> Exercice 3</h2>
+<p>Les données sont ici inspirées de l’article <em>Differences in soil properties among contrasting soil types in northern Borneo</em>, de G. Sellan et al (2020). Elles ont été modifiées à des fins pédagogiques, et ne représentent donc pas de réalité biologique dans le cadre de cet exercice.</p>
+<p>On s’intéresse ici aux caractéristiques physico-chimiques de sols tropicaux à Bornéo. On a mesuré, sur 180 sites, en 3 profondeurs différentes, des caractéristiques chimiques sur 539 échantillons (<span class="math inline">\(180 \times 3\)</span>, auquels se soustrait une mesure manquante). Les 18 caractéristiques mesurées sont les suivantes:</p>
+<ul>
+<li>Teneurs en sodium, Magnésium, Calcium, Potassium échangeables (<code>Exc.Na</code>, <code>Exc.Mg</code>, <code>Exc.Ca</code>, <code>Exc.K</code>)</li>
+<li>Teneur en eau (colonne <code>MC</code>),</li>
+<li>Phosphore <code>P</code>, Carbone <code>C</code> et Azote <code>N</code>, <code>pH</code> et Aluminium et Acidité échangeable <code>Exc.Al</code>, <code>Exc.Ac</code>, Saturation en bases(<code>BS</code>)</li>
+<li>Effective Cation Exchange Capacity (<code>ECEC</code>)</li>
+<li>Nitrates <code>NO3</code>, Ammonium <code>NH4</code></li>
+<li>Pourcentage d’argile <code>Clay</code>, de limon <code>Silt</code> et de sable <code>Sand</code>.</li>
+</ul>
+<p>En plus de ces caractéristiques, on connaît le type de sol (dans la colonne <code>Soil</code>), qui est soit Alluvial, Dunaire <em>(heath)</em>, ou Grès <em>(sandstone)</em>), ainsi que la profondeur à laquelle a été faite le prélèvement (colonne <code>Depth</code>, à 0-5cm, 5-20 cm ou 25-30 cm).</p>
+<p>En plus des ces colonnes sont enregistrées les noms des sites sur lesquels on a échantillonné les sols. Toutes les infos sont regroupées dans les colonnes <code>Plot</code>, <code>Subplot</code>, <code>Block</code>, <code>Name1</code>, <code>Name</code> et <code>Names2</code>.</p>
+<p>Ces données sont disponibles sur Connect dans le fichier <code>donnees_sols_chimies.csv</code>.</p>
+<ol type="1">
+<li><p>Importer ce jeu de données sous le nom <code>sol_initial</code>.</p></li>
+<li><p>Parallèlement à cela, on dispose de l’abondance de 21 espèces d’arbres sur nos sites dans le fichier <code>donnees_abondance.csv</code>, disponible sur Connect. Dans ce tableau de 900 lignes et 21 colonnes, chaque ligne est donc associée à un site, dont le nom est renseigné dans la colonne <code>Name</code>. Les 639 colonnes restantes correspondent aux 21 espèces. Pour un site et une espèce donnés, on a renseigné dans le tableau le nombre d’individus recensés.</p></li>
+</ol>
+<p>Importer ce jeu de données sous le nom <code>abondance_initial</code>.</p>
+<ol start="3" type="1">
+<li>A partir du jeu de données <code>sol_initial</code>. Effectuer les nettoyages suivants:</li>
+</ol>
+<ol type="a">
+<li>Se débarrasser des colonnes <code>Plot</code>, <code>Subplot</code>, <code>Block</code>, <code>Name1</code>, et <code>Names2</code>.</li>
+<li>Renommer les colonnes (en utilisant la fonction <code>rename</code>):</li>
+</ol>
+<ul>
+<li><code>MC</code> en <code>Eau</code></li>
+<li><code>ECEC</code> en <code>Exc.Cations</code></li>
+<li><code>Soil</code> en <code>Sol</code></li>
+<li><code>Name</code> en <code>Site</code></li>
+<li><code>Depth</code> en <code>Profondeur</code></li>
+<li><code>BS</code> en <code>SatBase</code></li>
+<li><code>Clay</code> en <code>Argile</code></li>
+<li><code>Silt</code> en <code>Limon</code></li>
+<li><code>Sand</code> en <code>Sable</code></li>
+</ul>
+<ol start="3" type="a">
+<li>Transformer la nouvelle colonne <code>Sol</code> en facteur pour que les niveaux soient en Français, dans cet ordre (Alluvial, Grès <em>(Sandstone)</em> et Dunaire <em>(Heath)</em>).</li>
+<li>Transformer la colonne Profondeur en facteur pour que les niveaux soient dans l’ordre “0-5 cm”, “5-20 cm”, “20-35 cm”.</li>
+</ol>
+<p>Le résultat sera stocké dans un objet <code>sol_avec_na</code>.</p>
+<ol start="4" type="1">
+<li>Il existe des valeurs manquantes dans les colonnes <code>pH</code> et <code>Av.P</code>. Pour les lignes correspondantes, seules ces informations manquent. Afin d’éviter de supprimer la ligne entière (et donc toutes les autres mesures pour ce site), remplacer dans <code>sol_avec_na</code> chaque valeur manquante par la moyenne de sa quantité, pour le type de sol correspondant.</li>
+</ol>
+<p>Stocker le résultat dans un objet <code>sol_propre</code>.</p>
+<ol start="5" type="1">
+<li>On veut maintenant créer un tableau où il y a une seule ligne par site, afin de le joindre avec la table des abondances. Pour cela, plusieurs options s’offrent à nous:</li>
+</ol>
+<ul>
+<li>Option <strong>choix d’une profondeur</strong>: avec la fonction <code>filter()</code>, stocker dans un tableau <code>sol_superficiel</code> le tableau ne comprenant que la profondeur 0-5 cm. Dans ce tableau, on aura supprimé la colonne <code>Profondeur</code> (avec <code>select(-Profondeur)</code>).</li>
+<li>Option <strong>moyenne</strong>: avec les fonctions <code>group_by()</code> et <code>summarise_if()</code>, créer un tableau <code>sol_moyen</code> où chaque ligne est la moyenne (pour les colonnes numériques) des caractéristiques par site.</li>
+</ul>
+<p>Créer ces deux tableaux à partir de <code>sol_propre</code>.</p>
+<ol start="6" type="1">
+<li>A partir du jeu de données <code>abondance_initial</code>, effectuer les nettoyages suivants, et stocker le résultat dans un jeu de données <code>abondance_propre</code>:</li>
+</ol>
+<ol type="a">
+<li>Renommer La colonne <code>Name</code> en <code>Site</code>.</li>
+<li>Cette colonne <code>Site</code> contient le nom des sites, qui est commun avec le tableau <code>sol_propre</code> traité dans la partie précédente. Malheureusement, ici, la lettre finale est séparée des chiffres par un espace au lieu d’un <code>_</code>. Modifier cette colonne <code>Site</code> en remplaçant les espaces par des <code>_</code> (on utilisera la fonction <code>str_replace()</code>).</li>
+</ol>
+<ol start="7" type="1">
+<li>A l’aide la fonction <code>pivot_longer()</code>, transformer <code>abondance_propre</code> en un tableau au format long (que l’on nommera <code>abondance_long</code>), c’est à dire comportant 3 colonnes:</li>
+</ol>
+<ul>
+<li>La colonne <code>Site</code>.</li>
+<li>Une nouvelle colonne <code>Espece</code> qui contiendra le noms de toutes les espèces présentes auparavant.</li>
+<li>Une nouvelle colonne <code>NbIndividus</code> qui contiendra, pour un site et une espèce donnée, le nombre d’individus correspondant.</li>
+</ul>
+<ol start="8" type="1">
+<li>A partir du tableau <code>abondance_long</code>, créer le tableau <code>richesse_par_site</code> de la manière suivante.</li>
+</ol>
+<ul>
+<li>Sélectionner simplement les lignes où le nombre d’individus comptés est supérieur à 0.</li>
+<li>De cette sélection, compter pour chaque site la densité d’arbres sur ce site, à savoir le nombre d’individus total (toutes espèces confondues), divisé par 400 (<span class="math inline">\(\mathrm{m}^2\)</span>), la surface de chaque site. Cette information sera stockée dans une colonne <code>densite_arbre</code>. De plus, on veut compter le nombre d’espèces recensées pour lesquelles on a compté au moins un individu (dans une colonne <code>richesse_specifique</code>).</li>
+</ul>
+<ol start="9" type="1">
+<li>Créer un tableau <code>donnees_richesses</code> qui, pour chaque site présent à la fois dans <code>richesse_par_site</code> et <code>sol_superficiel</code>, donne toutes les caractéristiques du site.</li>
+</ol>
+<p>Faire cette jointure à l’aide des fonctions <code>left_join()</code> et <code>inner_join()</code>. Quelle jointure doit on garder? Stocker le résultat dans <code>donnees_richesses</code>.</p>
+<ol start="10" type="1">
+<li>A l’aide de la fonction <code>save()</code>, enregistrer les tableaux crées précédemment dans un fichier <em>Borneo.Rdata</em>. <strong>Ces données seront réutilisées dans le prochain TD</strong>.</li>
+</ol>
 
 
 </section>
