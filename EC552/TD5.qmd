@@ -1,0 +1,524 @@
+---
+title: "TD5 : Graphiques avec `ggplot2`"
+number-sections: true
+number-depth: 2
+number-offset: 0
+---
+
+On s'intéresse dans ce TD à certaines représentations graphiques pouvant être réalisées en R.
+
+La plupart de ces graphiques peuvent être réalisés avec les packages de base, mais le package `ggplot2`, disponible avec la collection `tidyverse` permet d'élaborer des graphiques visuellement beaucoup plus satisfaisants.
+
+On le charge dans R avec
+
+```{r}
+library(ggplot2)
+```
+
+ou bien
+
+```{r eval=TRUE}
+library(tidyverse)
+```
+# Graphiques univariés
+
+## Pour une variable qualitative
+
+-   On peut représenter une variable qualitative (*i.e. un facteur*) par un *diagramme en barres*.
+
+Par exemple, avec le jeu de données `mtcars`, on peut représenter le nombre de voitures correspondant à chaque cylindrée.
+
+```{r eval=TRUE}
+data("mtcars")
+
+ggplot(mtcars)+
+  aes(x = factor(cyl))+
+  geom_bar()+
+  labs(x="Nb cylindres",
+       y="Nb voitures",
+       title = "Diagramme en barres")
+```
+
+***Remarque :*** Un graphique ggplot commence toujours par la même fonction du même nom, dans laquelle on indique le data-frame contennt les données (*obligatoirement un data-frame !*) et `aes` (*Aesthetic*) qui décrit les données considérées par le graphique. On ajoute ensuite les fonctions correspondnat au graphique souhaité.
+
+-   Ici, `geom_bar()` est la fonction permettant d'effectuer le diagramme en barres.
+-   La fonction `labs()` permet d'ajouter des titres aux axes et au graphique.
+
+On peut aussi paramétrer le fond du graphique :
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x=factor(cyl))+
+  geom_bar()+
+  labs(title="Diagramme en barres",
+    x="Nb cylindres",
+    y="Nb voitures")+
+  theme_minimal() # Fond du graphique
+```
+
+-   On peut aussi représenter une variable qualitative par un **diagramme circulaire** (*pie chart*).
+
+```{r eval=TRUE}
+# On crée un data-frame ou l'on compte le nombre de voitures pour chaque cylindrée
+# puis on calcule le pourcentage de ces véhicules
+cyl_count <- as.data.frame(table(mtcars$cyl)) %>% 
+  rename(Nb_cyl=Var1) %>%
+  mutate(Prop=round(Freq/sum(Freq),digits=2)) # arrondi à 0.01%
+
+# On crée le diagramme circulaire
+ggplot(cyl_count)+
+  aes(x=Prop,y="",fill=Nb_cyl)+ # fill spécifie la couleur de remplissage
+  geom_bar(stat="identity")+ 
+  coord_polar("x")+ # On spécifie que le diagramme sera circulaire
+  geom_text(aes(label=paste(Prop,"%")), # On rajoute les proportions
+            position = position_stack(vjust = 0.5))+ # On précise l'emplacement du texte
+  labs(title="Proportions du parc automobile en fonction de la cylindrée")+
+  theme_void()
+```
+
+On peut aussi modifier le titre de la légende, ou changer les couleurs afin qu'elles soient adaptées aux personnes daltoniennes.
+
+```{r eval=TRUE}
+ggplot(cyl_count)+
+  aes(x=Prop,y="",fill=Nb_cyl)+ 
+  geom_bar(stat="identity")+
+  scale_fill_viridis_d()+ # changement de la palette de couleurs
+  coord_polar("x")+ 
+  geom_text(aes(label=paste(Prop,"%")),colour="grey40",
+            position=position_stack(vjust = 0.5))+
+  labs(title="Proportions du parc automobile en fonction de la cylindrée")+
+  theme_void()+
+  guides(fill=guide_legend(title = "Nombre de cylindres")) # modification de la légende
+```
+
+***Remarques :***
+
+-   De nombreuses possibilités existent pour le choix des couleurs, et le web regorge de ressources pour s'y retrouver.
+
+-   Certains packages comme `RColorBrewer` ou `wesanderson` permettent un plus grand choix de couleurs (et plus joli) que celles incluses de base dans `ggplot2`.
+
+## Pour une variable quantitative
+
+-   On peut représenter les valeurs prises par une variable quantitative sous forme d'**histogramme**.
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x=wt)+
+  geom_histogram(bins = 10, # Nombre de classes
+                 alpha=0.8, # Pour gérer l'opacité
+                 fill="skyblue", # couleur de remplissage
+                 colour="black")+ # couleur du bord
+  theme_bw()+
+  labs(title = "Distribution du poids des voitures",
+       x="Poids (1000 lbs)",
+       y="Effectifs")
+```
+
+-   On peut représenter la même variable point par point.
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x="",y=wt)+
+  geom_jitter(width = 0.1)+
+  theme_minimal()+
+  labs(y="Poids (1000 lbs)",
+       x="",
+       title = "Poids des voitures")
+```
+
+-   On peut enfin représenter cette variable avec un **boxplot**.
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x="",y=wt)+
+  geom_boxplot(width=0.1)+
+  theme_minimal()+
+  labs(title = "Distribution du poids des voitures",
+       x="",
+       y="Poids (1000 lbs)")
+```
+
+***Remarques :***  - Les valeurs en-dehors des *moustaches* sont considéreés comme anormales, ou *outliers*. Elles sont ii représentées par les points. - On peut superposer les valeurs prises par la variable au boxplot.
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x="",y=wt)+
+  geom_boxplot(width=0.1,outliers = FALSE)+ # On n'affiche pas les outliers
+  geom_jitter(width = 0.02,color="tomato")+
+  theme_minimal()+
+  labs(title = "Distribution du poids des voitures",
+       x="",
+       y="Poids (1000 lbs)")
+```
+
+# Graphiques bivariés
+
+## Variable quantitative en fonction d'une variable qualitative
+
+### Pour les boxplots
+
+On peut représenter la distribution du poids des voitures en fonction de la cylindrée.
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x=as.factor(cyl),y=wt)+
+  geom_boxplot(width=0.5)+
+  geom_jitter(width=0.1)+
+  labs(title = "Disribution du poids des voitures",
+       x="Nombre de cylindres",
+       y="Poids (1000 lbs)")+
+  theme_minimal()
+  
+```
+
+### Pour les histogrammes
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x = wt,fill=as.factor(cyl))+
+  geom_histogram(bins=10,position = "identity",alpha=0.7,color="black")+
+  scale_fill_brewer(palette = "Set2")+
+  labs(title = "Distribution du poids des voitures",
+       x="Poids",
+       y="Effectifs")+
+  guides(fill=guide_legend(title = "Nombre de cylindres"))+
+  theme_minimal()
+```
+***Remarque :*** Il est aussi possible de faire un histogramme pour chaque cylindrée avec la fonction `facet_grid()`.
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x = wt,fill=as.factor(cyl))+
+  geom_histogram(bins=10,position = "identity",alpha=0.7,color="black")+
+  facet_grid(~cyl)+
+  scale_fill_brewer(palette = "Set2")+
+  labs(title = "Distribution du poids des voitures",
+       x="Poids",
+       y="Effectifs")+
+  guides(fill=guide_legend(title = "Nombre de cylindres"))+
+  theme_minimal()
+```
+
+## Variable quantitative en fonction d'une autre variable quantitative
+
+Il s'agit essentiellement de faire un **nuage de points**. Par exemple, on peut représenter la consomation des véhicules en fonction de leur poids.
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x=wt,y=mpg)+
+  geom_point(color="tomato")+
+  theme_bw()+
+  labs(title="Consommation des véhicules en fonction de leur poids",
+       x="Poids (1000 lbs)",
+       y="Consommation (mpg)")
+```
+
+
+## Variable qualitative en fonction d'une autre variable qualitative
+
+- On peut à nouveau réaliser un diagramme en barres. Dans l'exemple suivant, on représente le nombre de voitures par cylindrée et par type de transmission.
+
+```{r eval=TRUE}
+ggplot(mtcars)+
+  aes(x=as.factor(cyl),fill=factor(am,levels = c(0,1),labels=c("Automatique","Manuelle")))+
+  geom_bar()+
+  scale_fill_brewer(palette = "Set2")+
+  labs(title = "Nombre de voitures par clindrée et transmission",
+       x="Nombre de cylindres",
+       y="Effectifs")+
+  theme_minimal()+
+  guides(fill=guide_legend(title = "Transmission"))
+```
+
+A partir d'une table de contingence adaptée, on peut rajouter les effectifs sur le diagramme.
+
+```{r eval=TRUE}
+mtcars_table <- mtcars %>%
+  group_by(cyl,am) %>%
+  summarise(Counts=n()) %>%
+  ungroup()# On compte le nombre de lignes pour chaque groupement
+
+ggplot(mtcars_table)+
+  aes(x=as.factor(cyl),
+      y=Counts,
+      fill=factor(am,levels = c(0,1),labels=c("Automatique","Manuelle")))+
+  geom_bar(stat = "identity")+
+  scale_fill_brewer(palette="Set2")+
+  labs(title = "Nombre de voitures par clindrée et transmission",
+       x="Nombre de cylindres",
+       y="Effectifs")+
+  theme_minimal()+
+  guides(fill=guide_legend(title = "Transmission"))+
+  geom_text(aes(label=Counts),position = position_stack(vjust=0.5))
+```
+
+- Une autre possibilité est de représentée les barres "côte à côte".
+
+```{r eval=TRUE}
+ggplot(mtcars_table)+
+  aes(x=as.factor(cyl),
+      y=Counts,
+      fill=factor(am,levels = c(0,1),labels=c("Automatique","Manuelle")))+
+  geom_bar(stat = "identity",position = position_dodge())+
+  scale_fill_brewer(palette="Set2")+
+  labs(title = "Nombre de voitures par clindrée et transmission",
+       x="Nombre de cylindres",
+       y="Effectifs")+
+  theme_minimal()+
+  guides(fill=guide_legend(title = "Transmission"))+
+  geom_text(aes(label=Counts),nudge_y = -1,nudge_x = c(-0.2,0.2))
+```
+- On peut enfin effectuer le même type de diagramme en barres avec les proportions
+
+```{r eval=TRUE}
+mtcars_table <- mtcars_table %>%
+  group_by(cyl) %>%
+  mutate(Freq = round(100*Counts/sum(Counts),digits=2)) %>%
+  ungroup()
+
+ggplot(mtcars_table)+
+  aes(x=as.factor(cyl),
+      y=Freq,
+      fill=factor(am,levels=c(0,1),labels=c("Automatique","Manuelle")))+
+  geom_bar(stat = "identity")+
+  scale_fill_viridis_d()+
+  geom_text(aes(label = paste(Freq,"%")),
+            position = position_stack(vjust = 0.5),
+            colour="grey45")+
+  labs(title = "Proportion de véhicules par cylindrée et transmission",
+       x="Nombre de cylindres",
+       y="Pourcentage")+
+  guides(fill=guide_legend(title = "Transmission"))+
+  theme_minimal()
+
+```
+
+# Exercices
+
+## Exercice 1
+
+1. Importer le jeu de données *temperatures.xlsx* disponible sur Connect, et nettoyer le jeu de données du mieux possible.
+
+Ce jeu de données contient des données de températures moyennes pour plusieurs grandes villes européennes.
+
+*Remarque : on pourra utiliser la fonction `mutate_at()` pour modifier des colonnes spécifiques.*
+
+```{r echo=FALSE, eval=TRUE}
+library(readxl)
+temp <- read_xlsx("temperatures.xlsx")
+temp <- temp %>%
+  mutate(Région=as.factor(Région)) %>%
+  mutate_at(.vars=2:17,.funs = as.numeric)
+```
+
+2. Reproduire le grpahique suivant :
+
+```{r echo=FALSE, eval=TRUE}
+ggplot(temp)+
+  aes(x = Longitude,y=Latitude)+
+  geom_point(pch=19,size=2,color="tomato")+
+  geom_text(aes(label = Ville),position = position_nudge(x=0,y=0.7))+
+  theme_minimal()+
+  labs(title = "Position géographique des villes")
+```
+3. Représenter les températures mensuelles moyennes pour les trois villes : Londres, Rome et Minsk.
+
+*Aide :* 
+
+- *On pourra utliser la fonction `geom_line()`.*
+- *On modifiera le data-frame initial pour ne conserver que les températures souhaitées, en rajoutant une colonne `Nb_mois` indiquant le numéro du mois.*
+- *On pourra utiliser la fonction `scale_x_discrete()` pour ré-arranger la grille*.
+- *On pourra s'aider de l'aide trouvée sur le web... comme souvent pour les graphiques sur R !*
+
+```{r echo=FALSE, eval=TRUE}
+evol_temp <- temp %>%
+  select(-c(Moyenne,Amplitude,Latitude,Longitude,Région)) %>%
+  pivot_longer(cols = -Ville,names_to = "Mois",values_to = "Temperature") %>%
+  filter(Ville %in% c("Londres","Rome","Minsk")) %>%
+  group_by(Ville) %>%
+  mutate(Nb_Mois=1:12) %>%
+  ungroup()
+
+ggplot(evol_temp)+
+  aes(x=Nb_Mois,y=Temperature,colour = Ville)+
+  geom_line(linewidth = 1)+
+  geom_point()+
+  theme_bw()+
+  labs(title="Températures annuelles",
+       x="",
+       y="Température (°C)")+
+  scale_x_discrete(limits=as.factor(1:12),
+                   labels=colnames(temp)[2:13])+
+  theme(axis.text.x = element_text(angle=45,vjust = 0.6))
+
+```
+
+## Exercice 2
+
+On travaille ici à nouveau avec le jeu de données *bordeaux.csv*, disponible sur Connect.
+
+On cherche à étudier l’éventuelle relation entre la qualité du vin et certaines variables météorologiques. Les variables sont les suivantes : 
+
+- *Temperature* : somme des températures moyennes journalières;
+- *Insolation* : durée d’insolation;
+- *Chaleur* : nombre de jours de grande chaleur;
+- *Pluie* : hauteur des pluies;
+- *Y*: qualité du vin, 1 (Bon), 2 (Moyen), 3 (Médiocre).
+```{r echo=FALSE, eval=TRUE}
+bordeaux <- read.csv("bordeaux.csv",row.names = 1)%>%
+  select(-Y1) %>%
+  mutate(Y = factor(Y,
+                    levels = c(1,2,3),
+                    labels=c("Bon","Moyen","Médiocre")))
+```
+
+1. Réaliser les boxplots des variables *Temperature* et *Pluie* en fonction de la qualité du vin.
+
+*Remarqe : La ligne horizontale représente la moyenne globale de la variable (on utilisera la fonction `geom_abline()`).*
+
+```{r echo=FALSE, eval=TRUE}
+ggplot(bordeaux)+
+  aes(x=Y,y=Temperature)+
+  geom_boxplot()+
+  labs(x="Qualité du vin",
+       title = "Distribution des températures en fonction de la qualité du vin",
+       y="Température")+
+  theme_bw()+
+  geom_abline(intercept = mean(bordeaux$Temperature),
+              slope=0,
+              colour="tomato",linetype = "dashed",linewidth=0.8)
+```
+```{r echo=FALSE, eval=TRUE}
+ggplot(bordeaux)+
+  aes(x=Y,y=Pluie)+
+  geom_boxplot()+
+  labs(x="Qualité du vin",
+       title = "Distribution de la pluviométrie en fonction de la qualité du vin",
+       y="Pluie")+
+  theme_bw()+
+  geom_abline(intercept = mean(bordeaux$Pluie),
+              slope=0,
+              colour="tomato",linetype = "dashed",linewidth=0.8)
+```
+```{r echo=FALSE, eval=FALSE}
+# Pour mettre sur le même graphique
+bordeaux2 <- bordeaux %>%
+  select(Temperature,Pluie,Y) %>%
+  pivot_longer(cols=c(Temperature,Pluie),
+               names_to = "Type",
+               values_to = "Value")
+ggplot(bordeaux2)+
+  aes(y=Value,x=Y)+
+  geom_boxplot()+
+  labs(x="Qualité du vin",
+       title = "Distribution de la température et de la pluviométrie en fonction de la qualité du vin")+
+  theme_bw()+
+  facet_wrap(~Type)
+```
+
+2. Faire les 3 histogrammes de la variable *Chaleur* en fonction de la qualité du vin dans une même fenêtre graphique.
+
+```{r echo=FALSE, eval=TRUE}
+ggplot(bordeaux)+
+  aes(x=Chaleur)+
+  geom_histogram(alpha=0.5,bins = 5,colour="grey25",fill="skyblue")+
+  facet_wrap(~Y)+
+  labs(title = "Nombre de jours de frande chaleur en fonction de la qualité du vin",
+       y="Effectifs",
+       x="Nombre de jours de grande chaleur")+
+  theme_bw()
+```
+3. Créer une variable *Pluie_quali* correspondant à la variable *Pluie* et dont les modalités sont :
+
+  - `Faibles` lorsque la variable Pluie sera inférieure à sa médiane
+  - `Fortes` lorsque la variable Pluie sera supérieure ou égale à sa médiane.
+  
+*Indice : on pourra utiliser la fonction `cut()`.*
+
+```{r echo=FALSE, eval=TRUE,message=FALSE}
+bordeaux <- bordeaux %>%
+  mutate(Pluie_quali = cut(Pluie,breaks=c(min(Pluie),
+                                          median(Pluie),
+                                          max(Pluie)),
+                           include.lowest=TRUE,
+                           labels=c("Faibles","Fortes")))
+bordeaux4 <- bordeaux %>%
+  group_by(Pluie_quali,Y) %>%
+  summarise(Counts=n()) %>%
+  group_by(Y) %>%
+  mutate(Prop = round(100*Counts/sum(Counts),digits = 2)) %>%
+  ungroup()
+```
+
+
+4. Représenter la répartition de la qualité des vins en fonction des deux modalités `Faibles` et `Fortes`. On veillera ici à ce que les couleurs soient visibles par les personnes daltoniennes.
+
+```{r echo=FALSE, eval=TRUE}
+ggplot(bordeaux4)+
+  aes(x=Y,y=Prop,fill=Pluie_quali)+
+  geom_bar(stat = "identity")+
+  scale_fill_viridis_d(option = "C")+
+  geom_text(aes(label = paste(Prop,"%")),
+            position = position_stack(vjust = 0.5),
+            colour="grey40")+
+  labs(title = "Répartition de la qualité des vins",
+       x="Qualité des vins",
+       y="Pourcentage")+
+  guides(fill=guide_legend(title = "Pluie"))+
+  theme_bw()
+```
+5. Reproduire enfin le graphique suivant.
+
+```{r echo=FALSE,eval=TRUE}
+bordeaux5 <- bordeaux %>%
+  mutate(Year=rownames(bordeaux))
+ggplot(bordeaux5)+
+  aes(x=Temperature,y=Pluie,colour = Y)+
+  geom_point(size=-1)+
+  geom_text(aes(label = Year),show.legend =FALSE)+
+  theme_bw()+
+  labs(title = "Qualité des vins en fonction de la pluviométrie et de la température",
+       x="Température",
+       y="Pluviométrie")+
+  guides(colour=guide_legend(title = "Qualité du vin",override.aes = list(size=5)))
+```
+
+## Exercice 3
+
+On récupère ici les données créees au TD précdent dans le fichier *Borneo.Rdata*.
+
+```{r}
+load("Borneo.Rdata")
+```
+
+
+1. A partir de `donnees_richesses`, représenter graphiquement *densite_arbre* en fonction de *richesse_specifique*. On coloriera selon le type de sol.
+
+2. Renommer les axes en français, et mettre un titre.
+
+3. Dans le jeu de données `sol_propre`, faire un boxplot de la distribution du total de cations echangeables `Exc.Cations` en fonction des différents types de sol.
+
+4. Sur ce même graphique, dans la commande `aes()`, rajouter la commande `fill = Profondeur` pour inclure l’information de la profondeur dans la distribution.
+
+5. Sur trois graphiques différents (grâce à `facet_grid()`ou `facet_wrap()`), représenter les histogrammes de la distribution du phospore (colonne `NO3`).
+
+6. Modifier le graphique précédent afin de réaliser des histogrammes différents selon la profondeur.
+
+7. **Heat map** Avec les données `abondance_genre_metasite` on va faire une représentation de la **matrice d’abondance**. On aura en abscisse les espèces, en ordonnée les sites, et dans les cases une couleur donnant le nombre d’arbres pour chaque espèce. Séquentiellement:
+
+  - Représenter `abondance_genre_metasite` avec `ggplot(abondance_genre_metasite)`
+  
+  - Ajouter `aes(x = Genre, y = MetaSite, fill = NbArbres)` 
+  
+  - Ajouter la commande `geom_raster()`.
+  
+8. Sur le graphique précédent, ajouter (comme dans le section 9.1):
+
+```{r,eval=FALSE}
+theme(legend.position = "none", # pas de légende
+      # Pour le texte en abscisses
+      axis.text.x = element_text(angle = 90, # Mise du texte en vertical
+                                 size = 6), # Taille police
+      # Pour le texte en ordonnées
+      axis.text.y = element_text(size = 7)) # Taille police
+```

@@ -1,0 +1,431 @@
+---
+title: "TD4 : Manipulations de data-frames avec `dplyr`"
+number-sections: true
+number-depth: 2
+number-offset: 0
+---
+
+# Les packages `dplyr` et `tidyverse`
+
+-   Le package `dplyr` permet de manipuler facilement les données, notamment les data-frames.
+
+-   Il fait partie de l'ensemble de packages `tidyverse`, regroupant également le package `ggplot2`. Ce dernier permet de réaliser des graphiques sophistiqués à l'esthétique soignée *(voir TD5)*.
+
+```{r eval=TRUE}
+library(tidyverse)
+```
+
+# Le format `tibble`
+
+-   Il s’agit là d’une version plus moderne du format `data.frame`. N’importe quel data-frame peut naturellement être converti en format `tibble`.
+
+```{r eval=TRUE}
+data("iris")
+class(iris)
+iris_tibble <- as_tibble(iris)
+class(iris_tibble)
+```
+
+-   La création d’un `tibble` se fait assez naturellement :
+
+```{r eval=TRUE}
+Notes <- tibble("Nom"=c("Alice","Bob","Charles"),
+                "Notes"=c(16,8,9))
+```
+
+-   Contrairement au format `data.frame`, l’extraction d’une colonne ne renvoie pas un vecteur, mais un `tibble` :
+
+```{r eval=TRUE}
+class(Notes[,"Notes"])
+```
+
+# Le "pipe"
+
+-   Il s’agit de la commande `%>%`, qui ouvre un canal d’instructions séquentielles.
+
+-   Le pipe est notamment utilisé pour effectuer une sucession d’instructions données, en particulier afin de manipuler les données.
+
+## Un exemple
+
+-   Utilisons le jeu de données `diamonds`, dont on affiche ici les premières lignes.
+
+```{r eval=TRUE}
+data("diamonds")
+head(diamonds)
+```
+
+-   Supposons que l’on souhaite calculer le prix moyen des diamants dont la coupe satisfait `cut==Good` et la couleur satisfait `color=="E"`.
+
+On peut effectuer la succession d’instructions suivante :
+
+```{r eval=TRUE}
+cond <- diamonds$cut == "Good" & diamonds$color == "E"
+sub_diamonds <- diamonds[cond,]
+mean(sub_diamonds$price)
+```
+
+Ce qui peut aussi s’écrire en une ligne :
+
+```{r eval=TRUE}
+mean(diamonds[diamonds$cut=="Good" & diamonds$color=="E",]$price)
+```
+
+-   Le “pipe” permet d’effectuer cette succesion d’instruction de façon plus lisible en utilisant les fonctions `filter()` et `select()` du package `dplyr` :
+
+```{r eval=TRUE}
+diamonds %>% filter(cut == "Good" & color == "E") %>%
+  pull(price) %>%
+  mean()
+```
+
+-   En résumé, pour une fonction `f()` :
+    -   `x %>% f()` est équivalent à `f(x)`;
+    -   `x %>% f(y)`est équivalent à `f(x,y)`.
+
+## Un exercice
+
+En utilisant les fonctions `select()`, `filter()`, et `rename()`, créer un nouveau data-frame issu de `diamonds` ne contenant que les diamants dont le carat est supérieur à 0.5, la coupe égale à "Premium" et la couleur égale à "D". On ne conservera que les colonnes *carat* et *price*, et on renommera les colonnes en Français.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Voir la correction"
+diamonds_small <- diamonds %>%
+  filter(carat > 0.5 & cut=="Premium") %>%
+  select(carat,price) %>%
+  rename(Carat=carat,Prix=price)
+```
+
+# Quelques fonctions utiles
+
+## La fonction `mutate()`
+
+-   Elle permet de définir de nouvelles colonnes (*ou de modifier des colonnes existantes*) dans un data-frame, qui seront le résultat d’un calcul.
+
+-   Par exemple dans le data-frame `mtcars`, la consommation des voitures est exprimée en *mpg* (miles per galon). Si on veut l’exprimer en *L/100km*, alors on utilise *L/100 km* = *282.48/mpg* :
+
+```{r eval=TRUE}
+data("mtcars")
+
+mtcars <- mtcars %>%
+  mutate("L/100km" = 282.48/mpg) %>%
+  round(1)
+```
+
+## Les fonctions `group_by()` et `summarise()`
+
+-   De façon régulière, on est amené à calculer certaines statistiques dépendant de groupes. La fonction `group_by()` permet ce regroupement.
+
+-   La fonction `summarise()` permet quant à elle de créer un `tibble` à partir des opérations effectuées.
+
+***Exemple***
+
+A partir du data-frame `mtcars`, on souhaite calculer la consommation moyenne des véhicules ainsi que l'écart-type de ces consommations, en fonction de la cylindrée et du mode de transmission des véhicules.
+
+```{r eval=TRUE}
+df <- mtcars %>%
+  group_by(cyl,am) %>%
+  summarise(M = mean(`L/100km`),
+            SD = sd(`L/100km`)) %>%
+  ungroup()
+```
+
+***Remarque :*** Il est important de “dégrouper” le `tibble` une fois les manipulations effectuées avec la fonction `ungroup()`. Dans le cas contraire, tous les calculs suivants effectués sur le `tibble` se feraient selon les groupes effectués.
+
+***Exercice***
+
+A partir du jeu de données `diamonds` :
+
+1.  Renommer les variables *x*, *y* et *z* par *length*, *width* et *height*;
+2.  Convertir ces valeurs en cm, et non en mm;
+3.  Créer un objet `diamonds_modif` contenant ces trois colonnes ainsi que les colonnes *color*, *cut*, *carat* et *price*, où l’on ne conserve que les découpes *Premium* ou *Ideal*.
+4.  Pour chaque combinaison *cut/color*, calculer la moyenne des trois variables *length*, *width* et *height*. Stocker ce résumé dans un objet `diam_summary`.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Voir la correction"
+
+diamonds_modif <- diamonds %>%
+  rename(length=x,width=y,height=z) %>%
+  mutate(length = length/10,width=width/10,height=height/10) %>%
+  select(height,width,length,color,cut,carat,price) %>%
+  filter(cut=="Premium" | cut=="Ideal")
+
+diam_summary <- diamonds_modif %>% 
+  group_by(cut,color) %>%
+  summarise(mean_length = mean(length),
+            mean_width = mean(width),
+            mean_height = mean(height)) %>%
+  ungroup()
+```
+
+# Nettoyage des données
+
+Un jeu de données peut être considéré comme “propre” s’il satisfait les 3 règles suivantes :
+
+-   chaque variable possède sa propre colonne ;
+-   chaque observation possède sa propre ligne ;
+-   chaque valeur possède sa propre cellule.
+
+## Un exemple
+
+Considérons le jeu de données ci-dessous.
+
+```{r eval=TRUE}
+grades <- tibble(
+  Name = c("Tommy", "Mary", "Gary", "Cathy"),
+  Sex_Age = c("m_15", "f_15", "m_16", "f_14"),
+  Test1 = c(10, 15, 16, 14),
+  Test2 = c(11, 13, 10, 12),
+  Test3 = c(12, 13, 17, 10)
+  )
+```
+
+Ce jeu de données n’est pas “propre”. La colonne `Sex_Age` réunit deux variables. D’autre part, il y a trois colonnes *tests*, ce qui peut être le résultat souhaité, mais on pourrait aussi vouloir une variable *Grade* donnant la note obtenue, dépendant du test effectué.
+
+### Séparer les colonnes avec `separate()`
+
+La colonne Sex_Age doit être séparée en deux.
+
+```{r eval=TRUE}
+grades_s_a <- grades %>%
+  separate(col=Sex_Age,into=c("Sex","Age"),sep="_")
+```
+
+***Remarque :*** l'inverse de la fonction `separate()`est la fonction `unite()`.
+
+### Rassembler les colonnes avec `pivot_longer()`
+
+Supposons que la variable d’intérêt soit la note obtenue aux différents contrôles.
+
+Dans `grades_s_a`, cette variable est encodée dans trois colonnes. On préfère ici les rassembler en une seule colonne, et spécifier le numéro du test dans une autre colonne. Le jeu de données obtenu aura alors un format plus long, mais qui sera peut-être plus adapté à nos besoins.
+
+```{r eval=TRUE}
+grades_long <- grades_s_a %>%
+  pivot_longer(cols=starts_with("Test"), # On sélectionne les colonnes à assembler
+               names_to = "Test",        # Nom de la colonne rassemblant les anciens noms
+               values_to = "Grade")      # Nom de la collone rassemblant les valeurs
+```
+
+***Remarque :*** l'inverse de la fonction `pivot_longer()`est `pivot_wider()`.
+
+Un format plus long comme obtenu précédemment est souvent plus adapté pour résumer les données. Par exemple, si on veut la moyenne des notes obtenues par test et pour chaque sexe :
+
+```{r eval =TRUE}
+grades_summary <- grades_long %>%
+  group_by(Sex,Test) %>%
+  summarise(Mean = mean(Grade)) %>%
+  ungroup()
+```
+
+## Un exercice
+
+1.  Importer le data-frame contenu dans le fichier **tauxchomage.csv** disponible sur Connect *(à télécharger, et à placer dans le bon répertoire)*.
+2.  Ce fichier contient les taux de chômage par département en 2001, 2006 et 2011. A l'aide de la fonction `pivot_longer()`, créer un objet `taux_chomage_long` avec une colonne contenant tous les taux de chômage, et une colonne précisant les années pour chaque département.
+
+```{r}
+#| code-fold: true
+#| code-summary: "Voir la correction"
+
+taux_chomage <- read.csv("tauxchomage.csv",
+                         sep=";")
+taux_chomage_long <- taux_chomage %>%
+  pivot_longer(cols = starts_with("TCHOM"),
+               names_to = "Année",
+               values_to = "Taux_Chômage") %>%
+  mutate(Année= fct_recode(Année,          # Recodage de la variable Année pour plus de lisibilité
+                           "2001"="TCHOMB1T01",
+                           "2006"="TCHOMB1T06",
+                           "2011"="TCHOMB1T11"))
+```
+
+# Traitement des données manquantes
+
+Il arrive parfois que certaines données soient manquantes.
+
+```{r eval=TRUE}
+
+notes <- tibble(Nom = c("Alain", "Alain", "Benoît", "Claire"),
+                Discipline = c("Maths", "Francais", "Maths", "Francais"),
+                Note = c(16, 9, 17, 11),
+                Present = rep("oui", 4))
+notes
+```
+
+Ici par exemple, Benoît n'a pas de note en Français.
+
+## Compléter un data-frame avec `complete()`
+
+On peut vouloir compléter les données de manière à ce que chaque couple *Nom/Discipline* ait une note.
+
+```{r eval=TRUE}
+notes <- notes %>%
+  complete(Nom,Discipline)
+```
+
+La valeur d'attribtution par défaut est alors `NA`, mais on peut choisir ces valeurs.
+
+```{r eval=TRUE}
+notes <- notes %>%
+  complete(Nom,Discipline,
+           fill = list(Note=0,Present="non"))
+```
+
+## Remplacer les `NA` avec `replace_na()`
+
+Considérons le tableau suivant qui possède des données manquantes, codées comme `NA`.
+
+```{r eval=TRUE}
+donnees_na <- tibble(Groupe = rep(c("A", "B"), each = 3),
+       Nom = c("Al", "Bob", NA, "Dave", "Elle", "Fanch"),
+       Note = c(NA, 8, 7, 4.5, 1, 4))
+donnees_na
+```
+
+On peut utiliser la fonction `replace_na()`pour remplacer les données manquantes par les valeurs souhaitées.
+
+```{r eval=TRUE}
+donnees_na1 <- donnees_na %>%
+  replace_na(replace = list(Nom = "Inconnu",
+                            Note=0))
+donnees_na1
+```
+
+Il est à noter que la fonction `replace_na()` peut servir pour remplacer les `NA` d'une colonne spécifique. Pour les des valeurs numériques, il est assez courant de remplacer les valeurs manquantes par la moyenne de la colonne.
+
+Reprenons l'exemple précédent.
+
+```{r eval=TRUE}
+donnees_na2 <- donnees_na %>%
+  mutate(Nom=replace_na(Nom,replace="Inconnu"),
+         Note=replace_na(Note,replace = mean(Note,na.rm=TRUE))) 
+
+# On retire ici les valeurs NA pour calculer la moyenne
+donnees_na2
+```
+
+# Exercices
+
+## Exercice 1
+
+***Remarque :*** Dans la mesure du possible, on s'efforcera d'effectuer l'ensemble des manipulations ci-dessous via un seul canal d'instructions *(pipe)*.
+
+1.  Importer le data-frame contenu dans le fichier **birds_scandinavia.csv** disponible sur Connect. Ce jeu de données provient de l'article *Species composition and population fluctuations of alpine bird communities during 38 years in the scandinavian mountain range* de S. Svensson (2006). Dans cette étude, on compte le nombre d'oiseaux migrateurs revenant chaque année à certaines locations.
+
+2.  Modifier le data-frame afin qu'il contienne uniquement l'année, le nombre d'oiseaux comptés, le nom de l'espèce, la latitude et la longitude des observations. On renommera l'espèce par `SPECIES == GENUS_SPECIES`, et avec la fonction `arrange()`, on triera le data-frame en fonction des années.
+
+3.  Certaines espèces peuvent être aperçues à différents endroits. Modifier la colonne *ABUNDANCE* afin qu'elle contienne uniquement le nombre total d'individus observé par année pour chaque espèce.
+
+4.  Pour chaque année, créer une colonne *TOTAL_ABUNDANCE* donnant le nombre total d'oiseaux observés.
+
+5.  Créer ensuite une colonne *ABUNDANCE_REL* donnant par année l'**abondance relative** de chaque espèce, i.e. le pourcentage de chaque espèce dans la population totale *(on arrondira à 2 chiffres après la virgule)*.
+
+6.  Dans un obet `birds_summary`, donner pour chaque espèce le nombre moyen d'oiseaux observés chaque année, ainsi que l'abondance relative moyenne. On triera ce jeu de données en fonction de l'abondance relative, dans un ordre décroissant.
+
+## Exercice 2
+
+***Remarque :*** Dans la mesure du possible, on s'efforcera d'effectuer l'ensemble des manipulations ci-dessous via un seul canal d'instructions *(pipe)*.
+
+1.  Importer le data-frame contenu dans le fichier **cirrhosis.csv** disponible sur Connect. Il est également disponible sur <a href ="https://archive.ics.uci.edu/dataset/878/cirrhosis+patient+survival+prediction+dataset-1" target="_blank"> cette page </a> *(Source : Fleming, Thomas R., and David P. Harrington. Counting processes and survival analysis. Vol. 625. John Wiley & Sons, 2013)*, où l'on trouvera une description des variables d'intérêt.
+
+De façon générale, ce jeu de données recense des informations médicales sur 418 patients souffrant d'une cirrhose, ayant reçu un traitement expérimental, un placebo, ou n'ayant rien reçu.
+
+Combien de valeurs manquantes le data-frame compte-t-il ?
+
+2. A l'aide des fonctions `mutate()`et `mutate_if()`, transformer toutes les colonnes nécessaires en facteurs, ainsi que la colonne *Stage*.
+
+3. Remplacer les valeurs manquantes de la colonne *Drug* par la valeur `"None"`. *On pourra utiliser la fonction `fct_na_value_to_level()`*.
+
+4. Remplacer toutes les valeurs manquantes des autres variables catégorielles *(i.e. facteurs)* par `"Unknown"`.
+
+5. Efectuer un résumé statistique du data-frame.
+
+Afin d'éviter de compter des valeurs `Unknown` dans les variables n'en présentant aucune *(par exemple `Drug`)*, on re-transformera en facteurs toutes les variables catégorielles.
+
+Effectuer à nouveau un résumé statistique du data-frame, et comparer avec le résumé précédent.
+
+6. Remplacer ensuite les valeurs manquantes des variables numériques par les moyennes de ces variables *(plus difficile, chercher des solutions sur le web si nécessaire)*.
+
+7. Vérifier que le data-frame ne contient plus aucune valeur manquante.
+
+8. Créer un data-frame donnant les moyennes de la concentration en Bilirubine, ainsi que la quantité quotidienne moyenne de cuivre dans les urines pour chaque type de traitement et chaque stade de la maladie.
+
+9. Commenter les effets du traitement proposé sur ces valeurs.
+
+## Exercice 3
+
+Les données sont ici inspirées de l’article *Differences in soil properties among contrasting soil types in northern Borneo*, de G. Sellan et al (2020). Elles ont été modifiées à des fins pédagogiques, et ne représentent donc pas de réalité biologique dans le cadre de cet exercice.
+
+On s’intéresse ici aux caractéristiques physico-chimiques de sols tropicaux à Bornéo. On a mesuré, sur 180 sites, en 3 profondeurs différentes, des caractéristiques chimiques sur 539 échantillons ($180 \times 3$, auquels se soustrait une mesure manquante). Les 18 caractéristiques mesurées sont les suivantes:
+
+  - Teneurs en sodium, Magnésium, Calcium, Potassium échangeables (`Exc.Na`, `Exc.Mg`, `Exc.Ca`, `Exc.K`)
+  - Teneur en eau (colonne `MC`),
+  - Phosphore `P`, Carbone `C` et Azote `N`,
+`pH` et Aluminium et Acidité échangeable `Exc.Al`, `Exc.Ac`, Saturation en bases(`BS`)
+  - Effective Cation Exchange Capacity (`ECEC`)
+  - Nitrates `NO3`, Ammonium `NH4`
+  - Pourcentage d’argile `Clay`, de limon `Silt` et de sable `Sand`.
+
+En plus de ces caractéristiques, on connaît le type de sol (dans la colonne `Soil`), qui est soit Alluvial, Dunaire *(heath)*, ou Grès *(sandstone)*), ainsi que la profondeur à laquelle a été faite le prélèvement (colonne `Depth`, à 0-5cm, 5-20 cm ou 25-30 cm).
+
+En plus des ces colonnes sont enregistrées les noms des sites sur lesquels on a échantillonné les sols. Toutes les infos sont regroupées dans les colonnes `Plot`, `Subplot`, `Block`, `Name1`, `Name` et `Names2`.
+
+Ces données sont disponibles sur Connect dans le fichier `donnees_sols_chimies.csv`.
+
+1. Importer ce jeu de données sous le nom `sol_initial`.
+
+2. Parallèlement à cela, on dispose de l’abondance de 21 espèces d’arbres sur nos sites dans le fichier `donnees_abondance.csv`, disponible sur Connect. Dans ce tableau de 900 lignes et 21 colonnes, chaque ligne est donc associée à un site, dont le nom est renseigné dans la colonne `Name`. Les 639 colonnes restantes correspondent aux 21 espèces. Pour un site et une espèce donnés, on a renseigné dans le tableau le nombre d’individus recensés.
+
+Importer ce jeu de données sous le nom `abondance_initial`.
+
+3. A partir du jeu de données `sol_initial`. Effectuer les nettoyages suivants:
+
+  a. Se débarrasser des colonnes `Plot`, `Subplot`, `Block`, `Name1`, et `Names2`.
+  b. Renommer les colonnes (en utilisant la fonction `rename`):
+
+  - `MC` en `Eau`
+  - `ECEC` en `Exc.Cations`
+  - `Soil` en `Sol`
+  - `Name` en `Site`
+  - `Depth` en `Profondeur`
+  - `BS` en `SatBase`
+  - `Clay` en `Argile`
+  - `Silt` en `Limon`
+  - `Sand` en `Sable`
+
+  c. Transformer la nouvelle colonne `Sol` en facteur pour que les niveaux soient en Français, dans cet ordre (Alluvial, Grès *(Sandstone)* et Dunaire *(Heath)*).
+  d. Transformer la colonne Profondeur en facteur pour que les niveaux soient dans l’ordre “0-5 cm”, “5-20 cm”, “20-35 cm”.
+    
+Le résultat sera stocké dans un objet `sol_avec_na`. 
+
+4. Il existe des valeurs manquantes dans les colonnes `pH` et `Av.P`. Pour les lignes correspondantes, seules ces informations manquent. Afin d’éviter de supprimer la ligne entière (et donc toutes les autres mesures pour ce site), remplacer dans `sol_avec_na` chaque valeur manquante par la moyenne de sa quantité, pour le type de sol correspondant.
+
+Stocker le résultat dans un objet `sol_propre`.
+
+5. On veut maintenant créer un tableau où il y a une seule ligne par site, afin de le joindre avec la table des abondances. Pour cela, plusieurs options s’offrent à nous:
+
+  - Option **choix d’une profondeur**: avec la fonction `filter()`, stocker dans un tableau `sol_superficiel` le tableau ne comprenant que la profondeur 0-5 cm. Dans ce tableau, on aura supprimé la colonne `Profondeur` (avec `select(-Profondeur)`).
+  - Option **moyenne**: avec les fonctions `group_by()` et `summarise_if()`, créer un tableau `sol_moyen` où chaque ligne est la moyenne (pour les colonnes numériques) des caractéristiques par site.
+  
+Créer ces deux tableaux à partir de `sol_propre`.
+
+6. A partir du jeu de données `abondance_initial`, effectuer les nettoyages suivants, et stocker le résultat dans un jeu de données `abondance_propre`:
+
+  a. Renommer La colonne `Name` en `Site`.
+  b. Cette colonne `Site` contient le nom des sites, qui est commun avec le tableau `sol_propre` traité dans la partie précédente. Malheureusement, ici, la lettre finale est séparée des chiffres par un espace au lieu d’un `_`. Modifier cette colonne `Site` en remplaçant les espaces par des `_` (on utilisera la fonction `str_replace()`).
+  
+7. A l’aide la fonction `pivot_longer()`, transformer `abondance_propre` en un tableau au format long (que l'on nommera `abondance_long`), c’est à dire comportant 3 colonnes:
+
+  - La colonne `Site`.
+  - Une nouvelle colonne `Espece` qui contiendra le noms de toutes les espèces présentes auparavant.
+  - Une nouvelle colonne `NbIndividus` qui contiendra, pour un site et une espèce donnée, le nombre d’individus correspondant.
+
+8. A partir du tableau `abondance_long`, créer le tableau `richesse_par_site` de la manière suivante.
+
+  - Sélectionner simplement les lignes où le nombre d’individus comptés est supérieur à 0.
+   - De cette sélection, compter pour chaque site la densité d’arbres sur ce site, à savoir le nombre d’individus total (toutes espèces confondues), divisé par 400 ($\mathrm{m}^2$), la surface de chaque site. Cette information sera stockée dans une colonne `densite_arbre`. De plus, on veut compter le nombre d’espèces recensées pour lesquelles on a compté au moins un individu (dans une colonne `richesse_specifique`).
+   
+9. Créer un tableau `donnees_richesses` qui, pour chaque site présent à la fois dans `richesse_par_site` et `sol_superficiel`, donne toutes les caractéristiques du site.
+
+Faire cette jointure à l’aide des fonctions `left_join()` et `inner_join()`. Quelle jointure doit on garder? Stocker le résultat dans `donnees_richesses`.
+
+10. A l'aide de la fonction `save()`, enregistrer les tableaux crées précédemment dans un fichier *Borneo.Rdata*. **Ces données seront réutilisées dans le prochain TD**.
