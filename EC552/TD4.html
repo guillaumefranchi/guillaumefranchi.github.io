@@ -652,13 +652,75 @@ argument.</code></pre>
 <h2 data-number="7.1" class="anchored" data-anchor-id="exercice-1"><span class="header-section-number">7.1</span> Exercice 1</h2>
 <p><strong><em>Remarque :</em></strong> Dans la mesure du possible, on s’efforcera d’effectuer l’ensemble des manipulations ci-dessous via un seul canal d’instructions <em>(pipe)</em>.</p>
 <ol type="1">
-<li><p>Importer le data-frame contenu dans le fichier <strong>birds_scandinavia.csv</strong> disponible sur Connect. Ce jeu de données provient de l’article <em>Species composition and population fluctuations of alpine bird communities during 38 years in the scandinavian mountain range</em> de S. Svensson (2006). Dans cette étude, on compte le nombre d’oiseaux migrateurs revenant chaque année à certaines locations.</p></li>
-<li><p>Modifier le data-frame afin qu’il contienne uniquement l’année, le nombre d’oiseaux comptés, le nom de l’espèce, la latitude et la longitude des observations. On renommera l’espèce par <code>SPECIES == GENUS_SPECIES</code>, et avec la fonction <code>arrange()</code>, on triera le data-frame en fonction des années.</p></li>
-<li><p>Certaines espèces peuvent être aperçues à différents endroits. Modifier la colonne <em>ABUNDANCE</em> afin qu’elle contienne uniquement le nombre total d’individus observé par année pour chaque espèce.</p></li>
-<li><p>Pour chaque année, créer une colonne <em>TOTAL_ABUNDANCE</em> donnant le nombre total d’oiseaux observés.</p></li>
-<li><p>Créer ensuite une colonne <em>ABUNDANCE_REL</em> donnant par année l’<strong>abondance relative</strong> de chaque espèce, i.e.&nbsp;le pourcentage de chaque espèce dans la population totale <em>(on arrondira à 2 chiffres après la virgule)</em>.</p></li>
-<li><p>Dans un obet <code>birds_summary</code>, donner pour chaque espèce le nombre moyen d’oiseaux observés chaque année, ainsi que l’abondance relative moyenne. On triera ce jeu de données en fonction de l’abondance relative, dans un ordre décroissant.</p></li>
+<li>Importer le data-frame contenu dans le fichier <strong>birds_scandinavia.csv</strong> disponible sur Connect. Ce jeu de données provient de l’article <em>Species composition and population fluctuations of alpine bird communities during 38 years in the scandinavian mountain range</em> de S. Svensson (2006). Dans cette étude, on compte le nombre d’oiseaux migrateurs revenant chaque année à certaines locations.</li>
 </ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"birds_scandinavia.csv"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li>Modifier le data-frame afin qu’il contienne uniquement l’année, le nombre d’oiseaux comptés, le nom de l’espèce, la latitude et la longitude des observations. On renommera l’espèce par <code>SPECIES == GENUS_SPECIES</code>, et avec la fonction <code>arrange()</code>, on triera le data-frame en fonction des années.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> birds <span class="sc">%&gt;%</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(YEAR,ABUNDANCE,GENUS_SPECIES,LATITUDE,LONGITUDE) <span class="sc">%&gt;%</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">SPECIES=</span>GENUS_SPECIES) <span class="sc">%&gt;%</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(YEAR)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li>Certaines espèces peuvent être aperçues à différents endroits. Modifier la colonne <em>ABUNDANCE</em> afin qu’elle contienne uniquement le nombre total d’individus observé par année pour chaque espèce.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> birds <span class="sc">%&gt;%</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(YEAR,SPECIES) <span class="sc">%&gt;%</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ABUNDANCE=</span><span class="fu">sum</span>(ABUNDANCE)) <span class="sc">%&gt;%</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unique</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="4" type="1">
+<li>Pour chaque année, créer une colonne <em>TOTAL_ABUNDANCE</em> donnant le nombre total d’oiseaux observés.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> birds <span class="sc">%&gt;%</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(YEAR) <span class="sc">%&gt;%</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">TOTAL_ABUNDANCE =</span> <span class="fu">sum</span>(ABUNDANCE)) <span class="sc">%&gt;%</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="5" type="1">
+<li>Créer ensuite une colonne <em>ABUNDANCE_REL</em> donnant par année l’<strong>abondance relative</strong> de chaque espèce, i.e.&nbsp;le pourcentage de chaque espèce dans la population totale <em>(on arrondira à 2 chiffres après la virgule)</em>.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>birds <span class="ot">&lt;-</span> birds <span class="sc">%&gt;%</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ABUNDANCE_REL=</span>ABUNDANCE<span class="sc">/</span>TOTAL_ABUNDANCE) <span class="sc">%&gt;%</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ABUNDANCE_REL=</span><span class="fu">round</span>(<span class="dv">100</span><span class="sc">*</span>ABUNDANCE_REL,<span class="dv">2</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="6" type="1">
+<li>Dans un obet <code>birds_summary</code>, donner pour chaque espèce le nombre moyen d’oiseaux observés chaque année, ainsi que l’abondance relative moyenne. On triera ce jeu de données en fonction de l’abondance relative, dans un ordre décroissant.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>birds_summary <span class="ot">&lt;-</span> birds <span class="sc">%&gt;%</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(SPECIES) <span class="sc">%&gt;%</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">MEAN_ABUNDANCE_REL =</span> <span class="fu">mean</span>(ABUNDANCE_REL),</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">MEAN_ABUNDANCE =</span> <span class="fu">mean</span>(ABUNDANCE)) <span class="sc">%&gt;%</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="exercice-2" class="level2" data-number="7.2">
 <h2 data-number="7.2" class="anchored" data-anchor-id="exercice-2"><span class="header-section-number">7.2</span> Exercice 2</h2>
@@ -668,6 +730,13 @@ argument.</code></pre>
 </ol>
 <p>De façon générale, ce jeu de données recense des informations médicales sur 418 patients souffrant d’une cirrhose, ayant reçu un traitement expérimental, un placebo, ou n’ayant rien reçu.</p>
 <p>Combien de valeurs manquantes le data-frame compte-t-il ?</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>cirr <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"cirrhosis.csv"</span>)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(cirr)) <span class="co">#Il y a 1033 valeurs manquantes</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="2" type="1">
 <li><p>A l’aide des fonctions <code>mutate()</code>et <code>mutate_if()</code>, transformer toutes les colonnes nécessaires en facteurs, ainsi que la colonne <em>Stage</em>.</p></li>
 <li><p>Remplacer les valeurs manquantes de la colonne <em>Drug</em> par la valeur <code>"None"</code>. <em>On pourra utiliser la fonction <code>fct_na_value_to_level()</code></em>.</p></li>
@@ -676,12 +745,75 @@ argument.</code></pre>
 </ol>
 <p>Afin d’éviter de compter des valeurs <code>Unknown</code> dans les variables n’en présentant aucune <em>(par exemple <code>Drug</code>)</em>, on re-transformera en facteurs toutes les variables catégorielles.</p>
 <p>Effectuer à nouveau un résumé statistique du data-frame, et comparer avec le résumé précédent.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>cirr <span class="ot">&lt;-</span> cirr <span class="sc">%&gt;%</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Stage=</span><span class="fu">as.factor</span>(Stage)) <span class="sc">%&gt;%</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(<span class="at">.predicate =</span> is.character,</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.funs =</span> as.factor) <span class="sc">%&gt;%</span></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Drug =</span> <span class="fu">fct_na_value_to_level</span>(Drug,<span class="at">level=</span><span class="st">"None"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(<span class="at">.predicate =</span> is.factor,</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.funs =</span> fct_na_value_to_level,</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">level =</span> <span class="st">"Unknown"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(<span class="at">.predicate =</span> is.factor,</span>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">.funs=</span>factor) </span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cirr)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="6" type="1">
-<li><p>Remplacer ensuite les valeurs manquantes des variables numériques par les moyennes de ces variables <em>(plus difficile, chercher des solutions sur le web si nécessaire)</em>.</p></li>
-<li><p>Vérifier que le data-frame ne contient plus aucune valeur manquante.</p></li>
-<li><p>Créer un data-frame donnant les moyennes de la concentration en Bilirubine, ainsi que la quantité quotidienne moyenne de cuivre dans les urines pour chaque type de traitement et chaque stade de la maladie.</p></li>
-<li><p>Commenter les effets du traitement proposé sur ces valeurs.</p></li>
+<li>Remplacer ensuite les valeurs manquantes des variables numériques par les moyennes de ces variables <em>(plus difficile, chercher des solutions sur le web si nécessaire)</em>.</li>
 </ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>cirr <span class="ot">&lt;-</span> cirr <span class="sc">%&gt;%</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(<span class="at">.predicate =</span> is.numeric, <span class="co"># On force ici la conversion des entiers en réels</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">.funs=</span>as.numeric) <span class="sc">%&gt;%</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(<span class="at">.predicate =</span> is.numeric,</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.funs =</span> <span class="sc">~</span><span class="fu">replace_na</span>(.x,<span class="fu">mean</span>(.x,<span class="at">na.rm=</span><span class="cn">TRUE</span>)))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="7" type="1">
+<li>Vérifier que le data-frame ne contient plus aucune valeur manquante.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(cirr))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="8" type="1">
+<li>Créer un data-frame donnant les moyennes de la concentration en Bilirubine, ainsi que la quantité quotidienne moyenne de cuivre dans les urines pour chaque type de traitement et chaque stade de la maladie.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>cirr_summary <span class="ot">&lt;-</span> cirr <span class="sc">%&gt;%</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Drug,Stage) <span class="sc">%&gt;%</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">Mean_Bilirubin =</span> <span class="fu">mean</span>(Bilirubin),</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">Mean_Copper =</span> <span class="fu">mean</span>(Copper)) <span class="sc">%&gt;%</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="9" type="1">
+<li>Commenter les effets du traitement proposé sur ces valeurs.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>cirr <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Stage<span class="sc">==</span><span class="st">"1"</span> <span class="sc">&amp;</span> Drug <span class="sc">==</span> <span class="st">"D-penicillamine"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>cirr <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Stage<span class="sc">==</span><span class="st">"1"</span> <span class="sc">&amp;</span> Drug <span class="sc">==</span> <span class="st">"Placebo"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details>
+<summary>
+Commentaire
+</summary>
+<p><em>L’effect du traitement n’est pas clair. Sur les stades très avancés ou très peu avancés, les patients suivant le traitement ant des analyses moins bonnes. En revanche, les résultats sont meilleurs pour les stades “moyens” 2 et 3. Il convient ici de préciser que les échantillons sont très faibles pour le stade 1. Les résultats sont donc peu fiables</em></p>
+</details>
 </section>
 <section id="exercice-3" class="level2" data-number="7.3">
 <h2 data-number="7.3" class="anchored" data-anchor-id="exercice-3"><span class="header-section-number">7.3</span> Exercice 3</h2>
@@ -696,16 +828,31 @@ argument.</code></pre>
 <li>Pourcentage d’argile <code>Clay</code>, de limon <code>Silt</code> et de sable <code>Sand</code>.</li>
 </ul>
 <p>En plus de ces caractéristiques, on connaît le type de sol (dans la colonne <code>Soil</code>), qui est soit Alluvial, Dunaire <em>(heath)</em>, ou Grès <em>(sandstone)</em>), ainsi que la profondeur à laquelle a été faite le prélèvement (colonne <code>Depth</code>, à 0-5cm, 5-20 cm ou 25-30 cm).</p>
-<p>En plus des ces colonnes sont enregistrées les noms des sites sur lesquels on a échantillonné les sols. Toutes les infos sont regroupées dans les colonnes <code>Plot</code>, <code>Subplot</code>, <code>Block</code>, <code>Name1</code>, <code>Name</code> et <code>Names2</code>.</p>
-<p>Ces données sont disponibles sur Connect dans le fichier <code>donnees_sols_chimies.csv</code>.</p>
+<p>En plus des ces colonnes sont enregistrées les noms des sites sur lesquels on a échantillonné les sols. Toutes les informations sont regroupées dans les colonnes <code>Plot</code>, <code>Subplot</code>, <code>Block</code>, <code>Name1</code>, <code>Name</code> et <code>Names2</code>.</p>
+<p>Ces données sont disponibles sur Connect dans le fichier <code>donnees_sols_chimie.csv</code>.</p>
 <ol type="1">
-<li><p>Importer ce jeu de données sous le nom <code>sol_initial</code>.</p></li>
-<li><p>Parallèlement à cela, on dispose de l’abondance de 21 espèces d’arbres sur nos sites dans le fichier <code>donnees_abondance.csv</code>, disponible sur Connect. Dans ce tableau de 900 lignes et 21 colonnes, chaque ligne est donc associée à un site, dont le nom est renseigné dans la colonne <code>Name</code>. Les 639 colonnes restantes correspondent aux 21 espèces. Pour un site et une espèce donnés, on a renseigné dans le tableau le nombre d’individus recensés.</p></li>
+<li>Importer ce jeu de données sous le nom <code>sol_initial</code>.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>sol_initial <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"donnees_sols_chimie.csv"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li>Parallèlement à cela, on dispose de l’abondance de 21 espèces d’arbres sur nos sites dans le fichier <code>donnees_abondance.csv</code>, disponible sur Connect. Dans ce tableau de 900 lignes et 21 colonnes, chaque ligne est donc associée à un site, dont le nom est renseigné dans la colonne <code>Name</code>. Les colonnes restantes correspondent aux 20 espèces. Pour un site et une espèce donnés, on a renseigné dans le tableau le nombre d’individus recensés.</li>
 </ol>
 <p>Importer ce jeu de données sous le nom <code>abondance_initial</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>abondance_initial <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"donnees_abondance.csv"</span>,<span class="at">row.names =</span> <span class="dv">1</span>) </span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="3" type="1">
 <li>A partir du jeu de données <code>sol_initial</code>. Effectuer les nettoyages suivants:</li>
 </ol>
+<!-- -->
 <ol type="a">
 <li>Se débarrasser des colonnes <code>Plot</code>, <code>Subplot</code>, <code>Block</code>, <code>Name1</code>, et <code>Names2</code>.</li>
 <li>Renommer les colonnes (en utilisant la fonction <code>rename</code>):</li>
@@ -726,10 +873,32 @@ argument.</code></pre>
 <li>Transformer la colonne Profondeur en facteur pour que les niveaux soient dans l’ordre “0-5 cm”, “5-20 cm”, “20-35 cm”.</li>
 </ol>
 <p>Le résultat sera stocké dans un objet <code>sol_avec_na</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>sol_avec_na <span class="ot">&lt;-</span> sol_initial <span class="sc">%&gt;%</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(Plot,Subplot,Block,Name1,Names2)) <span class="sc">%&gt;%</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Eau =</span> MC,<span class="at">Exc.Cations =</span> ECEC,<span class="at">Sol=</span>Soil,<span class="at">Site=</span>Name,<span class="at">Profondeur=</span>Depth,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">SatBase=</span>BS,<span class="at">Argile=</span>Clay,<span class="at">Limon=</span>Silt,<span class="at">Sable=</span>Sand) <span class="sc">%&gt;%</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Sol=</span><span class="fu">factor</span>(Sol,<span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Alluvial"</span>,<span class="st">"Sandstone"</span>,<span class="st">"Heath"</span>),</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Alluvial"</span>,<span class="st">"Grès"</span>,<span class="st">"Dunaire"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Profondeur=</span><span class="fu">as.factor</span>(Profondeur))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="4" type="1">
 <li>Il existe des valeurs manquantes dans les colonnes <code>pH</code> et <code>Av.P</code>. Pour les lignes correspondantes, seules ces informations manquent. Afin d’éviter de supprimer la ligne entière (et donc toutes les autres mesures pour ce site), remplacer dans <code>sol_avec_na</code> chaque valeur manquante par la moyenne de sa quantité, pour le type de sol correspondant.</li>
 </ol>
 <p>Stocker le résultat dans un objet <code>sol_propre</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>sol_propre <span class="ot">&lt;-</span> sol_avec_na <span class="sc">%&gt;%</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Sol) <span class="sc">%&gt;%</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pH=</span><span class="fu">replace_na</span>(pH,<span class="fu">mean</span>(pH,<span class="at">na.rm=</span><span class="cn">TRUE</span>)),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Av.P=</span><span class="fu">replace_na</span>(Av.P,<span class="fu">mean</span>(Av.P,<span class="at">na.rm=</span><span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="5" type="1">
 <li>On veut maintenant créer un tableau où il y a une seule ligne par site, afin de le joindre avec la table des abondances. Pour cela, plusieurs options s’offrent à nous:</li>
 </ol>
@@ -738,13 +907,37 @@ argument.</code></pre>
 <li>Option <strong>moyenne</strong>: avec les fonctions <code>group_by()</code> et <code>summarise_if()</code>, créer un tableau <code>sol_moyen</code> où chaque ligne est la moyenne (pour les colonnes numériques) des caractéristiques par site.</li>
 </ul>
 <p>Créer ces deux tableaux à partir de <code>sol_propre</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>sol_superficiel <span class="ot">&lt;-</span> sol_propre <span class="sc">%&gt;%</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Profondeur<span class="sc">==</span><span class="st">"0-5 cm"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Profondeur)</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>sol_moyen <span class="ot">&lt;-</span> sol_propre <span class="sc">%&gt;%</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Site) <span class="sc">%&gt;%</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_if</span>(<span class="at">.predicate =</span> is.numeric,</span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">.funs =</span> mean) <span class="sc">%&gt;%</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="6" type="1">
 <li>A partir du jeu de données <code>abondance_initial</code>, effectuer les nettoyages suivants, et stocker le résultat dans un jeu de données <code>abondance_propre</code>:</li>
 </ol>
+<!-- -->
 <ol type="a">
 <li>Renommer La colonne <code>Name</code> en <code>Site</code>.</li>
 <li>Cette colonne <code>Site</code> contient le nom des sites, qui est commun avec le tableau <code>sol_propre</code> traité dans la partie précédente. Malheureusement, ici, la lettre finale est séparée des chiffres par un espace au lieu d’un <code>_</code>. Modifier cette colonne <code>Site</code> en remplaçant les espaces par des <code>_</code> (on utilisera la fonction <code>str_replace()</code>).</li>
 </ol>
+<!-- -->
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>abondance_propre <span class="ot">&lt;-</span> abondance_initial <span class="sc">%&gt;%</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">Site =</span> Name) <span class="sc">%&gt;%</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Site=</span><span class="fu">str_replace</span>(Site,<span class="at">pattern =</span> <span class="st">" "</span>,<span class="at">replacement =</span> <span class="st">"_"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="7" type="1">
 <li>A l’aide la fonction <code>pivot_longer()</code>, transformer <code>abondance_propre</code> en un tableau au format long (que l’on nommera <code>abondance_long</code>), c’est à dire comportant 3 colonnes:</li>
 </ol>
@@ -753,6 +946,13 @@ argument.</code></pre>
 <li>Une nouvelle colonne <code>Espece</code> qui contiendra le noms de toutes les espèces présentes auparavant.</li>
 <li>Une nouvelle colonne <code>NbIndividus</code> qui contiendra, pour un site et une espèce donnée, le nombre d’individus correspondant.</li>
 </ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>abondance_long <span class="ot">&lt;-</span> abondance_propre <span class="sc">%&gt;%</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="at">cols=</span><span class="sc">-</span>Site,<span class="at">names_to =</span> <span class="st">"Espece"</span>,<span class="at">values_to =</span> <span class="st">"NbIndividus"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="8" type="1">
 <li>A partir du tableau <code>abondance_long</code>, créer le tableau <code>richesse_par_site</code> de la manière suivante.</li>
 </ol>
@@ -760,13 +960,47 @@ argument.</code></pre>
 <li>Sélectionner simplement les lignes où le nombre d’individus comptés est supérieur à 0.</li>
 <li>De cette sélection, compter pour chaque site la densité d’arbres sur ce site, à savoir le nombre d’individus total (toutes espèces confondues), divisé par 400 (<span class="math inline">\(\mathrm{m}^2\)</span>), la surface de chaque site. Cette information sera stockée dans une colonne <code>densite_arbre</code>. De plus, on veut compter le nombre d’espèces recensées pour lesquelles on a compté au moins un individu (dans une colonne <code>richesse_specifique</code>).</li>
 </ul>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>richesse_par_site <span class="ot">&lt;-</span> abondance_long <span class="sc">%&gt;%</span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(NbIndividus <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Site) <span class="sc">%&gt;%</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">densite_arbres =</span> <span class="fu">sum</span>(NbIndividus)<span class="sc">/</span><span class="dv">400</span>,</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">richesse_specifique =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 <ol start="9" type="1">
 <li>Créer un tableau <code>donnees_richesses</code> qui, pour chaque site présent à la fois dans <code>richesse_par_site</code> et <code>sol_superficiel</code>, donne toutes les caractéristiques du site.</li>
 </ol>
 <p>Faire cette jointure à l’aide des fonctions <code>left_join()</code> et <code>inner_join()</code>. Quelle jointure doit on garder? Stocker le résultat dans <code>donnees_richesses</code>.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># donnees_richesse &lt;- left_join(richesse_par_site,sol_superficiel)</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>donnees_richesse <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(richesse_par_site,sol_superficiel)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<details>
+<summary>
+Commentaire
+</summary>
+<ul>
+<li>On doit garder le <code>inner_join()</code>.<code>left_join()</code> conserve tous les sites de <code>richesse_par_site</code>, même ceux qui n’étaient pas présents dans <code>sol_superficiel</code> (on a donc trop de sites et plein de <code>NA</code>…). <code>inner_join()</code> conserve uniquement les sites présents dans les 2 tableaux.</li>
+</ul>
+</details>
 <ol start="10" type="1">
 <li>A l’aide de la fonction <code>save()</code>, enregistrer les tableaux crées précédemment dans un fichier <em>Borneo.Rdata</em>. <strong>Ces données seront réutilisées dans le prochain TD</strong>.</li>
 </ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># donnees_richesse &lt;- left_join(richesse_par_site,sol_superficiel)</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(sol_propre,sol_superficiel,sol_moyen,abondance_propre,abondance_long,richesse_par_site,donnees_richesse,</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">file =</span> <span class="st">"Borneo.Rdata"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 </section>

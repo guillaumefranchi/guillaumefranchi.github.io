@@ -278,7 +278,7 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df[<span class="dv">1</span>,<span class="dv">1</span>]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 5.9</code></pre>
+<pre><code>[1] 4.7</code></pre>
 </div>
 </div>
 <ul>
@@ -287,13 +287,13 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>NoteF</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  [1]  5.9 17.4  6.3  9.1 17.6  9.2 13.8  0.0  9.6 13.0 17.1  1.0 14.8 19.8  7.4
- [16]  5.8 18.4  2.3  2.9 11.0 13.1  6.5 18.7 12.8 15.5  2.4  7.0 16.6 15.2 17.3
- [31] 15.3 12.6 15.3  2.8 13.6 15.4 16.3 16.4 19.1 17.9  2.5  5.3 13.7 19.4  0.6
- [46]  5.8  1.5  0.7  4.3  4.7  3.2  6.0 16.6  6.5 14.3 13.7 18.2  9.4 18.6  6.4
- [61] 14.0  2.6 11.2  5.0  2.9 19.5  7.8  8.1 14.0  6.7 16.2  4.1 15.7 10.0  3.3
- [76]  9.4  0.5  8.2 17.2  0.2 13.2 17.1 14.5  9.8  4.6 14.3  1.3 16.8  0.5  8.7
- [91] 13.9  9.7 19.6 10.6  4.6 12.8 14.9  0.4 17.7 11.2</code></pre>
+<pre><code>  [1]  4.7  0.7 16.2 15.2  6.0 10.0  6.7 11.1  7.1  0.9  8.3  6.5 20.0 16.5 17.1
+ [16]  3.5  3.3  9.5 14.9  9.2 11.7 10.3 17.1  8.8  1.9  8.7 11.6  0.0 12.5 19.6
+ [31]  2.7 19.3  4.4 10.6  3.7  1.4  1.4  0.2 11.8 17.7 18.5  6.9 19.1 17.7  2.9
+ [46]  4.5  0.4 13.3  4.4  2.7 12.1  0.4 15.1 15.9 16.2  4.8 14.3 15.2  5.7 14.3
+ [61]  0.7 19.6 15.1 19.8 19.0  5.0  5.3  6.2 10.3  9.0  1.3  7.4 15.3  1.8  6.6
+ [76]  3.5 11.0  9.0 14.0  4.7 16.2  3.2 16.5 13.0  9.2  3.7 12.0  3.7 17.2 19.3
+ [91]  9.4  8.7  1.1 14.2 12.3 14.8  5.2 13.7  8.6  9.9</code></pre>
 </div>
 </div>
 </section>
@@ -360,12 +360,12 @@ window.Quarto = {
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>     NoteF            NoteM             gr           
- Min.   : 0.000   Min.   : 0.100   Length:100        
- 1st Qu.: 5.225   1st Qu.: 6.175   Class :character  
- Median :10.800   Median :11.800   Mode  :character  
- Mean   :10.364   Mean   :10.923                     
- 3rd Qu.:15.425   3rd Qu.:15.250                     
- Max.   :19.800   Max.   :19.900                     </code></pre>
+ Min.   : 0.000   Min.   : 0.000   Length:100        
+ 1st Qu.: 4.475   1st Qu.: 5.600   Class :character  
+ Median : 9.300   Median :11.050   Mode  :character  
+ Mean   : 9.637   Mean   : 9.981                     
+ 3rd Qu.:14.950   3rd Qu.:15.050                     
+ Max.   :20.000   Max.   :19.700                     </code></pre>
 </div>
 </div>
 </section>
@@ -375,8 +375,8 @@ window.Quarto = {
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(df[,<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>],<span class="at">MARGIN=</span><span class="dv">2</span>,mean)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code> NoteF  NoteM 
-10.364 10.923 </code></pre>
+<pre><code>NoteF NoteM 
+9.637 9.981 </code></pre>
 </div>
 </div>
 <p><strong><em>Remarque :</em></strong> on n’a utilisé que les deux premières colonnes du data-frame car la troisième n’est pas numérique (donc on ne peut pas calculer sa moyenne).</p>
@@ -404,7 +404,7 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>statut_pro
  1  2  3  4 
-23 20 30 27 </code></pre>
+25 29 24 22 </code></pre>
 </div>
 </div>
 <ul>
@@ -426,9 +426,9 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>statut_pro
           en activité en recherche d'emploi              étudiant 
-                   23                    20                    30 
+                   25                    29                    24 
         à la retraite 
-                   27 </code></pre>
+                   22 </code></pre>
 </div>
 </div>
 <p><strong><em>Remarque :</em></strong> Les variables binaires (facteurs à deux modalités) sont souvent codées 0/1.</p>
@@ -442,9 +442,9 @@ window.Quarto = {
 <div class="cell-output cell-output-stdout">
 <pre><code>statut_pro
             étudiants           en activité en recherche d'emploi 
-                   23                    20                    30 
+                   25                    29                    24 
         à la retraite 
-                   27 </code></pre>
+                   22 </code></pre>
 </div>
 </div>
 <p><strong><em>Attention</em></strong> les labels doivent être exactement écrits de la même façon que les levels si les modalités sont déjà écrites et sinon on peut directement agir sur les modalités via labels :</p>
@@ -461,32 +461,203 @@ window.Quarto = {
 <section id="exercice-1" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="exercice-1"><span class="header-section-number">5.1</span> Exercice 1</h2>
 <ol type="1">
-<li><p>Charger le fichier de données <code>iris</code>. Lire l’aide de iris pour comprendre le jeu de données.</p></li>
-<li><p>Quel est le type de iris ? Quelles sont les dimensions de iris ?</p></li>
-<li><p>Appliquer la fonction <code>str()</code> à iris. A quoi correspondent les informations renvoyées ?</p></li>
-<li><p>Appliquer la fonction <code>summary()</code> à iris. A quoi correspondent les informations renvoyées ?</p></li>
-<li><p>Utiliser les fonctions <code>colnames()</code> et <code>rownames()</code>. Quelles sont les informations renvoyées ?</p></li>
-<li><p>A l’aide la fonction de texte <code>paste()</code> remplacer le nom des lignes par fleur_1, …, fleur_150.</p></li>
-<li><p>Pour un data-frame on peut appeler une colonne par son nom en utilisant $ : <code>iris$Sepal.Length</code>. En utilisant cette information donner la classe de la colonne <em>Species</em>.</p></li>
-<li><p>Quels sont les niveaux du facteur <em>Species</em> (fonction <code>levels()</code>) ?</p></li>
-<li><p>Créer une nouvelle colonne nommée <em>groupe</em> (on pensera à $) dans le data frame iris identique à la colonne <em>Species</em>. Quelle est la classe de cette nouvelle colonne ?</p></li>
-<li><p>Renommer les niveaux de la colonne <em>groupe</em> en <em>A</em>, <em>B</em>, <em>C</em> (<em>A</em> pour <em>setosa</em>, <em>B</em> pour <em>versicolor</em>, <em>C</em> pour <em>virginica</em>). Afficher les indices des lignes de <code>iris</code> correspondant au groupe <em>B</em>.</p></li>
-<li><p>Créer l’ensemble des numéros de lignes correspondant aux fleurs du groupe <em>A</em>. Afficher les lignes de <code>iris</code> correspondant au groupe <em>A</em>.</p></li>
-<li><p>En adoptant la même logique que la question précédente, afficher uniquement les lignes de <code>iris</code> où <em>Sepal.Length</em> est inférieur à 5.</p></li>
-<li><p>Combien y a-t-il d’individus ayant la longueur des sépales inférieure à 5 ?</p></li>
+<li>Charger le fichier de données <code>iris</code>. Lire l’aide de iris pour comprendre le jeu de données.</li>
 </ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(iris)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>?iris</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li>Quel est le type de iris ? Quelles sont les dimensions de iris ?</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(iris) <span class="co"># Il s'agit d'un data-frame</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(iris)   <span class="co"># Il y a 150 lignes (individus) et 5 colonnes (variables)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li>Appliquer la fonction <code>str()</code> à iris. A quoi correspondent les informations renvoyées ?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(iris) <span class="co"># Résumé rapide des variables</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>Appliquer la fonction <code>summary()</code> à iris. A quoi correspondent les informations renvoyées ?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(iris) <span class="co"># Résumé détaillé des variables</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" type="1">
+<li>Utiliser les fonctions <code>colnames()</code> et <code>rownames()</code>. Quelles sont les informations renvoyées ?</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(iris) <span class="co"># Nom des colonnes (ou des variables)</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(iris) <span class="co"># Nom des individus (ici, juste un nombre)</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="6" type="1">
+<li>A l’aide la fonction de texte <code>paste()</code> remplacer le nom des lignes par fleur_1, …, fleur_150.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(iris) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"fleur_"</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">150</span>,<span class="at">sep=</span><span class="st">""</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="7" type="1">
+<li>Pour un data-frame on peut appeler une colonne par son nom en utilisant $ : <code>iris$Sepal.Length</code>. En utilisant cette information donner la classe de la colonne <em>Species</em>.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(iris<span class="sc">$</span>Species) <span class="co"># Il s'agit d'un facteur</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="8" type="1">
+<li>Quels sont les niveaux du facteur <em>Species</em> (fonction <code>levels()</code>) ?</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(iris<span class="sc">$</span>Species) <span class="co">#Il y a 3 niveaux (ou classes) : setos, versicolor et virginica</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="9" type="1">
+<li>Créer une nouvelle colonne nommée <em>groupe</em> (on pensera à $) dans le data frame iris identique à la colonne <em>Species</em>. Quelle est la classe de cette nouvelle colonne ?</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>iris<span class="sc">$</span>groupe <span class="ot">&lt;-</span> iris<span class="sc">$</span>Species</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(iris<span class="sc">$</span>groupe) <span class="co"># Il s'agit toujours d'un facteur</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="10" type="1">
+<li>Renommer les niveaux de la colonne <em>groupe</em> en <em>A</em>, <em>B</em>, <em>C</em> (<em>A</em> pour <em>setosa</em>, <em>B</em> pour <em>versicolor</em>, <em>C</em> pour <em>virginica</em>). Afficher les indices des lignes de <code>iris</code> correspondant au groupe <em>B</em>.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>iris<span class="sc">$</span>groupe <span class="ot">&lt;-</span> <span class="fu">factor</span>(iris<span class="sc">$</span>groupe,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"setosa"</span>,<span class="st">"versicolor"</span>,<span class="st">"virginica"</span>),</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"A"</span>,<span class="st">"B"</span>,<span class="st">"C"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="11" type="1">
+<li>Créer l’ensemble des numéros de lignes correspondant aux fleurs du groupe <em>A</em>. Afficher les lignes de <code>iris</code> correspondant au groupe <em>A</em>.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(iris<span class="sc">$</span>groupe <span class="sc">==</span><span class="st">"A"</span>) <span class="co"># Numéros de lignes</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>iris[iris<span class="sc">$</span>groupe<span class="sc">==</span><span class="st">"A"</span>,]  <span class="co"># Affichage de ces lignes</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="12" type="1">
+<li>En adoptant la même logique que la question précédente, afficher uniquement les lignes de <code>iris</code> où <em>Sepal.Length</em> est inférieur à 5.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(iris<span class="sc">$</span>Sepal.Length <span class="sc">&lt;</span><span class="dv">5</span> ) <span class="co"># Numéros de lignes</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>iris[iris<span class="sc">$</span>Sepal.Length <span class="sc">&lt;</span><span class="dv">5</span>,]  <span class="co"># Affichage de ces lignes</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="13" type="1">
+<li>Combien y a-t-il d’individus ayant la longueur des sépales inférieure à 5 ?</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(iris[iris<span class="sc">$</span>Sepal.Length <span class="sc">&lt;</span><span class="dv">5</span>,])  <span class="co"># Affichage de ces lignes</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 </section>
 <section id="exercice-2" class="level2" data-number="5.2">
 <h2 data-number="5.2" class="anchored" data-anchor-id="exercice-2"><span class="header-section-number">5.2</span> Exercice 2</h2>
 <ol type="1">
-<li><p>Charger le data-frame <code>mtcars</code>. Combien de véhicules et de caractéristiques sur les véhicules sont contenus dans le data frame ?</p></li>
-<li><p>Deux caractéristiques sont mal identifiées dans le data-frame car ce sont des variables qualitatives <em>(facteurs)</em>. Rectifier en utilisant la fonction <code>as.factor()</code>.</p></li>
-<li><p>En utilisant l’aide du data-frame <code>mtcars</code> renommer les niveaux des deux facteurs précédents.</p></li>
-<li><p>Etablir la table de contingence de ces deux facteurs <em>(fonction <code>table()</code>)</em></p></li>
-<li><p>Calculer la moyenne des 7 premières variables <em>(on utilisera les fonctions <code>mean()</code> et <code>apply()</code>)</em>.</p></li>
-<li><p>Reprendre la question précédente pour les voitures avec un moteur à plat. De même pour les voitures ayant un moteur en V et qui sont automatiques.</p></li>
-<li><p>Calculer le nombre de voitures ayant un moteur en V qui ont au moins 3 carburateurs.</p></li>
+<li>Charger le data-frame <code>mtcars</code>. Combien de véhicules et de caractéristiques sur les véhicules sont contenus dans le data frame ?</li>
 </ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"mtcars"</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(mtcars) <span class="co"># 32 véhicules détaillés selon 11 caractéristiques</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="2" type="1">
+<li>Deux caractéristiques sont mal identifiées dans le data-frame car ce sont des variables qualitatives <em>(facteurs)</em>. Rectifier en utilisant la fonction <code>as.factor()</code>.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Il s'agit des variables vs et am</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="co"># vs : indique le type de moteur, mais codé en 0-1</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="co"># am : indique le type de transmission, codé 0 = automatique, 1=manuelle</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>mtcars<span class="sc">$</span>vs <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(mtcars<span class="sc">$</span>vs)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>mtcars<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(mtcars<span class="sc">$</span>am)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="3" type="1">
+<li>En utilisant l’aide du data-frame <code>mtcars</code> renommer les niveaux des deux facteurs précédents.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>mtcars<span class="sc">$</span>vs <span class="ot">&lt;-</span> <span class="fu">factor</span>(mtcars<span class="sc">$</span>vs,</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"V-shaped"</span>,<span class="st">"Straight"</span>))</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>mtcars<span class="sc">$</span>am <span class="ot">&lt;-</span> <span class="fu">factor</span>(mtcars<span class="sc">$</span>am,</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">levels=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels=</span><span class="fu">c</span>(<span class="st">"Automatic"</span>,<span class="st">"Manual"</span>))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="4" type="1">
+<li>Etablir la table de contingence de ces deux facteurs <em>(fonction <code>table()</code>)</em></li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(mtcars[,<span class="fu">c</span>(<span class="st">"vs"</span>,<span class="st">"am"</span>)]) <span class="co"># O ne sélectionne que les colonnes qui nous intéressent</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="5" type="1">
+<li>Calculer la moyenne des 7 premières variables <em>(on utilisera les fonctions <code>mean()</code> et <code>apply()</code>)</em>.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(<span class="at">X =</span> mtcars[,<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>],<span class="at">MARGIN =</span> <span class="dv">2</span>,<span class="at">FUN =</span> mean)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="6" type="1">
+<li>Reprendre la question précédente pour les voitures avec un moteur à plat. De même pour les voitures ayant un moteur en V et qui sont automatiques.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(<span class="at">X =</span> mtcars[mtcars<span class="sc">$</span>vs<span class="sc">==</span><span class="st">"Straight"</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>],<span class="at">MARGIN =</span> <span class="dv">2</span>,<span class="at">FUN=</span>mean) <span class="co"># Pour les moteurs à plat</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(<span class="at">X =</span> mtcars[mtcars<span class="sc">$</span>vs<span class="sc">==</span><span class="st">"V-shaped"</span> <span class="sc">&amp;</span> mtcars<span class="sc">$</span>am<span class="sc">==</span> <span class="st">"Automatic"</span> ,<span class="dv">1</span><span class="sc">:</span><span class="dv">7</span>],</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">MARGIN =</span> <span class="dv">2</span>,<span class="at">FUN=</span>mean) <span class="co"># Pour les moteurs en V avec transmission automatique</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<ol start="7" type="1">
+<li>Calculer le nombre de voitures ayant un moteur en V qui ont au moins 3 carburateurs.</li>
+</ol>
+<div class="cell">
+<details class="code-fold">
+<summary>Voir la correction</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(mtcars<span class="sc">$</span>vs<span class="sc">==</span><span class="st">"V-shaped"</span> <span class="sc">&amp;</span> mtcars<span class="sc">$</span>carb <span class="sc">&gt;=</span><span class="dv">3</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
 
 
 </section>
