@@ -1,0 +1,29 @@
+---
+title: "EC551 TD3 & TD4 : Préparation au projet"
+author: Guillaume Franchi
+number-sections: true
+number-depth: 2
+number-offset: 0
+---
+
+Ouvrir le fichier `mais.txt` avec la fonction `read.table()`. Pour toutes les questions suivantes on donnera dans une préanalyse :
+
+* la nature des variables considérées;
+
+* un résumé univarié (graphes et indices de position et de dispersion).
+
+Etudier le lien entre :
+
+* masse.grains et hauteur
+
+* masse.grains et couleur
+
+* hauteur et germination.epi
+
+* Enracinement et Verse
+
+* Attaque et Verse
+
+* Germination.epi et Masse
+
+* Germination.epi et Parcelle.
