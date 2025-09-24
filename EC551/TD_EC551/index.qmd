@@ -1,5 +1,5 @@
 ---
-title: "EC551 TD1 : Statitstiques univariées"
+title: "EC551 TD1 : Statistiques univariées"
 author: Guillaume Franchi
 number-sections: true
 number-depth: 2
@@ -10,7 +10,7 @@ number-offset: 0
 
 # Exercice 1
 
-Le jeu de données `salaires.csv`, disponible sur connect, contient répertorie l'expérience *(en mois)* et le salaire annuel *(en milliers d'euros bruts)* des 954 salariés d'une entreprise.
+Le jeu de données `salaires.csv`, disponible sur connect, contient l'expérience *(en mois)* et le salaire annuel *(en milliers d'euros bruts)* des 954 salariés d'une entreprise.
 
 ```{r echo=FALSE,eval=FALSE}
 library(tidyverse)
@@ -22,35 +22,36 @@ salaires <- read.csv("salaires.csv",row.names = 1) %>%
 write.csv(salaires,file="salaires_bis.csv")
 ```
 
-1) Pour chacune des variables *Experience* et *Salaire*, effectuer sur R un résumé statistique contenant
-  * la moyenne;
-  * l'écart-type;
-  * la médiane;
-  * les quartiles Q1 et Q3;
-  * le MAD *(fonction `mad()`)*.
-  
-On pourra utiliser les fonctions  `summary()`, `mean()`, `sd()`, `median()` ou `quantile()`.
+1)  Pour chacune des variables *Experience* et *Salaire*, effectuer sur R un résumé statistique contenant
 
-2) Déterminer les individus de l'entreprise qui peuvent être considérés comme des outliers.
+-   la moyenne;
+-   l'écart-type;
+-   la médiane;
+-   les quartiles Q1 et Q3;
+-   le MAD *(fonction `mad()`)*.
 
-3) Pour chacune des variables, représenter :
-  * Un boxplot;
-  * Un histogramme.
-  
-Le nombre $k$ de classes sera choisi avec la **formule de Yule**:
-  $$ k= 2.5\times n^{0.25}.$$
+On pourra utiliser les fonctions `summary()`, `mean()`, `sd()`, `median()` ou `quantile()`.
+
+2)  Déterminer les individus de l'entreprise qui peuvent être considérés comme des outliers.
+
+3)  Pour chacune des variables, représenter :
+
+-   Un boxplot;
+-   Un histogramme.
+
+Le nombre $k$ de classes sera choisi avec la **formule de Yule**: $$ k= 2.5\times n^{0.25}.$$
 
 # Exercice 2
 
 On considère le jeu de données `frenes.cv`, disponible sur connect. On y a recensé 277 forêts en indiquant
 
-  * La proportion de frênes dans chacune des forêts;
-  * Un indice de pluviométrie annuelle;
-  * Un indice de température annuelle;
-  * Un indic ede pH du sol;
-  * Un indice de concentration de nitrates (NO3) dans le sol;
-  * La présence ou non d'un charançon nuisible;
-  * Si la forêt est exploitée ou non.
+-   La proportion de frênes dans chacune des forêts;
+-   Un indice de pluviométrie annuelle;
+-   Un indice de température annuelle;
+-   Un indic ede pH du sol;
+-   Un indice de concentration de nitrates (NO3) dans le sol;
+-   La présence ou non d'un charançon nuisible;
+-   Si la forêt est exploitée ou non.
 
 ```{r echo=FALSE,eval=FALSE}
 frenes <- read.csv("frenes.csv",row.names = 1)
@@ -58,23 +59,24 @@ frenes <- read.csv("frenes.csv",row.names = 1)
 
 On s'intéresse dans un premier temps à l'impact du charançon sur ces forêts.
 
-1) Effectuer un résumé statistique des deux variables qualitatives *Charancon* et *Exploitation*. 
+1)  Effectuer un résumé statistique des deux variables qualitatives *Charancon* et *Exploitation*.
 
-2) Représenter graphiquement ces deux variables par un diagramme en barres.
+2)  Représenter graphiquement ces deux variables par un diagramme en barres.
 
-3) Réaliser la table de contingence de ces deux variables *(fonction `table()`)*, et représenter par un diagramme en barres la variable *Charancon* selon que la forêt soit exploitée ou non.
+3)  Réaliser la table de contingence de ces deux variables *(fonction `table()`)*, et représenter par un diagramme en barres la variable *Charancon* selon que la forêt soit exploitée ou non.
 
-5) Effectuer un résumé statistique de la variables *Frenes*, à la manière de l'**Exercice 1**.
+4)  Effectuer un résumé statistique de la variables *Frenes*, à la manière de l'**Exercice 1**.
 
-4) Réaliser un histogramme de la variable *Frenes*. Que constate-t-on ?
+5)  Réaliser un histogramme de la variable *Frenes*. Que constate-t-on ?
 
-On choisira le nombre $k$ de classes avec la **formule de Sturges** :
-$$ k = 1+3.3\times \log_{10}(n) $$
+On choisira le nombre $k$ de classes avec la **formule de Sturges** : $$ k = 1+3.3\times \log_{10}(n) $$
 
-5) Réaliser un nouvel histogramme de la variable *Frenes*, en distinguant cette-fois ci selon l'absence ou la présence du charançon. De la même manière, réaliser un boxplot de cette variable.
+6)  Réaliser un nouvel histogramme de la variable *Frenes*, en distinguant cette-fois ci selon l'absence ou la présence du charançon. De la même manière, réaliser un boxplot de cette variable.
 
 On s'intéresse à présent à la concentration de nitrates dans les forêts étudiées.
 
-6) Réaliser un résumé statistique de la variable *NO3*, ainsi qu'un boxplot. Certaines forêts vous semblent-elles anormales ? Ces forêts sont-elles exploitées par l'homme ? Le charançon est-il présent dans ces forêts ?
+7)  Réaliser un résumé statistique de la variable *NO3*, ainsi qu'un boxplot. Certaines forêts vous semblent-elles anormales ? Ces forêts sont-elles exploitées par l'homme ? Le charançon est-il présent dans ces forêts ?
 
-7) Déterminer le coefficient de corrélation entre les variables *Frenes* et *NO3*. Commenter.
+8)  Déterminer le coefficient de corrélation entre les variables *Frenes* et *NO3*. Commenter.
+
+9) Réaliser le nuage de points des varaibles *NO3* en abscisse et *Frenes* en ordonées. On coloriera les points selon la présence ou non du charançon dans la forêt. Commenter.
