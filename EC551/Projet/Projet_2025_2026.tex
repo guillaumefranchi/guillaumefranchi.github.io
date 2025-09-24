@@ -1,0 +1,167 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amssymb,amsmath,amsthm,dsfont,mathtools,stmaryrd}
+
+%-- Just labeled equations
+\usepackage{mathtools}
+\mathtoolsset{showonlyrefs}
+
+%-- Language parameters
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+%-- Font parameters
+\usepackage{lmodern}
+\usepackage{csquotes} % "guillemets"
+\usepackage{color} % For colors
+
+%-- Margin parameters
+\usepackage{geometry}
+\geometry{vmargin=1.5cm,hmargin=1cm}
+
+%-- For importing graphics
+\usepackage{graphicx}
+\graphicspath{{Images/}}
+
+%-- For image alignment
+\usepackage[export]{adjustbox}
+
+%-- Better float management
+\usepackage{float}
+
+%-- For subfigures
+\usepackage{subcaption}
+
+%-- Paragraph parameters 
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+
+%-- Enumeration / List parameters
+\usepackage{enumitem}
+
+
+%-- URL parameters
+\usepackage{hyperref}
+%\usepackage{cleveref}
+\hypersetup{colorlinks,
+breaklinks,
+urlcolor=blue,
+linkcolor=black,
+citecolor=blue}
+
+%-- For arrays
+
+\usepackage{arydshln}
+
+%-- Math commands / symbols !!!! After URL parameters
+
+
+% Common sets
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\X}{\mathcal{X}}
+
+% Integration
+\renewcommand{\d}{\mathrm{d}}
+
+% Exponential
+\newcommand{\e}{\mathrm{e}}
+
+
+% Index function
+\newcommand{\ind}{\mathds{1}}
+
+
+% Inner product
+\newcommand{\scal}[2]{\langle #1 , #2 \rangle}
+% Diverse
+\newcommand{\argmin}{\mathrm{argmin}}
+\newcommand{\argmax}{\mathrm{argmax}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\E}{\mathbb{E}}
+
+
+
+%-- Environments
+\newcounter{numexo}
+\setcounter{numexo}{0}
+\newenvironment{exo}[1][]{\stepcounter{numexo} \textbf{Exercice \thenumexo} #1}{\medskip}
+\usepackage{multicol}
+
+%-- Titre
+
+\title{\begin{normalsize}\textbf{
+\includegraphics[scale=0.25]{logo_oniris.png} \\
+EC 551 : Statistique descriptive et décisionnelle
+ \\ Projet}
+\end{normalsize}}
+\author{{\small Guillaume Franchi}}
+\date{{\small Année universitaire 2025-2026}}
+
+%-- Sous-titres
+\usepackage[svgnames]{xcolor}
+\newcommand{\greysquare}{\textcolor{gray}{$\blacksquare$}}
+
+\makeatletter
+  \def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
+\makeatother
+
+\newcommand{\sstitre}[1]{\greysquare \ \textbf{\textsf{{\Large #1}}} \textcolor{gray}{\vhrulefill{2pt}} \medskip }
+
+%-- changement puces
+\AtBeginDocument{\renewcommand{\labelenumi}{\textbf{\arabic*})}}
+
+\AtBeginDocument{\renewcommand{\labelenumii}{\textbf{\alph*})}}
+
+%-- POur tableau double entrée
+\usepackage{nicematrix}
+
+\begin{document}
+
+\maketitle
+
+\sstitre{Présentation du projet}
+
+Le jeu de données \texttt{olive$\_$oil.csv}, disponible sur connect, contient des données relatives aux compositions en acides gras et au prix au litre de 572 huiles d'olives provenant de différentes régions d'Italie.
+
+\medskip
+
+\emph{Remarque : les données ont été simulées à des fins pédagogiques, et ne reflètent pas la réalité du marché.}
+
+\medskip
+
+On s'intéresse aux variables pouvant expliquer le montant payé par un assuré.
+
+\medskip
+
+Par binôme, vous devrez rendre sur connect pour le \textbf{mercredi 22 octobre 12h00}:
+	\begin{enumerate}[label=$\bullet$]
+	\item un compte-rendu \emph{(format : CR$\_$nombinome1$\_$nombinome2.pdf)};
+	\item un script \textsf{R} \emph{(format : script$\_$nombinome1$\_$nombinome2.R)};
+	\end{enumerate}
+
+permettant de répondre aux questions posées ci-dessous. On s'appuiera sur des représentations graphiques et des indicateurs statistiques présentés en cours.
+
+\medskip
+
+\emph{Remarque : Avant d'analyser les possibles liens entre deux variables, on effectuera une rapide analyse univariée des variables considérées.}
+
+\medskip
+
+\sstitre{Questions}
+
+	\begin{enumerate}
+	\item Quelles compositions en acides gras semblent expliquer le prix de l'huile d'olive ?
+	\item La région de provenance de l'huile semble-t-elle expliquer sa composition en acide linoléique ?
+	\item Créer une nouvelle variable qualitative correspondant à une gamme de prix :
+	\begin{enumerate}[label=$\bullet$]
+	\item $<6$ : entrée de gamme;
+	\item $[6,8[$: bon marché;
+	\item $[8,10[$: moyenne gamme;
+	\item $[10,12[$: gamme supérieure 
+	\item $\geqslant 12$: haut de gamme.
+	\end{enumerate}
+	Existe-t-il un lien entre ces différentes gammes et la région de provenance de l'huile d'olive ?
+	\end{enumerate}
+
+\end{document}
