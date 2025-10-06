@@ -1,0 +1,33 @@
+---
+title: "ECF932 : Techniques avancées en évaluation sensorielle"
+author: 
+  - Guillaume Franchi
+number-sections: false
+---
+
+# Parfums
+
+On considère cette fois-ci le jeu de données `parfums.csv`, disponible sur connect.
+
+Dans cette expérience, on a demandé à 103 consommateurs leur avis sur 12 parfums :
+
+  * en leur faisant évaluer 21 critères sur une échelle JAR allant de 1 à 5 *(codée de -2 à 2)*;
+  * en leur demandant une note d'appréciation globale de 1 à 9.
+
+# Représentations graphiques
+
+1) A la manière de l'Exercice 1, dresser la cartographie interne des préférences. Interpréter.
+
+2) Réaliser ensuite les autres graphiques permettant de résumer le jeu de données.
+
+# Analyse des pénalités
+
+3) Effectuer l'analyse des pénalités, tous produits confondus, et tester leur significativité statistique.
+
+4) Choisir ensuite un parfum en particulier, et effectuer l'analyse des pénalités pondérées sur ce dernier.
+
+Ce produit posède-t-il des défauts majeurs à corriger ?
+
+# Analyse factorielle
+
+5) Réaliser une analyse factorielle complète du jeu de données, et interpréter.
