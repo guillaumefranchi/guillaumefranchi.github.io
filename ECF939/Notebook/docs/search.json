@@ -1,0 +1,79 @@
+[
+  {
+    "objectID": "TD2.html",
+    "href": "TD2.html",
+    "title": "ECF939 : Science des données avancées",
+    "section": "",
+    "text": "L’ensemble des exercices présentés dans ce notebook sera traité sur R.",
+    "crumbs": [
+      "Random Forests"
+    ]
+  },
+  {
+    "objectID": "TD2.html#exercice-1-prédiction-de-ventes",
+    "href": "TD2.html#exercice-1-prédiction-de-ventes",
+    "title": "ECF939 : Science des données avancées",
+    "section": "Exercice 1 : Prédiction de ventes",
+    "text": "Exercice 1 : Prédiction de ventes\nOn reprend ici le jeu de données food_sales.csv disponible sur connect, et précédemment décrit dans ce notebook.\n\nSéparer le jeu de données en un échantillon d’entraînement, et un échantillon de test.\nA l’aide de la fonction ranger(), venant du package du même nom, construire sur les données d’entraînement une forêt aléatoire permettant de prédire le nombre de ventes en fonction des autres variables. On utilisera les paramètres par défaut.\n\n\nQuelle est l’erreur Out Of Bag obtenue avec cette forêt ?\nEstimer l’erreur de prévision sur les données de test, et comparer cette erreur avec celle obtenue par une régression linéaire.\nConstruire une nouvelle forêt aléatoire sur l’intégralité des données. Déterminer l’importance des variables par permutation. Faire un graphique.\n\n\nD’après vous, doit on se soucier des prox pratiqués par la concurrence ?",
+    "crumbs": [
+      "Random Forests"
+    ]
+  },
+  {
+    "objectID": "TD2.html#exercice-2-breast-cancer",
+    "href": "TD2.html#exercice-2-breast-cancer",
+    "title": "ECF939 : Science des données avancées",
+    "section": "Exercice 2 : Breast Cancer",
+    "text": "Exercice 2 : Breast Cancer\nLes données présentées dans cet exercice sont issues de l’article Nuclear feature extraction for breast tumor diagnosis (Street et al., 1993), et sont disponibles sur connect.\nLe jeu de données décrit les cellules obtenues par une ponction à l’aiguille fine d’une masse mammaire, et ce pour 569 patientes. Les variables étudiées sont :\n\nDiagnosis (M si la tumeur est maligne, B sinon);\nRadius (Rayons des cellules);\nTexture (Calculée sur des nuances de gris des cellules );\nPerimeter;\nArea;\nSmoothness (Variation des rayons des cellules);\nCompactness (Perimeter^2 / Area - 1.0);\nConcavity (Sévérité des portions concaves sur le contour);\nConcave_Points (Nombre de portions concaves sur le contour);\nSymmetry;\nFractal_Dimension.\n\nPour chacune de ces variables, on dispose de la moyenne sur les cellules observées, de l’écart-type, et des pires (ou plus grandes) valeurs.\n\nCharger les données et les résumer brièvement.\n\n\ndf_breast &lt;- read.csv(\"breast_cancer.csv\",row.names = 1)\ndf_breast &lt;- df_breast %&gt;% mutate(Diagnosis = as.factor(Diagnosis))\n\n\nSéparer le jeu de données en un jeu d’entraînement, et un jeu de test.\n\n\nSur les données d’entraînement, faire pousser une arbre optimal afin de classifier les tumeurs (malignes ou bénines) présentes sur ce jeu de données. Représenter cet arbre.\n\n\nSur ces mêmes données d’entraînement, faire pousser une forêt aléatoire avec les paramètres par défaut. Déterminer l’erreur OOB estimée.\n\n\nEnfin, ajuster un modèle de régression logistique sur les données d’entraînement.\n\n\nEstimer l’erreur de prédiction pour chacun des modèles précédents sur les données de test. Quel modèle semble être le meilleur ?\n\n\nAfin d’estimer de façon plus robuste l’erreur de prévision, on se propose ici de procéder par validation croisée. Le code suivant, utilisant le package tidymodels, permet de séparer le jeu de données en 10 blocs, puis d’estimer l’erreur obtenue par validation croisée pour l’algorithme de forêt aléatoire.\n\n\nlibrary(tidymodels)\nset.seed(42)\n\n# Création des 10 vlocs\nfolds &lt;- vfold_cv(data=df_breast,v = 10) \n\n# Spécification du modèle de forêt aléatoire utilisé\nrf_spec &lt;- rand_forest(mode=\"classification\",engine=\"ranger\")\n\n# Précision du modèle utilisé dans un workflow\nrf_workflow &lt;- workflow() %&gt;% add_model(rf_spec) %&gt;% add_formula(Diagnosis~.)\n\n# Ajustement du modèle pour chaque bloc\nrf_cv &lt;- rf_workflow %&gt;% fit_resamples(resamples = folds)\n\n# Récupération des métriques d'évaluation obtenues par validation croisée\nmetrics_rf_cv &lt;- collect_metrics(rf_cv)\n\nAdapter ce code pour estimer l’erreur de prévision par validation croisée pour les modèles de régression logistique et d’argre de décision. Commenter.",
+    "crumbs": [
+      "Random Forests"
+    ]
+  },
+  {
+    "objectID": "TD2.html#exercice-3-wine-quality",
+    "href": "TD2.html#exercice-3-wine-quality",
+    "title": "ECF939 : Science des données avancées",
+    "section": "Exercice 3 : Wine Quality",
+    "text": "Exercice 3 : Wine Quality\nOn étudie ici la qualité d’un échantillon de vins verts portugais selon différents attributs. Les données sont disponibles sur connect, sous le nom wine_quality.csv. Source : Cortez et al., 2009.\n\nCharger les données et les résumer brièvement.\nComparer différentes méthodes de machine learning pour prédire la qualité des vins en fonction des paramètres étudiés. On utilisera une validation croisée sur l’ensemble des données.\nProposer une méthode pour classer les variables étudiées selon leur importance.\nLe tableau ci-dessous contient les valeurs pour 10 nouveaux vins.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nfixed acidity\nvolatile acidity\ncitric acid\nresidual sugar\nchlorides\nfree SO₂\ntotal SO₂\ndensity\npH\nsulphates\nalcohol\ntype\n\n\n\n\n7.4\n0.64\n0.03\n2.1\n0.076\n15\n34\n0.9979\n3.41\n0.60\n10.4\nRed\n\n\n8.1\n0.45\n0.28\n1.9\n0.070\n22\n60\n0.9969\n3.32\n0.65\n11.0\nRed\n\n\n6.9\n0.70\n0.00\n1.5\n0.079\n10\n28\n0.9984\n3.50\n0.52\n9.6\nWhite\n\n\n9.2\n0.34\n0.40\n2.4\n0.062\n25\n70\n0.9971\n3.18\n0.72\n11.8\nRed\n\n\n7.7\n0.58\n0.06\n2.0\n0.074\n16\n44\n0.9968\n3.43\n0.57\n10.1\nWhite\n\n\n10.1\n0.32\n0.44\n2.6\n0.059\n24\n67\n0.9975\n3.15\n0.79\n12.2\nWhite\n\n\n6.6\n0.63\n0.02\n1.8\n0.082\n14\n30\n0.9978\n3.47\n0.55\n9.8\nWhite\n\n\n8.4\n0.39\n0.34\n2.3\n0.068\n20\n57\n0.9970\n3.28\n0.64\n10.9\nWhite\n\n\n7.1\n0.52\n0.09\n2.0\n0.075\n17\n45\n0.9967\n3.40\n0.59\n10.2\nWhite\n\n\n9.6\n0.31\n0.37\n2.7\n0.060\n26\n73\n0.9973\n3.20\n0.76\n12.0\nRed\n\n\n\nDéterminer la qualité de ces vins par la méthode de votre choix.",
+    "crumbs": [
+      "Random Forests"
+    ]
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "ECF939 : Science des données avancées",
+    "section": "",
+    "text": "L’ensemble des exercices présentés dans ce notebook sera traité sur R.",
+    "crumbs": [
+      "Méthode CART"
+    ]
+  },
+  {
+    "objectID": "index.html#exercice-1-iris-data",
+    "href": "index.html#exercice-1-iris-data",
+    "title": "ECF939 : Science des données avancées",
+    "section": "Exercice 1 : Iris Data",
+    "text": "Exercice 1 : Iris Data\n\nCharger le jeu de données iris. Afficher les premières lignes et effectuer un résumé rapide des données.\n\n\nSéparer le jeu de données en deux échantillons :\n\n\nun échantillon d’entraînement contenant 70% des données;\nun échantillon de validation contenant 30% des données (i.e. les données restantes).\n\n\nOn cherche à prédire le type de fleur (Species) en fonction des autres variables. Sur l’échantillon d’entraînement, faire pousser un arbre de classification maximal à l’aide de la fonction rpart(), issue du package du même nom.\n\n\nA l’aide de la fonction rpart.plot(), issue du package du même nom, représenter l’arbre de classification ainsi crée.\n\n\n\n\n\n\n\n\n\n\n\nOn s’intéresse dorénavant à la complexité de l’arbre.\n\nA l’aide de la fonction printcp(), afficher la complexité de la suite d’arbres construits pour l’arbre maximal.\nAfficher ensuite, avec la fonction plotcp() les erreurs obtenues par validation croisée dans la recherche du meilleur arbre (au sens de la fonction de coût)\n\nDéterminer ensuite l’arbre optimal en utilisant la fonction prune(). On pourra d’abord déterminer la complexité optimale cp_opt.\n\n\nAfficher l’arbre obtenu\n\n\n\n\n\n\n\n\n\n\n\nAppliquer l’arbre de classification obtenu sur l’échantillon test, et calculer le pourcentage de mauvaises classifications obtenues. On pourra utiliser la fonction predict().",
+    "crumbs": [
+      "Méthode CART"
+    ]
+  },
+  {
+    "objectID": "index.html#exercice-2-prédiction-de-ventes",
+    "href": "index.html#exercice-2-prédiction-de-ventes",
+    "title": "ECF939 : Science des données avancées",
+    "section": "Exercice 2 : Prédiction de ventes",
+    "text": "Exercice 2 : Prédiction de ventes\nDans cet exercice, on considère le jeu de données food_sales.csv, disponible sur connect.\nOn s’intéresse ici aux ventes d’une marque de céréales, que l’on cherche à prédire en fonction de plusieurs variables. Le jeu de données représente ainsi 11 variables mesurées dans 400 magasins de communes différentes (les unités choisies ici sont arbitraires).\n\nSales : quantité de céréales vendues dans le magasin.\nCompPrice : prix de vente moyen des céréales concurrentes dans le magasin.\nIncome : Revenu moyen des consommateurs dans la commune du magasin.\nAdvertising : Montant dépensé en publicité dans la commune du magasin.\nPopulation : Population de la commune.\nPrice : Prix de vente des céréales.\nShelfQuality : Qualité de placement des céréales dans le magasin.\nStoreSize : Taille du magasin.\nStoreAge : Age du magasin.\nUrban : Si le magasin est situé en zone urbaine ou non.\nRegion : Zone géographique du mgasin.\n\n\nCharger le jeu de données, et en dresser un rapide résumé.\n\n\nSéparer les données en un jeu d’entraînement contenant 70% des données, et un jeu de test en contenant 30%.\n\n\nSur le jeu d’entraînement, faire pousser un arbre de régression profond donnant la quantité de céréales vendues en fonction des autres variables. Représenter graphiquement cet arbre.\n\n\nElaguer cet arbre pour avoir un arbre de régression optimal, et le représenter.\n\n\nEstimer le risque de la prévision obtenue par cet arbre sur le jeu de test.\n\n\nComparer ce risque avec celui obtenu en effectuant une simple régression linéaire.\nReprendre les questions précédentes, mais en faisant varier l’échantillon d’entraînement. Que constate-t-on ?",
+    "crumbs": [
+      "Méthode CART"
+    ]
+  }
+]

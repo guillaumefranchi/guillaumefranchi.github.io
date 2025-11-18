@@ -1,0 +1,238 @@
+---
+title: "ECF939 : Science des données avancées"
+author: 
+  - Guillaume Franchi
+number-sections: false
+---
+
+L'ensemble des exercices présentés dans ce notebook sera traité sur R.
+
+# Random Forests
+
+## Exercice 1 : Prédiction de ventes
+
+On reprend ici le jeu de données *food_sales.csv* disponible sur connect, et précédemment décrit dans ce notebook.
+
+1. Séparer le jeu de données en un échantillon d'entraînement, et un échantillon de test.
+
+2. A l'aide de la fonction `ranger()`, venant du package du même nom, construire sur les données d'entraînement une forêt aléatoire permettant de prédire le nombre de ventes en fonction des autres variables. *On utilisera les paramètres par défaut*.
+
+```{r echo=FALSE,eval=TRUE,message=FALSE,warning=FALSE}
+library(ranger)
+library(tidyverse)
+
+df_food <-read.csv("food_sales.csv",row.names = 1)
+df_food <- df_food %>%
+  mutate_if(.predicate = is.character,
+            .funs = as.factor)
+set.seed(456)
+train <- sample(1:nrow(df_food),floor(0.7*nrow(df_food)))
+food_train <- df_food[train,]
+food_test <- df_food[-train,]
+forest_food <- ranger(data=food_train,formula = Sales~.)
+# forest_food
+# 
+# pred_food <- predict(object = forest_food,data = food_test)$predictions
+# mean((pred_food-food_test$Sales)^2)
+# 
+# modlm <- lm(data = food_train,formula = Sales~.)
+# summary(modlm)
+# 
+# pred_food_lm <- predict(object = modlm,newdata = food_test)
+# mean((pred_food_lm-food_test$Sales)^2)
+```
+
+3. Quelle est l'erreur **Out Of Bag** obtenue avec cette forêt ?
+
+4. Estimer l'erreur de prévision sur les données de test, et comparer cette erreur avec celle obtenue par une régression linéaire.
+
+5. Construire une nouvelle forêt aléatoire sur l'intégralité des données. Déterminer l'importance des variables par permutation. Faire un graphique.
+
+```{r echo=FALSE,eval=TRUE,warning=FALSE}
+full_forest <- ranger(data=df_food,formula = Sales~.,importance = "permutation")
+# library(vip)
+# vip(full_forest)+
+#   theme_bw()+
+#   labs(title="Importance par permutation (Food Sales)")
+```
+
+6. D'après vous, doit on se soucier des prox pratiqués par la concurrence ? 
+
+## Exercice 2 : Breast Cancer
+
+Les données présentées dans cet exercice sont issues de l'article *Nuclear feature extraction for breast tumor diagnosis* (Street et al., 1993), et sont disponibles sur connect.
+
+Le jeu de données décrit les cellules obtenues par une ponction à l'aiguille fine d'une masse mammaire, et ce pour 569 patientes. Les variables étudiées sont :
+
+  * Diagnosis (*M si la tumeur est maligne, B sinon*);
+  * Radius (*Rayons des cellules*);
+  * Texture (*Calculée sur des nuances de gris des cellules* );
+  * Perimeter;
+  * Area;
+  * Smoothness (*Variation des rayons des cellules*);
+  * Compactness (*Perimeter^2 / Area - 1.0*);
+  * Concavity (*Sévérité des portions concaves sur le contour*);
+  * Concave_Points (*Nombre de portions concaves sur le contour*);
+  * Symmetry;
+  * Fractal_Dimension.
+  
+Pour chacune de ces variables, on dispose de la moyenne sur les cellules observées, de l'écart-type, et des pires (*ou plus grandes*) valeurs.
+
+```{r echo=FALSE,eval=FALSE}
+df_breast <- read.table("wdbc.data",sep=",") %>%
+  select(-1)
+library(tidyverse)
+names_breast <- c("Diagnosis",
+                  paste(rep(c("Radius",
+                          "Texture",
+                          "Perimeter",
+                          "Area",
+                          "Smoothness",
+                          "Compactness",
+                          "Concavity",
+                          "Concave_Points",
+                          "Symetry",
+                          "Fractal_Dimension"),3),c(rep("Mean",10),
+                                                    rep("SE",10),rep("Worst",10)),sep="_"))
+colnames(df_breast) <- names_breast
+write.csv(df_breast,file="breast_cancer.csv")
+```
+
+1. Charger les données et les résumer brièvement.
+
+```{r echo=TRUE,eval=TRUE}
+df_breast <- read.csv("breast_cancer.csv",row.names = 1)
+df_breast <- df_breast %>% mutate(Diagnosis = as.factor(Diagnosis))
+```
+
+2. Séparer le jeu de données en un jeu d'entraînement, et un jeu de test.
+
+```{r echo=FALSE,eval=TRUE}
+set.seed(34)
+train <- sample(1:nrow(df_breast),floor(0.7*nrow(df_breast)))
+breast_train <- df_breast[train,]
+breast_test <- df_breast[-train,]
+```
+
+
+3. Sur les données d'entraînement, faire pousser une arbre optimal afin de classifier les tumeurs (*malignes ou bénines*) présentes sur ce jeu de données. Représenter cet arbre.
+
+```{r echo=FALSE,eval=TRUE}
+library(rpart)
+library(rpart.plot)
+tree_breast_max <- rpart(data=breast_train,formula = Diagnosis~.,
+                         control = rpart.control(minsplit = 2,cp=1-5))
+cp_opt <- tree_breast_max$cptable %>%
+  as.data.frame() %>%
+  arrange(xerror) %>%
+  slice(1) %>%
+  select(CP) %>%
+  as.numeric()
+tree_breast_opt <- prune.rpart(tree_breast_max,cp_opt)
+# rpart.plot(tree_breast_opt,type=2,extra = 8,
+#            box.palette = list("#66C2A5", "#FC8D62"))
+```
+
+4. Sur ces mêmes données d'entraînement, faire pousser une forêt aléatoire avec les paramètres par défaut. Déterminer l'erreur OOB estimée.
+
+```{r echo=FALSE, eval=TRUE}
+forest_breast <- ranger(data=breast_train,formula = Diagnosis~.)
+```
+
+5. Enfin, ajuster un modèle de régression logistique sur les données d'entraînement.
+
+```{r echo=FALSE,eval=TRUE,warning=FALSE}
+glm_breast <- glm(data=breast_train,formula = Diagnosis~.,family = "binomial")
+```
+
+6. Estimer l'erreur de prédiction pour chacun des modèles précédents sur les données de test. Quel modèle semble être le meilleur ?
+
+```{r echo=FALSE,eval=TRUE}
+pred_glm <- predict(object = glm_breast,newdata = breast_test,type = "response")>=0.5
+pred_tree <- predict(object = tree_breast_opt,newdata = breast_test,type="class")
+pred_forest <- predict(object = forest_breast,data = breast_test)$predictions
+pred_glm <- factor(pred_glm,labels = c("B","M"),levels = c("FALSE","TRUE"))
+
+# mean(pred_forest!=breast_test$Diagnosis)
+# mean(pred_glm!=breast_test$Diagnosis)
+# mean(pred_tree!=breast_test$Diagnosis)
+```
+
+
+7. Afin d'estimer de façon plus robuste l'erreur de prévision, on se propose ici de procéder par validation croisée. Le code suivant, utilisant le package `tidymodels`, permet de séparer le jeu de données en 10 blocs, puis d'estimer l'erreur obtenue par validation croisée pour l'algorithme de forêt aléatoire.
+
+```{r echo=TRUE,eval=TRUE,message=FALSE,warning=FALSE}
+library(tidymodels)
+set.seed(42)
+
+# Création des 10 vlocs
+folds <- vfold_cv(data=df_breast,v = 10) 
+
+# Spécification du modèle de forêt aléatoire utilisé
+rf_spec <- rand_forest(mode="classification",engine="ranger")
+
+# Précision du modèle utilisé dans un workflow
+rf_workflow <- workflow() %>% add_model(rf_spec) %>% add_formula(Diagnosis~.)
+
+# Ajustement du modèle pour chaque bloc
+rf_cv <- rf_workflow %>% fit_resamples(resamples = folds)
+
+# Récupération des métriques d'évaluation obtenues par validation croisée
+metrics_rf_cv <- collect_metrics(rf_cv)
+```
+
+Adapter ce code pour estimer l'erreur de prévision par validation croisée pour les modèles de régression logistique et d'argre de décision. Commenter.
+
+```{r echo=FALSE,eval=TRUE,warning=FALSE}
+# glm_spec <- logistic_reg() %>% 
+#   set_engine("glm")
+# 
+# glm_workflow <- workflow() %>% 
+#   add_model(glm_spec) %>% 
+#   add_formula(Diagnosis ~ .)
+# 
+# glm_cv <- glm_workflow %>% 
+#   fit_resamples(resamples = folds)
+# 
+# metrics_glm_cv <- collect_metrics(glm_cv)
+# 
+# tree_spec <- decision_tree(mode="classification") %>% 
+#   set_engine("rpart")
+# 
+# tree_workflow <- workflow() %>% 
+#   add_model(tree_spec) %>% 
+#   add_formula(Diagnosis ~ .)
+# 
+# tree_cv <- tree_workflow %>% 
+#   fit_resamples(resamples = folds)
+# 
+# metrics_tree_cv <- collect_metrics(tree_cv)
+```
+
+## Exercice 3 : Wine Quality
+
+On étudie ici la qualité d'un échantillon de vins verts portugais selon différents attributs. Les données sont disponibles sur connect, sous le nom *wine_quality.csv*. *Source : Cortez et al., 2009*.
+
+1. Charger les données et les résumer brièvement.
+
+2. Comparer différentes méthodes de machine learning pour prédire la qualité des vins en fonction des paramètres étudiés. *On utilisera une validation croisée sur l'ensemble des données*.
+
+3. Proposer une méthode pour classer les variables étudiées selon leur importance.
+
+4. Le tableau ci-dessous contient les valeurs pour 10 nouveaux vins.
+
+| fixed acidity | volatile acidity | citric acid | residual sugar | chlorides | free SO₂ | total SO₂ | density   | pH   | sulphates | alcohol | type |
+|---------------|------------------|-------------|----------------|-----------|----------|------------|-----------|------|-----------|---------|---------|
+| 7.4 | 0.64 | 0.03 | 2.1 | 0.076 | 15 | 34 | 0.9979 | 3.41 | 0.60 | 10.4 | Red |
+| 8.1 | 0.45 | 0.28 | 1.9 | 0.070 | 22 | 60 | 0.9969 | 3.32 | 0.65 | 11.0 | Red |
+| 6.9 | 0.70 | 0.00 | 1.5 | 0.079 | 10 | 28 | 0.9984 | 3.50 | 0.52 | 9.6 | White |
+| 9.2 | 0.34 | 0.40 | 2.4 | 0.062 | 25 | 70 | 0.9971 | 3.18 | 0.72 | 11.8 | Red |
+| 7.7 | 0.58 | 0.06 | 2.0 | 0.074 | 16 | 44 | 0.9968 | 3.43 | 0.57 | 10.1 | White |
+| 10.1 | 0.32 | 0.44 | 2.6 | 0.059 | 24 | 67 | 0.9975 | 3.15 | 0.79 | 12.2 | White |
+| 6.6 | 0.63 | 0.02 | 1.8 | 0.082 | 14 | 30 | 0.9978 | 3.47 | 0.55 | 9.8 | White |
+| 8.4 | 0.39 | 0.34 | 2.3 | 0.068 | 20 | 57 | 0.9970 | 3.28 | 0.64 | 10.9 | White |
+| 7.1 | 0.52 | 0.09 | 2.0 | 0.075 | 17 | 45 | 0.9967 | 3.40 | 0.59 | 10.2 | White |
+| 9.6 | 0.31 | 0.37 | 2.7 | 0.060 | 26 | 73 | 0.9973 | 3.20 | 0.76 | 12.0 | Red |
+
+Déterminer la qualité de ces vins par la méthode de votre choix.
+

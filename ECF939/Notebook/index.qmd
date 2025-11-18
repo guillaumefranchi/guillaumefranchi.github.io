@@ -1,0 +1,176 @@
+---
+title: "ECF939 : Science des données avancées"
+author: 
+  - Guillaume Franchi
+number-sections: false
+---
+
+L'ensemble des exercices présentés dans ce notebook sera traité sur R.
+
+# Méthode CART
+
+## Exercice 1 : Iris Data
+
+1. Charger le jeu de données `iris`. Afficher les premières lignes et effectuer un résumé rapide des données.
+
+```{r echo=FALSE, eval=TRUE,message=FALSE}
+data("iris")
+```
+
+2. Séparer le jeu de données en deux échantillons :
+
+  * un échantillon d'entraînement contenant 70% des données;
+  * un échantillon de validation contenant 30% des données (i.e. les données restantes).
+  
+```{r echo= FALSE, eval=TRUE,message=FALSE}
+set.seed(951)
+train <- sample(1:nrow(iris),floor(0.7*nrow(iris)))
+
+iris_train <-iris[train,]
+iris_test <- iris[-train,]
+```
+
+3. On cherche à prédire le type de fleur (*Species*) en fonction des autres variables. Sur l'échantillon d'entraînement, faire pousser un arbre de classification maximal à l'aide de la fonction `rpart()`, issue du package du même nom.
+
+```{r echo=FALSE, eval=TRUE,message=FALSE}
+library(rpart)
+
+treemax_iris <- rpart(data = iris_train,formula = Species~.,
+                      control = rpart.control(minsplit = 2,cp=1e-5))
+
+```
+
+4. A l'aide de la fonction `rpart.plot()`, issue du package du même nom, représenter l'arbre de classification ainsi crée.
+
+```{r echo=FALSE, eval=TRUE}
+library(rpart.plot)
+library(RColorBrewer)
+
+rpart.plot(treemax_iris,type = 1,extra = 8,
+           main="Arbre de classification maximal (iris data)",
+           box.palette = list("#66C2A5", "#FC8D62", "#8DA0CB"))
+
+```
+
+5. On s'intéresse dorénavant à la complexité de l'arbre.
+
+A l'aide de la fonction `printcp()`, afficher la complexité de la suite d'arbres construits pour l'arbre maximal.
+
+Afficher ensuite, avec la fonction `plotcp()` les erreurs obtenues par validation croisée dans la recherche du meilleur arbre (*au sens de la fonction de coût*)
+
+6. Déterminer ensuite l'arbre optimal en utilisant la fonction `prune()`. *On pourra d'abord déterminer la complexité optimale `cp_opt`*.
+
+```{r echo=FALSE, eval=TRUE,message=FALSE}
+library(tidyverse)
+cp_opt <- treemax_iris$cptable %>%
+  as.data.frame() %>%
+  arrange(xerror) %>%
+  slice(1) %>%
+  select(CP) %>%
+  as.numeric()
+
+treeopt_iris <- prune(treemax_iris,cp = cp_opt)
+
+```
+
+
+7. Afficher l'arbre obtenu
+
+```{r echo=FALSE, eval=TRUE,message=FALSE}
+rpart.plot(treeopt_iris,type=2,extra = 8,
+           main="Arbre de classification optimal (iris data)",
+           box.palette = list("#66C2A5", "#FC8D62", "#8DA0CB"))
+```
+
+8. Appliquer l'arbre de classification obtenu sur l'échantillon test, et calculer le pourcentage de mauvaises classifications obtenues. *On pourra utiliser la fonction `predict()`*.
+
+```{r echo= FALSE, eval=TRUE, message=FALSE}
+iris_pred <- predict(treeopt_iris,newdata = iris_test,type="class")
+#mean(iris_pred != iris_test$Species)*100
+```
+
+<!-- 9. La proportion de mauvaises classifications obtenue à la question précédente nous donne une estimation du risque de mauvaise classification en utilisant un arbre CART sur les données `iris`. -->
+<!-- Comparer cette estimation avec une validation croisée 10 blocs. Pour ce faire : -->
+
+<!--   * Séparer les données en 10 blocs de même taille; -->
+<!--   * Pour chaque bloc $k \in \{1,\ldots,10\}$, déterminer l'arbre optimal à partir des données privées du bloc $k$; -->
+<!--   * Calculer l'erreur de classification réalisée sur le bloc $k$; -->
+<!--   * Calculer la moyenne de ces erreurs sur les 10 blocs. -->
+
+## Exercice 2 : Prédiction de ventes
+
+Dans cet exercice, on considère le jeu de données *food_sales.csv*, disponible sur connect.
+
+On s'intéresse ici aux ventes d'une marque de céréales, que l'on cherche à prédire en fonction de plusieurs variables. Le jeu de données représente ainsi 11 variables mesurées dans 400 magasins de communes différentes (*les unités choisies ici sont arbitraires*).
+
+- ***Sales*** : quantité de céréales vendues dans le magasin.
+- ***CompPrice*** : prix de vente moyen des céréales concurrentes dans le magasin.
+- ***Income*** : Revenu moyen des consommateurs dans la commune du magasin.
+- ***Advertising*** : Montant dépensé en publicité dans la commune du magasin.
+- ***Population*** : Population de la commune.
+- ***Price*** : Prix de vente des céréales.
+- ***ShelfQuality*** : Qualité de placement des céréales dans le magasin.
+- ***StoreSize*** : Taille du magasin.
+- ***StoreAge*** : Age du magasin.
+- ***Urban*** : Si le magasin est situé en zone urbaine ou non.
+- ***Region*** : Zone géographique du mgasin.
+
+1. Charger le jeu de données, et en dresser un rapide résumé.
+
+```{r echo=FALSE,eval=TRUE}
+df_food <- read.csv("food_sales.csv",row.names = 1)
+df_food <- df_food %>%
+  mutate_if(.predicate = is.character,
+            .funs = as.factor)
+```
+
+
+2. Séparer les données en un jeu d'entraînement contenant 70% des données, et un jeu de test en contenant 30%.
+
+```{r echo=FALSE,eval=TRUE}
+set.seed(33)
+train <- sample(1:nrow(df_food),floor(0.7*nrow(df_food)))
+food_train <- df_food[train,]
+food_test <- df_food[-train,]
+```
+
+
+3. Sur le jeu d'entraînement, faire pousser un arbre de régression profond donnant la quantité de céréales vendues en fonction des autres variables. Représenter graphiquement cet arbre.
+
+```{r echo=FALSE,eval=TRUE}
+tree_food <- rpart(data=food_train,formula = Sales~.,
+                   control = rpart.control(minsplit = 5,cp=1e-5))
+# rpart.plot(tree_food,type=2,box.palette = "Blues")
+# printcp(tree_food)
+# plotcp(tree_food)
+```
+
+4. Elaguer cet arbre pour avoir un arbre de régression optimal, et le représenter.
+
+```{r echo=FALSE,eval=TRUE}
+cp_opt <- tree_food$cptable %>%
+  as.data.frame() %>%
+  arrange(xerror) %>%
+  slice(1) %>%
+  select(CP) %>%
+  as.numeric()
+tree_food_opt <- prune(tree = tree_food,cp = cp_opt)
+# rpart.plot(tree_food_opt,type=2,box.palette = "Blues")
+```
+
+
+5. Estimer le risque de la prévision obtenue par cet arbre sur le jeu de test.
+
+```{r echo=FALSE,eval=TRUE}
+food_pred <- predict(object = tree_food_opt,newdata = food_test)
+# modlm <- lm(data=food_train,formula = Sales~.)
+# summary(modlm)
+# predlm <- predict(modlm,newdata = food_test)
+# mean((food_pred-food_test$Sales)^2)
+# mean((predlm-food_test$Sales)^2)
+```
+
+6. Comparer ce risque avec celui obtenu en effectuant une simple régression linéaire. 
+
+7. Reprendre les questions précédentes, mais en faisant varier l'échantillon d'entraînement. Que constate-t-on ?
+
