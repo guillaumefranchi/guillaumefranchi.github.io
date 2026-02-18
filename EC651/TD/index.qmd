@@ -1,0 +1,19 @@
+---
+title: "EC651 et 56/53 : Modélisation statistique (Régression linéaire)"
+author: Guillaume Franchi
+number-sections: true
+number-depth: 2
+number-offset: 0
+---
+
+# Avant-Propos {-}
+
+Ce notebook contient les exercices liés à la première partie du cours de modélisation statistique, concernant la régression linéaire.
+
+Vous trouverez, sur la barre de navigation à gauche, le menu vous permettant d'accéder aux différents TDs.
+
+Vous trouverez ci-dessous des liens utiles pour ce cours et ces TDS :
+  * Les slides de cours;
+  * Le [polycopié](https://perso.lpsm.paris/~aguyader/files/teaching/Regression.pdf){target="_blank"} d'Arnaud Guyader;
+  * Le [lien](https://r-stat-sc-donnees.github.io/){target="_blank"} vers le site du livre **R pour la statistique et la science des données**, sous la direction de F.Husson.
+

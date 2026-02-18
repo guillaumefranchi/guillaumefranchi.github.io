@@ -1,0 +1,36 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "EC651 et 56/53 : Modélisation statistique (Régression linéaire)"
+  sidebar:
+    style: "docked"
+    search: true
+    contents:
+      - href: index.qmd
+        text: "Avant-Propos"
+      - href: TD1.qmd
+        text: "TD1 : Régression linéaire simple"
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+editor: visual
+
+execute:
+  echo: true
+  eval: false
+  
+lang: fr
+
+
+
+
+
+
+

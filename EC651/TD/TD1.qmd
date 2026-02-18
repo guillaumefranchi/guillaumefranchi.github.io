@@ -1,0 +1,84 @@
+---
+title: "TD1 : Régression linéaire simple"
+author: Guillaume Franchi
+number-sections: true
+number-depth: 2
+number-offset: 0
+---
+
+
+
+# Exercice 1 {-}
+
+On considère le jeu de données `tomato_sauce.csv` disponible ici.
+
+Les données recueillies portent sur des mesures effectuées sur un site de production de sauce à base de tomate.
+
+La variable $Y$ à expliquer, notée *rdt*, est une réponse liée au rendement de production (% d’extrait de tomate dans la sauce).
+
+La variable explicative $X$, notée *ratioMP*, est relative à la qualité du lot de matières premières (% de solides insolubles dans l’eau par rapport à la quantité de solide totale).
+
+24 observations ont été réalisées sur une série d’ordres de production consécutifs
+
+1) Importer les données dans R, et en dresser un rapide résumé statistique.
+
+2) Réaliser les boxplots et histogrammes des différentes variables. Commenter.
+
+3) Tracer le nuage de points associé aux données, puis calculer le coefficient de corrélation linéaire entre les deux variables *(rappeler la définition de ce dernier)*.
+
+Celui-ci est-il significativement non nul ? Un modèle linéaire semble-t-il adapté aux données ? Ecrire mathématiquement ce modèle.
+
+4) À l'aide de la fonction `lm()`, ajsuter un modèle linéaire aux données. En faire un résumé rapide avec la fonction `summary()`.
+
+5) Donner les valeurs estimées des coefficients du modèle, ainsi qu'un intervalle de confiance à 95% de ces coefficients avec la fonction `confint()`. Ceux-ci sont-ils significativement non nuls ? Préciser la statistique de test utilisée ici.
+
+6) Quelle est la proportion de variance expliquée par le modèle ? Rappeler la définition de l'indicateur statistique utilisé.
+
+7) Utiliser la fonction `geom_smooth()` du package `ggplot2` afin de tracer la droite de régression linéaire ajustée aux données.
+
+*L'intervalle de confiance à 95% tracé par cette fonction est celui de la valeur $\hat{\beta}_0 + \hat{\beta}_1 x$. Il s'agit en fait de l'intervalle de confiance pour la valeur moyenne de la variable réponse $y$.*
+
+8) On souhaite à présent rajouter l'intervalle de confiance pour les prévisions faites par le modèle. Celui-ci est différent de l'intervalle tracé par la fonction `geom_smooth()`. Il prend notamment en compte la dispersion liée au bruit gaussien du modèle.
+
+  * A l'aide de la fonction `predict()` récupérer les bornes inférieures et supérieures des prévisions associées aux observations du jeu de données. On stockera ces valeurs dans le data-frame initial avec pour noms de variables *pred_lwr* et *pred_upr*.
+  * Rajouter, à l'aide de la fonction `geom_line()`, ces bornes sur le graphique réalisé jusqu'à présent.
+  
+9) Déterminer les valeurs prédites *(ainsi que leurs intervalles de confiance à 95%)* de la variable rendement pour les valeurs suivantes de la variable *ratioMP*.
+
+# Exercice 2 {-}
+
+On s'intéresse ici à l’équilibre des saveurs dans différents cidres.
+
+90 cidres bruts ont été évalués par un jury sensoriel formé de 24 juges (échelle de notation de 1 à
+10, calcul des notes moyennes), selon différents critères :
+  - Saveur sucrée;
+  - Saveur Acide;
+  - Saveur amère;
+  - Saveur astringente
+  
+On étudie plus précisément la relation entre la saveur astringente *(variable réponse)* des cidres et
+leur saveur amère *(variable explicative)*.
+
+1) Importer le jeu de données dans R *(disponible ici)*, et en dresser un rapide résumé statistique. 
+
+2) Représenter graphiquement la distribution des différentes variables du jeu de données par la méthode de votre choix.
+
+3) Combien de données manquantes le jeu de données comporte-t-il ?
+
+4) On souhaite imputer ces valeurs manquantes via un modèle linéaire simple reliant la saveur astringente *(variable réponse)* des cidre et leur saveur amère *(variable explicative)*.
+
+Un tel modèle vous semble-t-il adapté ?
+
+5) Ajuster un modèle linéaire donnant la saveur astringente en fonction de la saveur amère. Quel est le pourcentage de variance expliquée par ce modèle ?
+
+6) Sur un graphique, représenter :
+  - le nuage de points donnant la saveur astringente des cidres en fonction de leur saveur amère;
+  - la droite de régression linéaire donnée par le modèle utilisé;
+  - les différents intervalles de confiance au niveau 95% pour les prévisions faites par le modèle.
+  
+7) Imputer enfin les valeurs manquantes, et donner leur intervalle de confiance au niveau 95%.
+
+
+
+
+
