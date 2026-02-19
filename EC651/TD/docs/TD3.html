@@ -8,7 +8,7 @@
 
 <meta name="author" content="Guillaume Franchi">
 
-<title>TD1 : Régression linéaire simple – EC651 et 56/53 : Modélisation statistique (Régression linéaire)</title>
+<title>TD3 : Régression non linéaire – EC651 et 56/53 : Modélisation statistique (Régression linéaire)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -111,7 +111,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TD1.html">TD1 : Régression linéaire simple</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TD3.html">TD3 : Régression non linéaire</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -144,7 +144,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./TD1.html" class="sidebar-item-text sidebar-link active">
+  <a href="./TD1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">TD1 : Régression linéaire simple</span></a>
   </div>
 </li>
@@ -156,7 +156,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./TD3.html" class="sidebar-item-text sidebar-link">
+  <a href="./TD3.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">TD3 : Régression non linéaire</span></a>
   </div>
 </li>
@@ -180,7 +180,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">TD1 : Régression linéaire simple</h1>
+<h1 class="title">TD3 : Régression non linéaire</h1>
 </div>
 
 
@@ -205,65 +205,72 @@ window.Quarto = {
 
 <section id="exercice-1" class="level1 unnumbered">
 <h1 class="unnumbered">Exercice 1</h1>
-<p>On considère le jeu de données <code>tomato_sauce.csv</code> disponible <a href="tomato_sauce.csv" download=""> ici </a>.</p>
-<p>Les données recueillies portent sur des mesures effectuées sur un site de production de sauce à base de tomate.</p>
-<p>La variable <span class="math inline">\(Y\)</span> à expliquer, notée <em>rdt</em>, est une réponse liée au rendement de production (% d’extrait de tomate dans la sauce).</p>
-<p>La variable explicative <span class="math inline">\(X\)</span>, notée <em>ratioMP</em>, est relative à la qualité du lot de matières premières (% de solides insolubles dans l’eau par rapport à la quantité de solide totale).</p>
-<p>24 observations ont été réalisées sur une série d’ordres de production consécutifs</p>
+<p>On considère le jeu de données <code>azote_ble.csv</code> disponible <a href="./azote_ble.csv" download=""> ici </a>.</p>
+<p>On a recensé ici le rendement <em>(en T/ha)</em> de 92 champs de blés en fonction de la dose d’azote apportée <em>(en kg/ha)</em>.</p>
 <ol type="1">
-<li><p>Importer les données dans R, et en dresser un rapide résumé statistique.</p></li>
-<li><p>Réaliser les boxplots et histogrammes des différentes variables. Commenter.</p></li>
-<li><p>Tracer le nuage de points associé aux données, puis calculer le coefficient de corrélation linéaire entre les deux variables <em>(rappeler la définition de ce dernier)</em>.</p></li>
+<li><p>Importer les données dans R, et en faire un bref résumé statistique.</p></li>
+<li><p>Un modèle linéaire semble-t-il adapté afin d’expliquer le rendement des champs ?</p></li>
+<li><p>On se propose de modéliser le rendement des champs par un modèle polynomial de degré 3 :</p></li>
 </ol>
-<p>Celui-ci est-il significativement non nul ? Un modèle linéaire semble-t-il adapté aux données ? Ecrire mathématiquement ce modèle.</p>
-<ol start="4" type="1">
-<li><p>À l’aide de la fonction <code>lm()</code>, ajsuter un modèle linéaire aux données. En faire un résumé rapide avec la fonction <code>summary()</code>.</p></li>
-<li><p>Donner les valeurs estimées des coefficients du modèle, ainsi qu’un intervalle de confiance à 95% de ces coefficients avec la fonction <code>confint()</code>. Ceux-ci sont-ils significativement non nuls ? Préciser la statistique de test utilisée ici.</p></li>
-<li><p>Quelle est la proportion de variance expliquée par le modèle ? Rappeler la définition de l’indicateur statistique utilisé.</p></li>
-<li><p>Utiliser la fonction <code>geom_smooth()</code> du package <code>ggplot2</code> afin de tracer la droite de régression linéaire ajustée aux données.</p></li>
-</ol>
-<p><em>L’intervalle de confiance à 95% tracé par cette fonction est celui de la valeur <span class="math inline">\(\hat{\beta}_0 + \hat{\beta}_1 x\)</span>. Il s’agit en fait de l’intervalle de confiance pour la valeur moyenne de la variable réponse <span class="math inline">\(y\)</span>.</em></p>
-<ol start="8" type="1">
-<li>On souhaite à présent rajouter l’intervalle de confiance pour les prévisions faites par le modèle. Celui-ci est différent de l’intervalle tracé par la fonction <code>geom_smooth()</code>. Il prend notamment en compte la dispersion liée au bruit gaussien du modèle.</li>
-</ol>
+<p><span class="math display">\[ Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 +\beta_4X^4+ \varepsilon\]</span> où :</p>
 <ul>
-<li>A l’aide de la fonction <code>predict()</code> récupérer les bornes inférieures et supérieures des prévisions associées aux observations du jeu de données. On stockera ces valeurs dans le data-frame initial avec pour noms de variables <em>pred_lwr</em> et <em>pred_upr</em>.</li>
-<li>Rajouter, à l’aide de la fonction <code>geom_line()</code>, ces bornes sur le graphique réalisé jusqu’à présent.</li>
+<li><span class="math inline">\(X\)</span> désigne la dose d’azote apportée <em>(en kg/ha)</em>;</li>
+<li><span class="math inline">\(Y\)</span> désigne le rendement du champ <em>(en T/ha)</em>;</li>
+<li><span class="math inline">\(\varepsilon \sim \mathcal{N}(0,\sigma^2)\)</span> désigne un bruit gausssien.</li>
 </ul>
-<ol start="9" type="1">
-<li>Déterminer les valeurs prédites <em>(ainsi que leurs intervalles de confiance à 95%)</em> de la variable rendement pour les valeurs suivantes de la variable <em>ratioMP</em>.</li>
+<p>Modifier le jeu de données initial afin de faire apparaître les variables <span class="math inline">\(X^2\)</span>, <span class="math inline">\(X^3\)</span> et <span class="math inline">\(X^4\)</span>.</p>
+<ol start="4" type="1">
+<li><p>À l’aide de la fonction <code>lm()</code>, ajuster un modèle polynomial aux données.</p></li>
+<li><p>Quel est le pourcentage de variance expliquée par le modèle ? Certains coefficients semblent-ils non significatifs ?</p></li>
+<li><p>Effectuer un ou plusieurs tests de modèles emboîtés afin de déterminer les coefficients significativement non nuls du modèle. Quel modèle est finalement retenu ?</p></li>
+<li><p>Tracer le nuage de points représentant les données, et y ajouter les différents intervalles de confiance au niveau 95% pour les prédictions faites par le modèle.</p></li>
 </ol>
 </section>
 <section id="exercice-2" class="level1 unnumbered">
 <h1 class="unnumbered">Exercice 2</h1>
-<p>On s’intéresse ici à l’équilibre des saveurs dans différents cidres.</p>
-<p>90 cidres bruts ont été évalués par un jury sensoriel formé de 24 juges (échelle de notation de 1 à 10, calcul des notes moyennes), selon différents critères :</p>
+<p>On étudie dans cet exercice l’espérance de vie moyenne dans un pays en fonction de sa population et de son PIB par habitant. On dispose pour cela d’un jeu de données <em>(disponible <a href="./life_expectancy.csv" download=""> ici </a>)</em> libre de droits issu de la banque mondiale, et disponible sur <a href="https://www.gapminder.org/" target="_blank">Gapminder.org</a>, CCBY License.</p>
+<p>On trouvera dans ce jeu de données pour 142 pays en 2007 :</p>
 <ul>
-<li>Saveur sucrée;</li>
-<li>Saveur Acide;</li>
-<li>Saveur amère;</li>
-<li>Saveur astringente</li>
+<li>le PIB par habitant;</li>
+<li>la population du pays;</li>
+<li>le continent du pays;</li>
+<li>l’espérance de vie dans le pays.</li>
 </ul>
-<p>On étudie plus précisément la relation entre la saveur astringente <em>(variable réponse)</em> des cidres et leur saveur amère <em>(variable explicative)</em>.</p>
 <ol type="1">
-<li><p>Importer le jeu de données dans R <em>(disponible <a href="./cidre.csv" download=""> ici </a>)</em>, et en dresser un rapide résumé statistique.</p></li>
-<li><p>Représenter graphiquement la distribution des différentes variables du jeu de données par la méthode de votre choix.</p></li>
-<li><p>Combien de données manquantes le jeu de données comporte-t-il ?</p></li>
-<li><p>On souhaite imputer ces valeurs manquantes via un modèle linéaire simple reliant la saveur astringente <em>(variable réponse)</em> des cidre et leur saveur amère <em>(variable explicative)</em>.</p></li>
+<li><p>Importer les données dans R et résumer brièvement les données.</p></li>
+<li><p>Ajuster un modèle linéaire permettant d’expliquer l’espérance de vie dans un pays en fonction des autres variables. Ecrire mathématiquement ce modèle.</p></li>
+<li><p>Quel le pourcentage de variance expliquée par ce modèle ?</p></li>
+<li><p>Ré-ajuster le modèle afin de ne conserver que les coefficients significativement non nuls.</p></li>
+<li><p>Un modèle linéaire n’est pas tout à fait adapté ici. On va utiliser un modèle non linéaire en utilisant une transformation logarithmique sur les données de PIB par habitant.</p></li>
 </ol>
-<p>Un tel modèle vous semble-t-il adapté ?</p>
+<ol type="a">
+<li>Ecrire mathématiquement le modèle considéré.</li>
+<li>Créer une nouvelle variable donnant le logarithme du PIB par habitant.</li>
+<li>Représenter brièvement les nouvelles données obtenues.</li>
+<li>A l’aide de la fonction <code>lm()</code> ajuster le modèle envisagé aux données.</li>
+<li>Ré-ajuster le modèle afin de ne conserver que les coefficients significativement non nuls.</li>
+</ol>
 <ol start="5" type="1">
-<li><p>Ajuster un modèle linéaire donnant la saveur astringente en fonction de la saveur amère. Quel est le pourcentage de variance expliquée par ce modèle ?</p></li>
-<li><p>Sur un graphique, représenter :</p></li>
+<li>On souhaite dorénavant comparer les deux modèles construits.</li>
+</ol>
+<ol type="a">
+<li>Dans un premier temps, comparer les coefficients de détermination <span class="math inline">\(R^2\)</span> et <span class="math inline">\(R_a^2\)</span>.</li>
+<li>On compare ensuite les critères <span class="math inline">\(AIC\)</span> <em>(Akaike Information Criterion)</em> des deux modèles : <span class="math display">\[AIC = 2p-2\ln(L)\]</span> où</li>
 </ol>
 <ul>
-<li>le nuage de points donnant la saveur astringente des cidres en fonction de leur saveur amère;</li>
-<li>la droite de régression linéaire donnée par le modèle utilisé;</li>
-<li>les différents intervalles de confiance au niveau 95% pour les prévisions faites par le modèle.</li>
+<li><span class="math inline">\(p\)</span> désigne le nombre de paramètres à estimer dans le modèle;</li>
+<li><span class="math inline">\(L\)</span> désigne la vraisemblance du modèle.</li>
 </ul>
-<ol start="7" type="1">
-<li>Imputer enfin les valeurs manquantes, et donner leur intervalle de confiance au niveau 95%.</li>
+<p>Un tel critère vise à pénaliser les modèles ayant trop de paramètres à estimer. Il favorise donc les modèles parcimonieux en sélectionnant le modèle avec le critère <span class="math inline">\(AIC\)</span> le plus faible.</p>
+<p>Sélectionner le modèle ayant le meilleur critère <span class="math inline">\(AIC\)</span> à l’aide de la fonction <code>AIC()</code>.</p>
+<ol start="3" type="a">
+<li>On compare dorénavant les critères <span class="math inline">\(BIC\)</span> <em>(Bayesian Information Criterion)</em> des modèles : <span class="math display">\[BIC = p\ln(n) -2\ln(L)\]</span> où <span class="math inline">\(n\)</span> désigne le nombre d’observations. Une nouvelle fois, le but est de choisir un modèle parcimonieux en sélectionnant le critère <span class="math inline">\(BIC\)</span> le plus faible. Comparé au critère <span class="math inline">\(AIC\)</span>, le critère <span class="math inline">\(BIC\)</span> pénalise plus fortement les modèles avec beaucoup de paramètres à estimer.</li>
 </ol>
+<p>Sélectionner le modèle ayant le meilleur critère <span class="math inline">\(BIC\)</span>, à l’aide de la fonction <code>BIC()</code>.</p>
+<ol start="4" type="a">
+<li>Enfin, on compare les performances prédictives des modèles. Pour ce faire, on va estimer le risque quadratique des deux modèles par validation croisée 10 blocs <em>(voir <a href="./TD2.html">TD2</a>)</em>.</li>
+</ol>
+<p>Sélectionner le modèles semblant avoir la meilleure performance prédictive.</p>
 
 
 </section>

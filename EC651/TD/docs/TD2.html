@@ -8,7 +8,7 @@
 
 <meta name="author" content="Guillaume Franchi">
 
-<title>TD1 : Régression linéaire simple – EC651 et 56/53 : Modélisation statistique (Régression linéaire)</title>
+<title>TD2 : Régression linéaire multiple – EC651 et 56/53 : Modélisation statistique (Régression linéaire)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -111,7 +146,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TD1.html">TD1 : Régression linéaire simple</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TD2.html">TD2 : Régression linéaire multiple</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -144,13 +179,13 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./TD1.html" class="sidebar-item-text sidebar-link active">
+  <a href="./TD1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">TD1 : Régression linéaire simple</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./TD2.html" class="sidebar-item-text sidebar-link">
+  <a href="./TD2.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">TD2 : Régression linéaire multiple</span></a>
   </div>
 </li>
@@ -180,7 +215,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">TD1 : Régression linéaire simple</h1>
+<h1 class="title">TD2 : Régression linéaire multiple</h1>
 </div>
 
 
@@ -205,65 +240,78 @@ window.Quarto = {
 
 <section id="exercice-1" class="level1 unnumbered">
 <h1 class="unnumbered">Exercice 1</h1>
-<p>On considère le jeu de données <code>tomato_sauce.csv</code> disponible <a href="tomato_sauce.csv" download=""> ici </a>.</p>
-<p>Les données recueillies portent sur des mesures effectuées sur un site de production de sauce à base de tomate.</p>
-<p>La variable <span class="math inline">\(Y\)</span> à expliquer, notée <em>rdt</em>, est une réponse liée au rendement de production (% d’extrait de tomate dans la sauce).</p>
-<p>La variable explicative <span class="math inline">\(X\)</span>, notée <em>ratioMP</em>, est relative à la qualité du lot de matières premières (% de solides insolubles dans l’eau par rapport à la quantité de solide totale).</p>
-<p>24 observations ont été réalisées sur une série d’ordres de production consécutifs</p>
+<p>On considère un échantillon de 500 produits anti-âge disponible <a href="./cosmetics.csv" download=""> ici </a>.</p>
+<p>Le jeu de données consiste en 6 variables :</p>
+<ul>
+<li><em>product_type</em>,</li>
+<li><em>viscosity</em> en mPa.s,</li>
+<li><em>pH</em>,</li>
+<li><em>density</em> en g/cm<span class="math inline">\(^3\)</span>,</li>
+<li><em>surface_tension</em> en mN/m,</li>
+<li><em>user_rating</em>, correspondant à une note moyenne donnée par les consommateurs (entre 1 et 5).</li>
+</ul>
+<p>On cherche à expliquer la note donnée par les consommateurs en fonction des autres variables.</p>
 <ol type="1">
-<li><p>Importer les données dans R, et en dresser un rapide résumé statistique.</p></li>
-<li><p>Réaliser les boxplots et histogrammes des différentes variables. Commenter.</p></li>
-<li><p>Tracer le nuage de points associé aux données, puis calculer le coefficient de corrélation linéaire entre les deux variables <em>(rappeler la définition de ce dernier)</em>.</p></li>
+<li><p>Importer les données dans R et effectuer un rapide résumé statistique.</p></li>
+<li><p>Représenter graphiquement les liens pouvant exister entre la variable <em>user_rating</em> et les autres.</p></li>
+<li><p>Un modèle linéaire semble-t-il adapté pour prédire la note donnée par les consommateurs ? Ecrire mathématiquement ce modèle.</p></li>
+<li><p>Ajuster un modèle linéaire aux données, permettant d’expliquer <em>user_rating</em> en fonction des autres variables.</p></li>
 </ol>
-<p>Celui-ci est-il significativement non nul ? Un modèle linéaire semble-t-il adapté aux données ? Ecrire mathématiquement ce modèle.</p>
-<ol start="4" type="1">
-<li><p>À l’aide de la fonction <code>lm()</code>, ajsuter un modèle linéaire aux données. En faire un résumé rapide avec la fonction <code>summary()</code>.</p></li>
-<li><p>Donner les valeurs estimées des coefficients du modèle, ainsi qu’un intervalle de confiance à 95% de ces coefficients avec la fonction <code>confint()</code>. Ceux-ci sont-ils significativement non nuls ? Préciser la statistique de test utilisée ici.</p></li>
-<li><p>Quelle est la proportion de variance expliquée par le modèle ? Rappeler la définition de l’indicateur statistique utilisé.</p></li>
-<li><p>Utiliser la fonction <code>geom_smooth()</code> du package <code>ggplot2</code> afin de tracer la droite de régression linéaire ajustée aux données.</p></li>
-</ol>
-<p><em>L’intervalle de confiance à 95% tracé par cette fonction est celui de la valeur <span class="math inline">\(\hat{\beta}_0 + \hat{\beta}_1 x\)</span>. Il s’agit en fait de l’intervalle de confiance pour la valeur moyenne de la variable réponse <span class="math inline">\(y\)</span>.</em></p>
-<ol start="8" type="1">
-<li>On souhaite à présent rajouter l’intervalle de confiance pour les prévisions faites par le modèle. Celui-ci est différent de l’intervalle tracé par la fonction <code>geom_smooth()</code>. Il prend notamment en compte la dispersion liée au bruit gaussien du modèle.</li>
+<p>Quel est le pourcentage de variance expliquée par le modèle ?</p>
+<p>Quelles variables ne semblent pas expliquer la note donnée par les consommateurs ?</p>
+<ol start="5" type="1">
+<li><p>À l’aide de la fonction <code>anova()</code>, réaliser un test de modèles emboîtés afin de déterminer les variables intervenant réellement dans le modèle. Ecrire les hypothèses envisagées dans ce test.</p></li>
+<li><p>On souhaite maintenant comparer les performances prédictitives des deux modèles utilisés précédemment :</p></li>
 </ol>
 <ul>
-<li>A l’aide de la fonction <code>predict()</code> récupérer les bornes inférieures et supérieures des prévisions associées aux observations du jeu de données. On stockera ces valeurs dans le data-frame initial avec pour noms de variables <em>pred_lwr</em> et <em>pred_upr</em>.</li>
-<li>Rajouter, à l’aide de la fonction <code>geom_line()</code>, ces bornes sur le graphique réalisé jusqu’à présent.</li>
+<li>le modèle complet, avec toutes les variables;</li>
+<li>le modèle réduit, comprenant uniquement les variables semblant expliquer la note donnée par les consommateurs.</li>
 </ul>
-<ol start="9" type="1">
-<li>Déterminer les valeurs prédites <em>(ainsi que leurs intervalles de confiance à 95%)</em> de la variable rendement pour les valeurs suivantes de la variable <em>ratioMP</em>.</li>
+<p>Pour ce faire, on dispose de 50 données supplémentaires <em>(disponibles <a href="./cosmetics_extra.csv" download=""> ici </a>)</em>.</p>
+<p>Prédire, avec les deux modèles, les notes données par les consommateurs pour ces 50 nouveaux produits.</p>
+<ol start="7" type="1">
+<li>Calculer, pour chacune des prédictions, l’erreur quadratique moyenne <span class="math inline">\(MSE\)</span> réalisée par chaque modèle : <span class="math display">\[ MSE = \sum_{i=1}^{50} (y_i - \hat{y}_i)^2 \]</span></li>
 </ol>
+<p>Quel modèle semble avoir la meileure performance prédictive ? Comparer avec les coefficients de détermination <span class="math inline">\(R^2\)</span> obtenus par chacun des modèles.</p>
 </section>
 <section id="exercice-2" class="level1 unnumbered">
 <h1 class="unnumbered">Exercice 2</h1>
-<p>On s’intéresse ici à l’équilibre des saveurs dans différents cidres.</p>
-<p>90 cidres bruts ont été évalués par un jury sensoriel formé de 24 juges (échelle de notation de 1 à 10, calcul des notes moyennes), selon différents critères :</p>
-<ul>
-<li>Saveur sucrée;</li>
-<li>Saveur Acide;</li>
-<li>Saveur amère;</li>
-<li>Saveur astringente</li>
-</ul>
-<p>On étudie plus précisément la relation entre la saveur astringente <em>(variable réponse)</em> des cidres et leur saveur amère <em>(variable explicative)</em>.</p>
+<p>On considère ici les données présentées dans les <a href="https://guillaumefranchi.github.io/EC651/Cours/Cours.pdf" target="_blank">slides de cours</a> sur le rendement de 80 champs de tomates, disponibles <a href="./champs_tomates.csv" download=""> ici </a>.</p>
 <ol type="1">
-<li><p>Importer le jeu de données dans R <em>(disponible <a href="./cidre.csv" download=""> ici </a>)</em>, et en dresser un rapide résumé statistique.</p></li>
-<li><p>Représenter graphiquement la distribution des différentes variables du jeu de données par la méthode de votre choix.</p></li>
-<li><p>Combien de données manquantes le jeu de données comporte-t-il ?</p></li>
-<li><p>On souhaite imputer ces valeurs manquantes via un modèle linéaire simple reliant la saveur astringente <em>(variable réponse)</em> des cidre et leur saveur amère <em>(variable explicative)</em>.</p></li>
+<li><p>Importer les données dans R et effectuer un rapide résumé statistique. Représenter par un graphique simple les données.</p></li>
+<li><p>Ajuster un modèle linéaire aux données. Quel est le pourcentage de variance expliquée par le modèle ?</p></li>
+<li><p>Quels coefficients de la régression ne semblent pas significatifs ? Préciser la statistique de test utilisée.</p></li>
+<li><p>Réaliser un test de modèles emboîtés afin de tester la nullité simultanée de ces coefficients. Quel est la statistique de test utilisée ici ?</p></li>
+<li><p>Comme dans l’exercice précédent, on souhaite comparer la capacité prédictive des deux modèles construits.</p></li>
 </ol>
-<p>Un tel modèle vous semble-t-il adapté ?</p>
-<ol start="5" type="1">
-<li><p>Ajuster un modèle linéaire donnant la saveur astringente en fonction de la saveur amère. Quel est le pourcentage de variance expliquée par ce modèle ?</p></li>
-<li><p>Sur un graphique, représenter :</p></li>
-</ol>
+<p>Pour ce faire, on propose d’utiliser une validation croisée 10 blocs. Le principe est de séparer aléatoirement le jeu de données en 10 blocs de 8 observations, et d’ajuster 10 fois le modèle linéaire avec les variables retenues. Pour chacun des 10 ajustements :</p>
 <ul>
-<li>le nuage de points donnant la saveur astringente des cidres en fonction de leur saveur amère;</li>
-<li>la droite de régression linéaire donnée par le modèle utilisé;</li>
-<li>les différents intervalles de confiance au niveau 95% pour les prévisions faites par le modèle.</li>
+<li>9 blocs (72 observations) servent à entraîner le modèle;</li>
+<li>1 bloc (8 observations) sert à prédire les nouvelles valeurs, et calculer le <span class="math inline">\(MSE\)</span> sur 8 valeurs;</li>
+<li>on estime enfin le risque quadratique du modèle en calculant la moyenne des 10 <span class="math inline">\(MSE\)</span> calculés.</li>
 </ul>
-<ol start="7" type="1">
-<li>Imputer enfin les valeurs manquantes, et donner leur intervalle de confiance au niveau 95%.</li>
-</ol>
+<p>On présente ci-dessous un code utilisant le package <code>tidymodels</code> permettant d’effectuer cette validation croisée pour le modèle complet.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des 10 blocs</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="at">data=</span>df_tomato,<span class="at">v =</span> <span class="dv">10</span>) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle linéaire utilisé</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode=</span><span class="st">"regression"</span>,<span class="at">engine=</span><span class="st">"lm"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision du modèle utilisé dans un workflow</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>lm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(Rendement<span class="sc">~</span>.)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>lm_cv <span class="ot">&lt;-</span> lm_workflow <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Adapter ce code au problème de l’exercice, et comparer les performances prédictives du modèle complet et du modèle réduit.</p>
 
 
 </section>
