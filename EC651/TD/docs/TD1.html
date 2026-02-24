@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -211,18 +246,226 @@ window.Quarto = {
 <p>La variable explicative <span class="math inline">\(X\)</span>, notée <em>ratioMP</em>, est relative à la qualité du lot de matières premières (% de solides insolubles dans l’eau par rapport à la quantité de solide totale).</p>
 <p>24 observations ont été réalisées sur une série d’ordres de production consécutifs</p>
 <ol type="1">
-<li><p>Importer les données dans R, et en dresser un rapide résumé statistique.</p></li>
-<li><p>Réaliser les boxplots et histogrammes des différentes variables. Commenter.</p></li>
-<li><p>Tracer le nuage de points associé aux données, puis calculer le coefficient de corrélation linéaire entre les deux variables <em>(rappeler la définition de ce dernier)</em>.</p></li>
+<li>Importer les données dans R, et en dresser un rapide résumé statistique.</li>
 </ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>tomato_sauce <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"tomato_sauce.csv"</span>,<span class="at">sep=</span><span class="st">";"</span>,<span class="at">row.names=</span><span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(tomato_sauce)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    ratioMP           rdt       
+ Min.   :10.71   Min.   :30.20  
+ 1st Qu.:12.67   1st Qu.:35.88  
+ Median :13.70   Median :39.10  
+ Mean   :13.78   Mean   :39.73  
+ 3rd Qu.:14.82   3rd Qu.:43.38  
+ Max.   :18.22   Max.   :51.00  </code></pre>
+</div>
+</div>
+</details>
+<ol start="2" type="1">
+<li>Réaliser les boxplots et histogrammes des différentes variables. Commenter.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Boxplots</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tomato_sauce) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">""</span>,<span class="at">y=</span>ratioMP)<span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribution de la variable ratioMP"</span>,<span class="at">x=</span><span class="st">""</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On remarque une valeur anormalement grande</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tomato_sauce) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">""</span>,<span class="at">y=</span>rdt)<span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribution de la variable rdt"</span>,<span class="at">x=</span><span class="st">""</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-2-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rien à signaler</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogrammes</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nrow</span>(tomato_sauce) <span class="co"># nombre d'observations</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>n_class <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(<span class="dv">1</span><span class="fl">+3.3</span><span class="sc">*</span><span class="fu">log10</span>(n)) <span class="co">#nombre de classes (Formule de Sturges)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tomato_sauce)<span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>ratioMP)<span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill=</span><span class="st">"skyblue"</span>,<span class="at">color=</span><span class="st">"grey40"</span>,<span class="at">bins=</span>n_class)<span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribution de la variable ratioMP"</span>,<span class="at">y=</span><span class="st">"Effectifs"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-2-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Il y a un cerrtain nombre de valeurs très basses, les autres étant globalement regroupées autour de la moyenne</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tomato_sauce)<span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>rdt)<span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">fill=</span><span class="st">"skyblue"</span>,<span class="at">color=</span><span class="st">"grey40"</span>,<span class="at">bins=</span>n_class)<span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Distribution de la variable rdt"</span>,<span class="at">y=</span><span class="st">"Effectifs"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-2-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Les données semblent regroupées en 2 paquets : un autour de 37, l'autre, plus petit, autour de 45</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="3" type="1">
+<li>Tracer le nuage de points associé aux données, puis calculer le coefficient de corrélation linéaire entre les deux variables <em>(rappeler la définition de ce dernier)</em>.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Commentaire
+</summary>
+Pour deux séries d’observations <span class="math inline">\((x_i)_{1\leqslant i \leqslant n}\)</span> et <span class="math inline">\((y_i)_{1\leqslant i \leqslant n}\)</span>, le coefficient de corrélation est donné par <span class="math display">\[\rho = \dfrac{\sum_{i=1}^n (x_i -\overline{x})(y_i-\overline{y})}{\sqrt{\sum_{i=1}^n (x_i-\overline{x})^2}\times \sqrt{\sum_{i=1}^n (y_i-\overline{y})^2}}\]</span>
+</details>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tomato_sauce) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>ratioMP,<span class="at">y=</span>rdt)<span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"tomato"</span>)<span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Nuage de points rdt VS ratioMP"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x=</span>tomato_sauce<span class="sc">$</span>ratioMP,<span class="at">y=</span>tomato_sauce<span class="sc">$</span>rdt)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  tomato_sauce$ratioMP and tomato_sauce$rdt
+t = -18.718, df = 22, p-value = 5.293e-15
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.9871402 -0.9308572
+sample estimates:
+       cor 
+-0.9700104 </code></pre>
+</div>
+</div>
+</details>
 <p>Celui-ci est-il significativement non nul ? Un modèle linéaire semble-t-il adapté aux données ? Ecrire mathématiquement ce modèle.</p>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+Le test statistique réalisé nous renvoie une <span class="math inline">\(p\)</span>-value inférieure à 0.05 <em>(elle est égale à <span class="math inline">\(5.293\times 10^{-15}\)</span>)</em>. On rejette donc l’hypothèse nulle comme quoi les deux séries sont non corrélées. En d’autres termes, le coefficient de corrélation est siginificativement non nul. Un modèle linéaire semble alors parfaitement adapté aux données <em>(tendance linéaire sur le nuage de points + coefficient de corrélation significativement non nul)</em>. Celui-ci s’écrit <span class="math display">\[ rdt_i = \beta_0 + \beta_1 ratioMP_i + \varepsilon_i, \quad 1 \leqslant i  \leqslant n,\]</span> où les <span class="math inline">\(\varepsilon_i\)</span> sont i.i.d. de loi <span class="math inline">\(\mathcal{N}(0,\sigma^2)\)</span>.
+</details>
 <ol start="4" type="1">
-<li><p>À l’aide de la fonction <code>lm()</code>, ajsuter un modèle linéaire aux données. En faire un résumé rapide avec la fonction <code>summary()</code>.</p></li>
-<li><p>Donner les valeurs estimées des coefficients du modèle, ainsi qu’un intervalle de confiance à 95% de ces coefficients avec la fonction <code>confint()</code>. Ceux-ci sont-ils significativement non nuls ? Préciser la statistique de test utilisée ici.</p></li>
-<li><p>Quelle est la proportion de variance expliquée par le modèle ? Rappeler la définition de l’indicateur statistique utilisé.</p></li>
-<li><p>Utiliser la fonction <code>geom_smooth()</code> du package <code>ggplot2</code> afin de tracer la droite de régression linéaire ajustée aux données.</p></li>
+<li>À l’aide de la fonction <code>lm()</code>, ajsuter un modèle linéaire aux données. En faire un résumé rapide avec la fonction <code>summary()</code>.</li>
 </ol>
-<p><em>L’intervalle de confiance à 95% tracé par cette fonction est celui de la valeur <span class="math inline">\(\hat{\beta}_0 + \hat{\beta}_1 x\)</span>. Il s’agit en fait de l’intervalle de confiance pour la valeur moyenne de la variable réponse <span class="math inline">\(y\)</span>.</em></p>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lm_sauce <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>tomato_sauce,<span class="at">formula =</span> rdt<span class="sc">~</span>.)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_sauce)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = rdt ~ ., data = tomato_sauce)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.5871 -0.9040 -0.1434  1.0381  3.1522 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  76.1934     1.9657   38.76  &lt; 2e-16 ***
+ratioMP      -2.6467     0.1414  -18.72 5.29e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.288 on 22 degrees of freedom
+Multiple R-squared:  0.9409,    Adjusted R-squared:  0.9382 
+F-statistic: 350.4 on 1 and 22 DF,  p-value: 5.293e-15</code></pre>
+</div>
+</div>
+</details>
+<ol start="5" type="1">
+<li>Donner les valeurs estimées des coefficients du modèle, ainsi qu’un intervalle de confiance à 95% de ces coefficients avec la fonction <code>confint()</code>. Ceux-ci sont-ils significativement non nuls ? Préciser la statistique de test utilisée ici.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+On a les estimations <span class="math display">\[\hat{\beta}_0 \approx 76.1934 \quad \text{et} \quad \hat{\beta}_1 \approx -2.6467.\]</span> Ceux-ci sont significativement non nuls <em>(présence de 3 étoiles dans le résumé)</em>. La statistique de test utilisée ici est, pour <span class="math inline">\(i \in \{0,1\}\)</span> <span class="math display">\[t_i = \dfrac{\hat{\beta}_i}{\hat{\sigma}_i} \]</span> qui suit la loi de Student <span class="math inline">\(\mathcal{T}_{n-2}\)</span> sous l’hypothèse nulle <span class="math inline">\(H_0 : \beta_i=0\)</span>. Les intervalles de confiance des coefficients sont donnés par le code ci-dessous.
+</details>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confint</span>(lm_sauce)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                2.5 %    97.5 %
+(Intercept) 72.116805 80.270061
+ratioMP     -2.939885 -2.353422</code></pre>
+</div>
+</div>
+</details>
+<ol start="6" type="1">
+<li>Quelle est la proportion de variance expliquée par le modèle ? Rappeler la définition de l’indicateur statistique utilisé.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+On utilise le coefficient de déterminations <span class="math inline">\(R^2\)</span> <span class="math display">\[ R^2 = \dfrac{SCE}{SCT} = \dfrac{\sum_{i=1}^n (\hat{y}_i-\overline{y})^2}{\sum_{i=1}^n (y_i-\overline{y})^2}\]</span> où les <span class="math inline">\(\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1x_i\)</span> sont les valeurs ajustées par le modèle. Ici, on a <span class="math inline">\(R^2 \approx 0.9409\)</span>, ce qui signifie que le modèle explique 94,09% de la variance. Il est donc extrêmement bien adapté aux données.
+</details>
+<ol start="7" type="1">
+<li>Utiliser la fonction <code>geom_smooth()</code> du package <code>ggplot2</code> afin de tracer la droite de régression linéaire ajustée aux données.</li>
+</ol>
+<p><em>L’intervalle de confiance à 95% tracé par cette fonction est celui de la valeur</em> <span class="math inline">\(\hat{\beta}_0 + \hat{\beta}_1 x\)</span>. Il s’agit en fait de l’intervalle de confiance pour la valeur moyenne de la variable réponse <span class="math inline">\(y\)</span>.</p>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tomato_sauce) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>ratioMP,<span class="at">y=</span>rdt)<span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"tomato"</span>)<span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>,<span class="at">color=</span><span class="st">"tomato"</span>,<span class="at">linetype=</span><span class="st">"dashed"</span>,<span class="at">lwd=</span><span class="fl">0.5</span>,<span class="at">fill=</span><span class="st">"tomato"</span>,<span class="at">alpha=</span><span class="fl">0.2</span>)<span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"rdt VS ratioMP"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
 <ol start="8" type="1">
 <li>On souhaite à présent rajouter l’intervalle de confiance pour les prévisions faites par le modèle. Celui-ci est différent de l’intervalle tracé par la fonction <code>geom_smooth()</code>. Il prend notamment en compte la dispersion liée au bruit gaussien du modèle.</li>
 </ol>
@@ -230,9 +473,39 @@ window.Quarto = {
 <li>A l’aide de la fonction <code>predict()</code> récupérer les bornes inférieures et supérieures des prévisions associées aux observations du jeu de données. On stockera ces valeurs dans le data-frame initial avec pour noms de variables <em>pred_lwr</em> et <em>pred_upr</em>.</li>
 <li>Rajouter, à l’aide de la fonction <code>geom_line()</code>, ces bornes sur le graphique réalisé jusqu’à présent.</li>
 </ul>
-<ol start="9" type="1">
-<li>Déterminer les valeurs prédites <em>(ainsi que leurs intervalles de confiance à 95%)</em> de la variable rendement pour les valeurs suivantes de la variable <em>ratioMP</em>.</li>
-</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_sauce,<span class="at">newdata =</span> tomato_sauce,<span class="at">interval=</span><span class="st">"prediction"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>tomato_sauce <span class="ot">&lt;-</span> tomato_sauce <span class="sc">%&gt;%</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pred_lwr =</span> pred[,<span class="dv">2</span>],</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">pred_upr =</span> pred[,<span class="dv">3</span>])</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tomato_sauce) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>ratioMP,<span class="at">y=</span>rdt)<span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"tomato"</span>)<span class="sc">+</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>,<span class="at">linetype=</span><span class="st">"dashed"</span>,<span class="at">lwd=</span><span class="fl">0.5</span>,<span class="at">color=</span><span class="st">"tomato"</span>,<span class="at">alpha=</span><span class="fl">0.2</span>,</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">fill=</span><span class="st">"Intervalle de confiance pour la valeur moyenne (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="st">"tomato"</span>)<span class="sc">+</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"rdt VS ratioMP"</span>)<span class="sc">+</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred_lwr,<span class="at">linetype=</span><span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred_upr,<span class="at">linetype=</span><span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values=</span><span class="st">"dotted"</span>)<span class="sc">+</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
 </section>
 <section id="exercice-2" class="level1 unnumbered">
 <h1 class="unnumbered">Exercice 2</h1>
@@ -246,24 +519,246 @@ window.Quarto = {
 </ul>
 <p>On étudie plus précisément la relation entre la saveur astringente <em>(variable réponse)</em> des cidres et leur saveur amère <em>(variable explicative)</em>.</p>
 <ol type="1">
-<li><p>Importer le jeu de données dans R <em>(disponible <a href="./cidre.csv" download=""> ici </a>)</em>, et en dresser un rapide résumé statistique.</p></li>
-<li><p>Représenter graphiquement la distribution des différentes variables du jeu de données par la méthode de votre choix.</p></li>
-<li><p>Combien de données manquantes le jeu de données comporte-t-il ?</p></li>
-<li><p>On souhaite imputer ces valeurs manquantes via un modèle linéaire simple reliant la saveur astringente <em>(variable réponse)</em> des cidre et leur saveur amère <em>(variable explicative)</em>.</p></li>
+<li>Importer le jeu de données dans R <em>(disponible</em> <a href="./cidre.csv" download=""> ici </a>), et en dresser un rapide résumé statistique.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>cidre <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"cidre.csv"</span>,<span class="at">row.names =</span> <span class="dv">1</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(cidre)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>    S.Sucree        S.Acide         S.Amere      S.Astringente   
+ Min.   :3.444   Min.   :2.107   Min.   :2.143   Min.   :0.7143  
+ 1st Qu.:4.580   1st Qu.:3.625   1st Qu.:3.286   1st Qu.:1.4732  
+ Median :5.250   Median :4.089   Median :3.964   Median :2.0000  
+ Mean   :5.169   Mean   :4.181   Mean   :4.274   Mean   :2.0561  
+ 3rd Qu.:5.670   3rd Qu.:4.643   3rd Qu.:5.268   3rd Qu.:2.4286  
+ Max.   :7.036   Max.   :6.536   Max.   :7.857   Max.   :4.6786  
+                                                 NA's   :4       </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(cidre))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Attention, il y a 4 valeurs manquantes pour la saveur Astringente...</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="2" type="1">
+<li>Représenter graphiquement la distribution des différentes variables du jeu de données par la méthode de votre choix.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On se propose ici de faire des boxplots</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cidre) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">""</span>,<span class="at">y=</span>S.Sucree)<span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Saveur sucrée"</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Distribution des notes pour la saveur sucrée"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cidre) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">""</span>,<span class="at">y=</span>S.Acide)<span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Saveur sucrée"</span>,</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Distribution des notes pour la saveur acide"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cidre) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">""</span>,<span class="at">y=</span>S.Amere)<span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>,</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Saveur sucrée"</span>,</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Distribution des notes pour la saveur amère"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-9-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cidre) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span><span class="st">""</span>,<span class="at">y=</span>S.Astringente)<span class="sc">+</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">""</span>,</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Saveur sucrée"</span>,</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Distribution des notes pour la saveur astringente"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-9-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On remarque quelques outliers pour les saveurs acide et astringente</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="3" type="1">
+<li>Combien de données manquantes le jeu de données comporte-t-il ?</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+Comme indiqué plus haut, il y en a quatre.
+</details>
+<ol start="4" type="1">
+<li>On souhaite imputer ces valeurs manquantes via un modèle linéaire simple reliant la saveur astringente <em>(variable réponse)</em> des cidre et leur saveur amère <em>(variable explicative)</em>.</li>
 </ol>
 <p>Un tel modèle vous semble-t-il adapté ?</p>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>On va réaliser un nuage de points de ces deux variables, et calculer leur coefficient de corrélation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cidre) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>S.Amere,<span class="at">y=</span>S.Astringente)<span class="sc">+</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"tomato"</span>)<span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Saveur astringente en fonction de la saveur amère"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Note de saveur amère"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Note de saveur astringente"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x=</span>cidre<span class="sc">$</span>S.Amere,<span class="at">y=</span>cidre<span class="sc">$</span>S.Astringente)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  cidre$S.Amere and cidre$S.Astringente
+t = 13.583, df = 84, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.7485333 0.8853255
+sample estimates:
+     cor 
+0.828942 </code></pre>
+</div>
+</div>
+Etant donné la forme du nuage de points et la significativité du coefficient de corrélation <em>(<span class="math inline">\(p\)</span>-value inférieure à <span class="math inline">\(2.2\times 10^{-16}\)</span> dans le test de nullité)</em>, un modèle linéaire semble parfaiement adapté aux données.
+</details>
 <ol start="5" type="1">
-<li><p>Ajuster un modèle linéaire donnant la saveur astringente en fonction de la saveur amère. Quel est le pourcentage de variance expliquée par ce modèle ?</p></li>
-<li><p>Sur un graphique, représenter :</p></li>
+<li>Ajuster un modèle linéaire donnant la saveur astringente en fonction de la saveur amère. Quel est le pourcentage de variance expliquée par ce modèle ?</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>lm_cidre <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>cidre,<span class="at">formula =</span> S.Astringente<span class="sc">~</span>S.Amere)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_cidre)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = S.Astringente ~ S.Amere, data = cidre)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.14284 -0.32774 -0.05057  0.27225  1.60204 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -0.14678    0.16938  -0.867    0.389    
+S.Amere      0.50964    0.03752  13.583   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.4532 on 84 degrees of freedom
+  (4 observations effacées parce que manquantes)
+Multiple R-squared:  0.6871,    Adjusted R-squared:  0.6834 
+F-statistic: 184.5 on 1 and 84 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</details>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+Le pourcentage de variance expliquée par ce modèle est de 68,71%.
+</details>
+<ol start="6" type="1">
+<li>Sur un graphique, représenter :</li>
 </ol>
 <ul>
 <li>le nuage de points donnant la saveur astringente des cidres en fonction de leur saveur amère;</li>
 <li>la droite de régression linéaire donnée par le modèle utilisé;</li>
 <li>les différents intervalles de confiance au niveau 95% pour les prévisions faites par le modèle.</li>
 </ul>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_cidre,<span class="at">newdata =</span> cidre,<span class="at">interval=</span><span class="st">"prediction"</span>)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>cidre <span class="ot">&lt;-</span> cidre <span class="sc">%&gt;%</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">pred_lwr=</span>pred[,<span class="dv">2</span>],</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">pred_upr=</span>pred[,<span class="dv">3</span>])</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cidre)<span class="sc">+</span><span class="fu">aes</span>(<span class="at">x=</span>S.Amere,<span class="at">y=</span>S.Astringente)<span class="sc">+</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"tomato"</span>)<span class="sc">+</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>,<span class="at">color=</span><span class="st">"tomato"</span>,<span class="at">lwd=</span><span class="fl">0.5</span>,<span class="at">linetype=</span><span class="st">"dashed"</span>,<span class="at">alpha=</span><span class="fl">0.2</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>              <span class="fu">aes</span>(<span class="at">fill=</span><span class="st">"Intervalle de confiance pour la valeur moyenne (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="st">"tomato"</span>)<span class="sc">+</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred_lwr,<span class="at">linetype =</span> <span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred_upr,<span class="at">linetype =</span> <span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values=</span><span class="st">"dotted"</span>)<span class="sc">+</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Saveur astringente en fonction de la saveur amère"</span>,</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Note de aveur amère"</span>,</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Note de saveur astringente"</span>)<span class="sc">+</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD1_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
 <ol start="7" type="1">
 <li>Imputer enfin les valeurs manquantes, et donner leur intervalle de confiance au niveau 95%.</li>
 </ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>values_to_impute <span class="ot">&lt;-</span> cidre <span class="sc">%&gt;%</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(S.Astringente))</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>imputed_values <span class="ot">&lt;-</span> <span class="fu">predict</span>(lm_cidre,<span class="at">newdata =</span> values_to_impute,<span class="at">interval =</span> <span class="st">"prediction"</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>imputed_values</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       fit       lwr      upr
+1 1.363927 0.4517479 2.276105
+2 1.491336 0.5810406 2.401631
+3 1.855363 0.9483536 2.762371
+4 1.309323 0.3962213 2.222424</code></pre>
+</div>
+</div>
+</details>
 
 
 </section>
