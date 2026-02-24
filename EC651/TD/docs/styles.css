@@ -1,7 +1,10 @@
-details > p {
-  border-radius: 0 0 10px 10px;
-  background-color: #dddddd;
-  padding: 2px 6px;
-  margin: 0;
-  box-shadow: 3px 3px 4px black;
+.mydetails:open {
+  background-color: #a5c2a3;      
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.mydetails:open > summary {
+  color: black;
+  font-weight: bold;
 }
