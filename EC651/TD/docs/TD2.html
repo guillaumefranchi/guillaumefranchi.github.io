@@ -402,18 +402,18 @@ Réponse
 Voir le code
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lm_cosmetics_reduit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>cosmetics,<span class="at">formula =</span> user_rating <span class="sc">~</span> product_type <span class="sc">+</span> viscosity <span class="sc">+</span> pH)</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lm_cosmetics_reduit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>cosmetics,<span class="at">formula =</span> user_rating <span class="sc">~</span>  viscosity <span class="sc">+</span> pH)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_cosmetics,lm_cosmetics_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
 Model 1: user_rating ~ product_type + viscosity + pH + density + surface_tension
-Model 2: user_rating ~ product_type + viscosity + pH
+Model 2: user_rating ~ viscosity + pH
   Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
 1    492 41.825                           
-2    494 41.943 -2  -0.11823 0.6954 0.4994</code></pre>
+2    497 42.157 -5  -0.33217 0.7815 0.5633</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Avec une p-value de 0.4994, one ne rejette pas l'hypothèse nulle H0.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Avec une p-value de 0.5633, one ne rejette pas l'hypothèse nulle H0.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <ol start="6" type="1">
@@ -444,15 +444,15 @@ Voir le code
 Voir le code
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>MSE_complet <span class="ot">&lt;-</span> <span class="fu">mean</span>((pred_complet<span class="sc">-</span>cosmetics<span class="sc">$</span>user_rating)<span class="sc">^</span><span class="dv">2</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>MSE_reduit <span class="ot">&lt;-</span> <span class="fu">mean</span>((pred_reduit<span class="sc">-</span>cosmetics<span class="sc">$</span>user_rating)<span class="sc">^</span><span class="dv">2</span>)</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>MSE_complet <span class="ot">&lt;-</span> <span class="fu">mean</span>((cosmetics<span class="sc">$</span>user_rating<span class="sc">-</span>pred_complet)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>MSE_reduit <span class="ot">&lt;-</span> <span class="fu">mean</span>((cosmetics<span class="sc">$</span>user_rating<span class="sc">-</span>pred_reduit)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>MSE_complet</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.3117702</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>MSE_reduit</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.3111741</code></pre>
+<pre><code>[1] 0.3133974</code></pre>
 </div>
 </div>
 </details>
@@ -461,34 +461,7 @@ Voir le code
 <summary>
 Réponse
 </summary>
-<p>Avec un <span class="math inline">\(MSE\)</span> inférieur, le modèle réduit réalise moins d’erreur sur la prédiction de nouvelles données. Le coefficient de détermination <span class="math inline">\(R^2\)</span> de ce modèle est pourtant plus petit que celui du modèle complet.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_cosmetics_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = user_rating ~ product_type + viscosity + pH, data = cosmetics)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.82786 -0.21084  0.00943  0.19225  0.93313 
-
-Coefficients:
-                     Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)         3.9425852  0.4315259   9.136  &lt; 2e-16 ***
-product_typegel     0.0958744  0.1874004   0.512   0.6092    
-product_typelotion  0.0253044  0.1573501   0.161   0.8723    
-product_typeserum   0.0069341  0.2013920   0.034   0.9725    
-viscosity           0.0002835  0.0000722   3.926 9.87e-05 ***
-pH                 -0.1661681  0.0649299  -2.559   0.0108 *  
----
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.2914 on 494 degrees of freedom
-Multiple R-squared:  0.5914,    Adjusted R-squared:  0.5873 
-F-statistic:   143 on 5 and 494 DF,  p-value: &lt; 2.2e-16</code></pre>
-</div>
-</div>
+<p>Avec un <span class="math inline">\(MSE\)</span> inférieur, le modèle complet réalise moins d’erreur sur la prédiction de nouvelles données, bien que certaines des variables utilisées n’aient a priori pas d’impact sur la note d’un produit.</p>
 </details>
 </section>
 <section id="exercice-2" class="level1 unnumbered">
@@ -502,12 +475,12 @@ F-statistic:   143 on 5 and 494 DF,  p-value: &lt; 2.2e-16</code></pre>
 Voir le code
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>champs_tomates <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"champs_tomates.csv"</span>,<span class="at">row.names=</span><span class="dv">1</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(champs_tomates)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>champs_tomates <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"champs_tomates.csv"</span>,<span class="at">row.names=</span><span class="dv">1</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(champs_tomates)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="TD2_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="TD2_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -521,8 +494,8 @@ Voir le code
 Voir le code
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lm_tomates <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>champs_tomates,<span class="at">formula =</span> Rendement<span class="sc">~</span>.)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_tomates)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>lm_tomates <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>champs_tomates,<span class="at">formula =</span> Rendement<span class="sc">~</span>.)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_tomates)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -547,7 +520,7 @@ Residual standard error: 0.1016 on 74 degrees of freedom
 Multiple R-squared:  0.3499,    Adjusted R-squared:  0.306 
 F-statistic: 7.965 on 5 and 74 DF,  p-value: 4.767e-06</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Le modèle explique 34,99% de la variance.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Le modèle explique 34,99% de la variance.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <ol start="3" type="1">
@@ -573,8 +546,8 @@ Réponse
 <li><span class="math inline">\(SCR_0\)</span> est la somme des carrés résiduelles quand on ne prend pas les variables <em>Heures_Travail</em> et <em>Temperature</em> dans le modèle.</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>lm_tomates_reduit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>champs_tomates,<span class="at">formula =</span> Rendement<span class="sc">~</span>Engrais <span class="sc">+</span> Irrigation <span class="sc">+</span> Qualite_Sol)</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_tomates,lm_tomates_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>lm_tomates_reduit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>champs_tomates,<span class="at">formula =</span> Rendement<span class="sc">~</span>Engrais <span class="sc">+</span> Irrigation <span class="sc">+</span> Qualite_Sol)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_tomates,lm_tomates_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -599,24 +572,24 @@ Ici, on ne rejette pas l’hypothèse nulle <em>(<span class="math inline">\(p\)
 </ul>
 <p>On présente ci-dessous un code utilisant le package <code>tidymodels</code> permettant d’effectuer cette validation croisée pour le modèle complet.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des 10 blocs</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="at">data=</span>df_tomato,<span class="at">v =</span> <span class="dv">10</span>) </span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle linéaire utilisé</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode=</span><span class="st">"regression"</span>,<span class="at">engine=</span><span class="st">"lm"</span>)</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision du modèle utilisé dans un workflow</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>lm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(Rendement<span class="sc">~</span>.)</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>lm_cv <span class="ot">&lt;-</span> lm_workflow <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv)</span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des 10 blocs</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="at">data=</span>df_tomato,<span class="at">v =</span> <span class="dv">10</span>) </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle linéaire utilisé</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode=</span><span class="st">"regression"</span>,<span class="at">engine=</span><span class="st">"lm"</span>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision du modèle utilisé dans un workflow</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>lm_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(Rendement<span class="sc">~</span>.)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>lm_cv <span class="ot">&lt;-</span> lm_workflow <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Adapter ce code au problème de l’exercice, et comparer les performances prédictives du modèle complet et du modèle réduit.</p>
 <details class="mydetails">
@@ -625,39 +598,39 @@ Réponse
 </summary>
 <p>On effectue une validation croisée pour chaque modèle. Pour le modèle complet, on a :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des 10 blocs</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="at">data=</span>champs_tomates,<span class="at">v =</span> <span class="dv">10</span>) </span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle linéaire utilisé</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode=</span><span class="st">"regression"</span>,<span class="at">engine=</span><span class="st">"lm"</span>)</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision du modèle utilisé dans un workflow</span></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>lm_workflow_complet <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(Rendement<span class="sc">~</span>.)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>lm_cv_complet <span class="ot">&lt;-</span> lm_workflow_complet <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv_complet <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv_complet)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des 10 blocs</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="at">data=</span>champs_tomates,<span class="at">v =</span> <span class="dv">10</span>) </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle linéaire utilisé</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode=</span><span class="st">"regression"</span>,<span class="at">engine=</span><span class="st">"lm"</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision du modèle utilisé dans un workflow</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>lm_workflow_complet <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(Rendement<span class="sc">~</span>.)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>lm_cv_complet <span class="ot">&lt;-</span> lm_workflow_complet <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv_complet <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv_complet)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Et pour le modèle réduit :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision du modèle utilisé dans un workflow</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>lm_workflow_reduit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(Rendement<span class="sc">~</span>Engrais <span class="sc">+</span> Irrigation <span class="sc">+</span> Qualite_Sol)</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>lm_cv_reduit <span class="ot">&lt;-</span> lm_workflow_reduit <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv_reduit <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision du modèle utilisé dans un workflow</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>lm_workflow_reduit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(Rendement<span class="sc">~</span>Engrais <span class="sc">+</span> Irrigation <span class="sc">+</span> Qualite_Sol)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>lm_cv_reduit <span class="ot">&lt;-</span> lm_workflow_reduit <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv_reduit <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>On compare ensuite les <span class="math inline">\(RMSE\)</span>, qui sont les racines carrées des <span class="math inline">\(MSE\)</span> définis plus haut.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv_complet</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv_complet</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 6
   .metric .estimator   mean     n std_err .config        
@@ -665,7 +638,7 @@ Réponse
 1 rmse    standard   0.0990    10  0.0120 pre0_mod0_post0
 2 rsq     standard   0.416     10  0.0783 pre0_mod0_post0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv_reduit</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv_reduit</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 6
   .metric .estimator   mean     n std_err .config        
