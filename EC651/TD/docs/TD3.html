@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -208,9 +243,74 @@ window.Quarto = {
 <p>On considère le jeu de données <code>azote_ble.csv</code> disponible <a href="./azote_ble.csv" download=""> ici </a>.</p>
 <p>On a recensé ici le rendement <em>(en T/ha)</em> de 92 champs de blés en fonction de la dose d’azote apportée <em>(en kg/ha)</em>.</p>
 <ol type="1">
-<li><p>Importer les données dans R, et en faire un bref résumé statistique.</p></li>
-<li><p>Un modèle linéaire semble-t-il adapté afin d’expliquer le rendement des champs ?</p></li>
-<li><p>On se propose de modéliser le rendement des champs par un modèle polynomial de degré 3 :</p></li>
+<li>Importer les données dans R, et en faire un bref résumé statistique.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>azote_ble <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"azote_ble.csv"</span>,<span class="at">row.names =</span> <span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(azote_ble)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   Dose_Azote        Rendement    
+ Min.   :  0.125   Min.   :1.600  
+ 1st Qu.: 49.094   1st Qu.:4.571  
+ Median : 94.128   Median :5.197  
+ Mean   :101.073   Mean   :4.946  
+ 3rd Qu.:153.179   3rd Qu.:5.554  
+ Max.   :198.854   Max.   :6.352  </code></pre>
+</div>
+</div>
+</details>
+<ol start="2" type="1">
+<li>Un modèle linéaire semble-t-il adapté afin d’expliquer le rendement des champs ?</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>Pour répondre à cette question, on va :</p>
+<ul>
+<li>tracer le nuage de points donnant le rendement dans un champ en fonction de la dose d’azote;</li>
+<li>calculer le coefficient de corrélation entre les deux variables.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(azote_ble) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>Dose_Azote,<span class="at">y=</span>Rendement)<span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"skyblue"</span>)<span class="sc">+</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Dose d'azote (en kg/ha)"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Rendement (en T/ha)"</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Rendement du champ en fonction de la dose d'azote"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD3_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.test</span>(<span class="at">x=</span>azote_ble<span class="sc">$</span>Dose_Azote,azote_ble<span class="sc">$</span>Rendement)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  azote_ble$Dose_Azote and azote_ble$Rendement
+t = 4.4398, df = 90, p-value = 2.55e-05
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.2398778 0.5784672
+sample estimates:
+    cor 
+0.42387 </code></pre>
+</div>
+</div>
+<p>Ici, le coefficient de corrélation est significativement non nul. Néanmoins, la forme du nuage de points ne montre absolument pas de tendance linéaire, mais plutôt une tendance polynomiale.</p>
+Un modèle linéaire ne semble donc pas adapté.
+</details>
+<ol start="3" type="1">
+<li>On se propose de modéliser le rendement des champs par un modèle polynomial de degré 4 :</li>
 </ol>
 <p><span class="math display">\[ Y = \beta_0 + \beta_1 X + \beta_2 X^2 + \beta_3 X^3 +\beta_4X^4+ \varepsilon\]</span> où :</p>
 <ul>
@@ -219,16 +319,228 @@ window.Quarto = {
 <li><span class="math inline">\(\varepsilon \sim \mathcal{N}(0,\sigma^2)\)</span> désigne un bruit gausssien.</li>
 </ul>
 <p>Modifier le jeu de données initial afin de faire apparaître les variables <span class="math inline">\(X^2\)</span>, <span class="math inline">\(X^3\)</span> et <span class="math inline">\(X^4\)</span>.</p>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.2
+✔ lubridate 1.9.4     ✔ tibble    3.3.0
+✔ purrr     1.1.0     ✔ tidyr     1.3.1
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>azote_ble <span class="ot">&lt;-</span> azote_ble <span class="sc">%&gt;%</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Dose_Azote2 =</span> Dose_Azote<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Dose_Azote3 =</span> Dose_Azote<span class="sc">^</span><span class="dv">3</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Dose_Azote4 =</span> Dose_Azote<span class="sc">^</span><span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
 <ol start="4" type="1">
-<li><p>À l’aide de la fonction <code>lm()</code>, ajuster un modèle polynomial aux données.</p></li>
-<li><p>Quel est le pourcentage de variance expliquée par le modèle ? Certains coefficients semblent-ils non significatifs ?</p></li>
-<li><p>Effectuer un ou plusieurs tests de modèles emboîtés afin de déterminer les coefficients significativement non nuls du modèle. Quel modèle est finalement retenu ?</p></li>
-<li><p>Tracer le nuage de points représentant les données, et y ajouter les différents intervalles de confiance au niveau 95% pour les prédictions faites par le modèle.</p></li>
+<li>À l’aide de la fonction <code>lm()</code>, ajuster un modèle polynomial aux données.</li>
 </ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lm_ble <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span>.)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="5" type="1">
+<li>Quel est le pourcentage de variance expliquée par le modèle ? Certains coefficients semblent-ils non significatifs ?</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>On dresse un résumé du modèle :</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_ble)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Rendement ~ ., data = azote_ble)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.78238 -0.24016  0.02354  0.17685  0.90809 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  1.954e+00  1.966e-01   9.940 5.36e-16 ***
+Dose_Azote   8.039e-02  1.305e-02   6.163 2.17e-08 ***
+Dose_Azote2 -3.752e-04  2.590e-04  -1.448    0.151    
+Dose_Azote3 -9.330e-07  1.920e-06  -0.486    0.628    
+Dose_Azote4  5.639e-09  4.729e-09   1.192    0.236    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3424 on 87 degrees of freedom
+Multiple R-squared:  0.8784,    Adjusted R-squared:  0.8728 
+F-statistic: 157.1 on 4 and 87 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+Ici, les coefficients associés aux puissances 2, 3 et 4 de la dose d’azote ne semblent, à première vue, pas significatifs. On va voir plus loin que ce n’est pas si clair…
+</details>
+<ol start="6" type="1">
+<li>Effectuer un ou plusieurs tests de modèles emboîtés afin de déterminer les coefficients significativement non nuls du modèle. Quel modèle est finalement retenu ?</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>On va tout d’abord tester la nullité des coefficients <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span> et <span class="math inline">\(\beta_4\)</span> associés aux puissances 2, 3 et 4 de la dose d’azote.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span> Dose_Azote)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: Rendement ~ Dose_Azote + Dose_Azote2 + Dose_Azote3 + Dose_Azote4
+Model 2: Rendement ~ Dose_Azote
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     87 10.201                                  
+2     90 68.806 -3   -58.605 166.61 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>D’après ce test, au moins l’un des coefficients <span class="math inline">\(\beta_2, \beta_3\)</span> ou <span class="math inline">\(\beta_4\)</span> est non nul. Pour déterminer lesquels, on va ensuite tester la nullité simultanée de <span class="math inline">\(\beta_3\)</span> et <span class="math inline">\(\beta_4\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span>Dose_Azote <span class="sc">+</span> Dose_Azote2)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Rendement ~ Dose_Azote + Dose_Azote2, data = azote_ble)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.0291 -0.2481 -0.0511  0.2438  1.2901 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  2.381e+00  1.291e-01   18.44   &lt;2e-16 ***
+Dose_Azote   6.130e-02  2.976e-03   20.60   &lt;2e-16 ***
+Dose_Azote2 -2.684e-04  1.429e-05  -18.78   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3946 on 89 degrees of freedom
+Multiple R-squared:  0.8347,    Adjusted R-squared:  0.831 
+F-statistic: 224.8 on 2 and 89 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: Rendement ~ Dose_Azote + Dose_Azote2 + Dose_Azote3 + Dose_Azote4
+Model 2: Rendement ~ Dose_Azote + Dose_Azote2
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     87 10.201                                  
+2     89 13.861 -2   -3.6599 15.607 1.614e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>On voit ici que le coefficient <span class="math inline">\(\beta_2\)</span> est significativement non nul. De plus, l’un des deux coefficients <span class="math inline">\(\beta_3\)</span> ou <span class="math inline">\(\beta_4\)</span> est aussi non nul. On va tester lequel.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mod3<span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula=</span>Rendement<span class="sc">~</span>Dose_Azote<span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>            Dose_Azote2<span class="sc">+</span>Dose_Azote3)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod3)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Rendement ~ Dose_Azote + Dose_Azote2 + Dose_Azote3, 
+    data = azote_ble)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.79733 -0.22234 -0.00154  0.17302  0.95400 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  1.808e+00  1.539e-01  11.746  &lt; 2e-16 ***
+Dose_Azote   9.387e-02  6.518e-03  14.403  &lt; 2e-16 ***
+Dose_Azote2 -6.708e-04  7.494e-05  -8.952 5.16e-14 ***
+Dose_Azote3  1.338e-06  2.456e-07   5.445 4.63e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.3432 on 88 degrees of freedom
+Multiple R-squared:  0.8764,    Adjusted R-squared:  0.8722 
+F-statistic:   208 on 3 and 88 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod3)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: Rendement ~ Dose_Azote + Dose_Azote2 + Dose_Azote3 + Dose_Azote4
+Model 2: Rendement ~ Dose_Azote + Dose_Azote2 + Dose_Azote3
+  Res.Df    RSS Df Sum of Sq      F Pr(&gt;F)
+1     87 10.201                           
+2     88 10.368 -1  -0.16667 1.4214 0.2364</code></pre>
+</div>
+</div>
+<p>On a enfin notre réponse : seul le coefficient <span class="math inline">\(\beta_4\)</span> n’est pas significativement non nul.</p>
+Finalement, on retient le modèle <span class="math display">\[Y = \beta_0 + \beta_1 X + \beta_2 X^2 +\beta_3 X^3 + \varepsilon.\]</span>
+</details>
+<ol start="7" type="1">
+<li>Tracer le nuage de points représentant les données, et y ajouter les différents intervalles de confiance au niveau 95% pour les prédictions faites par le modèle.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On calcule les valeurs ajustées par le modèle et leur intervalle de prédiction</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod3,<span class="at">newdata =</span> azote_ble,<span class="at">interval =</span> <span class="st">"prediction"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ici, on rajoute l'intervalle de confiance pour les valeurs moyennes des prévisions</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>pred_moy <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod3,<span class="at">newdata =</span> azote_ble,<span class="at">interval =</span> <span class="st">"confidence"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(azote_ble)<span class="sc">+</span><span class="fu">aes</span>(<span class="at">x=</span>Dose_Azote,<span class="at">y=</span>Rendement)<span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred_moy<span class="sc">$</span>fit,<span class="at">linetype=</span><span class="st">"Prévisions"</span>),</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">color=</span><span class="st">"blue4"</span>,<span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> pred_moy<span class="sc">$</span>lwr,</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax=</span>pred_moy<span class="sc">$</span>upr,</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fill=</span><span class="st">"Intervalle de confiance pour les valeurs moyennes (95%)"</span>),</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span><span class="fl">0.2</span>)<span class="sc">+</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="st">"blue2"</span>)<span class="sc">+</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred<span class="sc">$</span>lwr,</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">linetype=</span><span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred<span class="sc">$</span>upr,</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>                <span class="at">linetype=</span><span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"dotted"</span>,<span class="st">"dashed"</span>))<span class="sc">+</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,<span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box =</span> <span class="st">"vertical"</span>)<span class="sc">+</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Rendement d'un champ de blé en fonction de la dose d'azote"</span>,</span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Dose d'azote (en kg/ha)"</span>,</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Rendement (en T/ha)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD3_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
 </section>
 <section id="exercice-2" class="level1 unnumbered">
 <h1 class="unnumbered">Exercice 2</h1>
-<p>On étudie dans cet exercice l’espérance de vie moyenne dans un pays en fonction de sa population et de son PIB par habitant. On dispose pour cela d’un jeu de données <em>(disponible <a href="./life_expectancy.csv" download=""> ici </a>)</em> libre de droits issu de la banque mondiale, et disponible sur <a href="https://www.gapminder.org/" target="_blank">Gapminder.org</a>, CCBY License.</p>
+<p>On étudie dans cet exercice l’espérance de vie moyenne dans un pays en fonction de sa population et de son PIB par habitant. On dispose pour cela d’un jeu de données <em>(disponible</em> <a href="./life_expectancy.csv" download=""> ici </a>) libre de droits issu de la banque mondiale, et disponible sur <a href="https://www.gapminder.org/" target="_blank">Gapminder.org</a>, CCBY License.</p>
 <p>On trouvera dans ce jeu de données pour 142 pays en 2007 :</p>
 <ul>
 <li>le PIB par habitant;</li>
@@ -237,20 +549,173 @@ window.Quarto = {
 <li>l’espérance de vie dans le pays.</li>
 </ul>
 <ol type="1">
-<li><p>Importer les données dans R et résumer brièvement les données.</p></li>
-<li><p>Ajuster un modèle linéaire permettant d’expliquer l’espérance de vie dans un pays en fonction des autres variables. Ecrire mathématiquement ce modèle.</p></li>
-<li><p>Quel le pourcentage de variance expliquée par ce modèle ?</p></li>
-<li><p>Ré-ajuster le modèle afin de ne conserver que les coefficients significativement non nuls.</p></li>
-<li><p>Un modèle linéaire n’est pas tout à fait adapté ici. On va utiliser un modèle non linéaire en utilisant une transformation logarithmique sur les données de PIB par habitant.</p></li>
+<li>Importer les données dans R et résumer brièvement les données.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>life_expectancy <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"life_expectancy.csv"</span>, <span class="at">row.names=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">continent =</span> <span class="fu">as.factor</span>(continent))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="2" type="1">
+<li>Ajuster un modèle linéaire permettant d’expliquer l’espérance de vie dans un pays en fonction des autres variables. Ecrire mathématiquement ce modèle.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>Ici, la variable <em>country</em> n’est pas utilisée, car elle sert simplement à nommer chaque observation. La variable <em>continent</em> est, quant à elle, qualitative.</p>
+<p>On note ci-dessous :</p>
+<ul>
+<li><p><span class="math inline">\(Y\)</span> la variable <em>lifeExp</em> <em>(observations <span class="math inline">\(y_1,\ldots,y_n\)</span>)</em>;</p></li>
+<li><p><span class="math inline">\(X_1\)</span> la variable <em>continent</em> <em>(observations <span class="math inline">\(x_{1,1},\ldots,x_{n,1}\)</span>)</em>;</p></li>
+<li><p><span class="math inline">\(X_2\)</span> la variable <em>pop</em> <em>(observations <span class="math inline">\(x_{1,2},\ldots,x_{n,2}\)</span>)</em>;</p></li>
+<li><p><span class="math inline">\(X_3\)</span> la variable <em>gdpPercap</em> <em>(observations <span class="math inline">\(x_{1,3},\ldots,x_{n,3}\)</span>)</em>.</p>
+<p>Le modèle envisagé est donné pour tout <span class="math inline">\(i \in \{1,\ldots,n\}\)</span> par <span class="math display">\[{\small y_i = \beta_0 + \beta_1^{Americas} \mathbf{1}_{Americas}(x_{i,1}) + \beta_1^{Asia} \mathbf{1}_{Asia}(x_{i,1}) +\beta_1^{Europe}\mathbf{1}_{Europe}(x_{i,1}) + \beta_1^{Oceania} \mathbf{1}_{Oceania}(x_{i,1}) + \beta_2 x_{i,2} + \beta_3 x_{i,3} + \varepsilon_i }\]</span> où les <span class="math inline">\(\varepsilon_i\)</span> sont i.i.d. de loi <span class="math inline">\(\mathcal{N}(0,\sigma^2)\)</span>.</p>
+<p><strong><em>Remarque :</em></strong> Le modèle ne contient ici pas de coefficient <span class="math inline">\(\beta_1^{Africa}\)</span> pour des raisons d’<strong>identifiabilité</strong>. En d’autres termes, si on intégrait ce coeffcient dans le modèle, différentes valeurs des coefficients aboutiraient aux mêmes valeurs réponses, ce qui poseraient un souci quant à la bonne définition du problème.</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>lm_life <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp <span class="sc">~</span> continent <span class="sc">+</span> pop <span class="sc">+</span> gdpPercap)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="3" type="1">
+<li>Quel le pourcentage de variance expliquée par ce modèle ?</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lifeExp ~ continent + pop + gdpPercap, data = life_expectancy)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-22.8199  -2.8905   0.1574   2.9046  20.0585 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       5.371e+01  9.356e-01  57.413  &lt; 2e-16 ***
+continentAmericas 1.603e+01  1.671e+00   9.592  &lt; 2e-16 ***
+continentAsia     1.256e+01  1.621e+00   7.751 1.97e-12 ***
+continentEurope   1.520e+01  1.966e+00   7.730 2.20e-12 ***
+continentOceania  1.662e+01  4.993e+00   3.329  0.00112 ** 
+pop               9.586e-10  3.926e-09   0.244  0.80747    
+gdpPercap         3.479e-04  5.717e-05   6.086 1.13e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 6.597 on 135 degrees of freedom
+Multiple R-squared:  0.7141,    Adjusted R-squared:  0.7014 
+F-statistic:  56.2 on 6 and 135 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+Ce modèle explique 71,41% de la variance.
+</details>
+<ol start="4" type="1">
+<li>Ré-ajuster le modèle afin de ne conserver que les coefficients significativement non nuls.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>Ici, on ne supprime que la variable <em>pop</em>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>lm_life_reduit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp <span class="sc">~</span>continent <span class="sc">+</span> gdpPercap)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lifeExp ~ continent + gdpPercap, data = life_expectancy)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-22.9145  -2.8518   0.1407   2.8881  20.0479 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       5.374e+01  9.284e-01  57.881  &lt; 2e-16 ***
+continentAmericas 1.606e+01  1.662e+00   9.663  &lt; 2e-16 ***
+continentAsia     1.267e+01  1.557e+00   8.137 2.27e-13 ***
+continentEurope   1.523e+01  1.956e+00   7.786 1.57e-12 ***
+continentOceania  1.665e+01  4.974e+00   3.348  0.00105 ** 
+gdpPercap         3.466e-04  5.674e-05   6.109 9.89e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 6.574 on 136 degrees of freedom
+Multiple R-squared:  0.714, Adjusted R-squared:  0.7035 
+F-statistic:  67.9 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</details>
+<ol start="5" type="1">
+<li>Un modèle linéaire n’est pas tout à fait adapté ici. On va utiliser un modèle non linéaire en utilisant une transformation logarithmique sur les données de PIB par habitant.</li>
 </ol>
 <ol type="a">
 <li>Ecrire mathématiquement le modèle considéré.</li>
 <li>Créer une nouvelle variable donnant le logarithme du PIB par habitant.</li>
 <li>Représenter brièvement les nouvelles données obtenues.</li>
 <li>A l’aide de la fonction <code>lm()</code> ajuster le modèle envisagé aux données.</li>
-<li>Ré-ajuster le modèle afin de ne conserver que les coefficients significativement non nuls.</li>
+<li>Quel est le gain sur le coefficient de détermination ?</li>
 </ol>
-<ol start="5" type="1">
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>Le modèle considéré ici est, en reprenant les notations précédentes <span class="math display">\[\small{y_i = \beta_0 + \beta_1^{Americas} \mathbf{1}_{Americas}(x_{i,1}) + \beta_1^{Asia} \mathbf{1}_{Asia}(x_{i,1}) +\beta_1^{Europe}\mathbf{1}_{Europe}(x_{i,1}) + \beta_1^{Oceania} \mathbf{1}_{Oceania}(x_{i,1}) + \beta_3 \ln( x_{i,3}) + \varepsilon_i.}\]</span> <em>Remarque : on rappelle que, dans un soucie de parcimonie, on n’a pas conservé la variable <span class="math inline">\(X_2\)</span>.</em></p>
+<p>On transforme dorénavant les données et on les représente.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>life_expectancy <span class="ot">&lt;-</span> life_expectancy <span class="sc">%&gt;%</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_gdpPercap =</span> <span class="fu">log</span>(gdpPercap))</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(life_expectancy[,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD3_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>On ajuste ensuite notre modèle.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>lm_life_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp<span class="sc">~</span>continent <span class="sc">+</span> log_gdpPercap)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lifeExp ~ continent + log_gdpPercap, data = life_expectancy)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-19.4917  -2.3146  -0.0432   2.5498  14.8818 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)        20.1376     4.0332   4.993 1.79e-06 ***
+continentAmericas  11.6942     1.6546   7.068 7.46e-11 ***
+continentAsia      10.1144     1.4761   6.852 2.31e-10 ***
+continentEurope    11.2682     1.8936   5.951 2.14e-08 ***
+continentOceania   12.9293     4.5211   2.860  0.00491 ** 
+log_gdpPercap       4.6308     0.5274   8.780 6.14e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.929 on 136 degrees of freedom
+Multiple R-squared:  0.7674,    Adjusted R-squared:  0.7588 
+F-statistic: 89.72 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+On voit ici que ce dernier modèle explique 5% de variance en plus que le précédent.
+</details>
+<ol start="6" type="1">
 <li>On souhaite dorénavant comparer les deux modèles construits.</li>
 </ol>
 <ol type="a">
@@ -270,7 +735,139 @@ window.Quarto = {
 <ol start="4" type="a">
 <li>Enfin, on compare les performances prédictives des modèles. Pour ce faire, on va estimer le risque quadratique des deux modèles par validation croisée 10 blocs <em>(voir <a href="./TD2.html">TD2</a>)</em>.</li>
 </ol>
-<p>Sélectionner le modèles semblant avoir la meilleure performance prédictive.</p>
+<p>Sélectionner le modèle semblant avoir la meilleure performance prédictive.</p>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<ul>
+<li>Comparons les <span class="math inline">\(R^2\)</span> et <span class="math inline">\(R_a^2\)</span> :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lifeExp ~ continent + gdpPercap, data = life_expectancy)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-22.9145  -2.8518   0.1407   2.8881  20.0479 
+
+Coefficients:
+                   Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)       5.374e+01  9.284e-01  57.881  &lt; 2e-16 ***
+continentAmericas 1.606e+01  1.662e+00   9.663  &lt; 2e-16 ***
+continentAsia     1.267e+01  1.557e+00   8.137 2.27e-13 ***
+continentEurope   1.523e+01  1.956e+00   7.786 1.57e-12 ***
+continentOceania  1.665e+01  4.974e+00   3.348  0.00105 ** 
+gdpPercap         3.466e-04  5.674e-05   6.109 9.89e-09 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 6.574 on 136 degrees of freedom
+Multiple R-squared:  0.714, Adjusted R-squared:  0.7035 
+F-statistic:  67.9 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = lifeExp ~ continent + log_gdpPercap, data = life_expectancy)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-19.4917  -2.3146  -0.0432   2.5498  14.8818 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)        20.1376     4.0332   4.993 1.79e-06 ***
+continentAmericas  11.6942     1.6546   7.068 7.46e-11 ***
+continentAsia      10.1144     1.4761   6.852 2.31e-10 ***
+continentEurope    11.2682     1.8936   5.951 2.14e-08 ***
+continentOceania   12.9293     4.5211   2.860  0.00491 ** 
+log_gdpPercap       4.6308     0.5274   8.780 6.14e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.929 on 136 degrees of freedom
+Multiple R-squared:  0.7674,    Adjusted R-squared:  0.7588 
+F-statistic: 89.72 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>Le modèle avec la transformation logarithmique possède à la fois un meilleur <span class="math inline">\(R^2\)</span> et un meilleur <span class="math inline">\(R_a^2\)</span>.</p>
+<ul>
+<li>Comparons ensuite les AIC :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 945.6641</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 916.3339</code></pre>
+</div>
+</div>
+<p>Une fois encore, selon le critère AIC, on sélectionnerait le modèle logarithmique.</p>
+<ul>
+<li>Maintenant, comparons les BIC :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 966.3549</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 937.0247</code></pre>
+</div>
+</div>
+<p>On a toujours la même conclusion.</p>
+<ul>
+<li>Comparons enfin les performances prédictives des deux modèles via une validation croisée 10 blocs :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">333</span>)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des 10 blocs</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="at">data=</span>life_expectancy,<span class="at">v =</span> <span class="dv">10</span>) </span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle linéaire utilisé</span></span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode=</span><span class="st">"regression"</span>,<span class="at">engine=</span><span class="st">"lm"</span>)</span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision des modèles utilisés dans un workflow</span></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>lm_workflow1 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(lifeExp<span class="sc">~</span>continent <span class="sc">+</span> gdpPercap)</span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>lm_workflow2 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(lifeExp<span class="sc">~</span>continent <span class="sc">+</span> log_gdpPercap)</span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
+<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>lm_cv1 <span class="ot">&lt;-</span> lm_workflow1 <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>lm_cv2 <span class="ot">&lt;-</span> lm_workflow2 <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv1 <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv1)</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv2 <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv2)</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv1</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric .estimator  mean     n std_err .config        
+  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;          
+1 rmse    standard   6.31     10  0.677  pre0_mod0_post0
+2 rsq     standard   0.729    10  0.0494 pre0_mod0_post0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  .metric .estimator  mean     n std_err .config        
+  &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;          
+1 rmse    standard   5.81     10  0.474  pre0_mod0_post0
+2 rsq     standard   0.777    10  0.0280 pre0_mod0_post0</code></pre>
+</div>
+</div>
+<p>Le modèle logarithmique possède une meilleure capacité prédictive. Il bat donc le modèle linéaire à tout point de vue.</p>
+</details>
 
 
 </section>

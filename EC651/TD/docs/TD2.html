@@ -306,7 +306,7 @@ Voir le code
 <summary>
 Commentaire
 </summary>
-Bien que les corrélations calculées entre les différentes variables soient significativement non nuls, les nuages de points ne montrent pas de tendance particulière, si ce n’est entre les variables <em>user_rating</em> et <em>surface_tension</em>. On remarque toutefois des clusters sur certains nuages de points, notamment pour la variable <em>viscosity</em>, montrant l’impact de la variable catégorielle <em>product_type</em>, indiquant si le produit est une crème, un gel, etc…
+<p>Bien que les corrélations calculées entre les différentes variables soient significativement non nuls, les nuages de points ne montrent pas de tendance particulière, si ce n’est entre les variables <em>user_rating</em> et <em>surface_tension</em>. On remarque toutefois des clusters sur certains nuages de points, notamment pour la variable <em>viscosity</em>, montrant l’impact de la variable catégorielle <em>product_type</em>, indiquant si le produit est une crème, un gel, etc…</p>
 </details>
 <ol start="3" type="1">
 <li>Un modèle linéaire semble-t-il adapté pour prédire la note donnée par les consommateurs ? Ecrire mathématiquement ce modèle.</li>
@@ -325,7 +325,7 @@ Réponse
 <li><span class="math inline">\(X_5\)</span> la variable <em>surface_tension</em>, (observations <span class="math inline">\(x_{1,5},\ldots,x_{n,5}\)</span>).</li>
 </ul>
 <p>On a alors pour tout <span class="math inline">\(i \in \{1,\ldots,n\}\)</span> <span class="math display">\[y_i = \beta_0 + \beta_1^{gel} \mathbf{1}_{gel}(x_{i,1}) + \beta_1^{lotion} \mathbf{1}_{lotion}(x_i,1) +\beta_1^{serum} \mathbf{1}_{serum}(x_{i,1}) + \beta_2 x_{i,2} + \beta_3 x_{i,3} +\beta_4 x_{i,4} + \beta_5 x_{i,5} + \varepsilon_i\]</span> où les <span class="math inline">\(\varepsilon_i\)</span> son i.i.d. de loi <span class="math inline">\(\mathcal{N}(0,\sigma^2)\)</span>.</p>
-<strong><em>Remarque :</em></strong> Le modèle ne contient ici pas de coefficient <span class="math inline">\(\beta_1^{cream}\)</span> pour des raisons d’<strong>identifiabilité</strong>. En d’autres termes, si on intégrait ce coeffcient dans le modèle, différentes valeurs des coefficients aboutiraient aux mêmes valeurs réponses, ce qui poseraient un souci quant à la bonne définition du problème.
+<p><strong><em>Remarque :</em></strong> Le modèle ne contient ici pas de coefficient <span class="math inline">\(\beta_1^{cream}\)</span> pour des raisons d’<strong>identifiabilité</strong>. En d’autres termes, si on intégrait ce coeffcient dans le modèle, différentes valeurs des coefficients aboutiraient aux mêmes valeurs réponses, ce qui poseraient un souci quant à la bonne définition du problème.</p>
 </details>
 <ol start="4" type="1">
 <li>Ajuster un modèle linéaire aux données, permettant d’expliquer <em>user_rating</em> en fonction des autres variables.</li>
@@ -380,7 +380,7 @@ Réponse
 <li><em>surface_tension</em>.</li>
 </ul></li>
 </ul>
-Elles ne semblent donc pas expliquer la note donnée par les consommateurs.
+<p>Elles ne semblent donc pas expliquer la note donnée par les consommateurs.</p>
 </details>
 <ol start="5" type="1">
 <li>À l’aide de la fonction <code>anova()</code>, réaliser un test de modèles emboîtés afin de déterminer les variables intervenant réellement dans le modèle. Ecrire les hypothèses envisagées dans ce test.</li>
@@ -531,7 +531,7 @@ F-statistic: 7.965 on 5 and 74 DF,  p-value: 4.767e-06</code></pre>
 Réponse
 </summary>
 <p>Pour chaque coefficient <span class="math inline">\(\beta_i\)</span>, on effectue le test <span class="math display">\[H_0 : \beta_i = 0 \quad \text{contre} \quad H_1 : \beta_i \neq0.\]</span> Sous <span class="math inline">\(H_0\)</span>, on a <span class="math inline">\(t_i = \dfrac{\hat{\beta}_i}{\hat{\sigma}_i} \sim \mathcal{T}_{n-p}\)</span>, où <span class="math inline">\(p\)</span> est le nombre de paramètres à estimer. On rejette <span class="math inline">\(H_0\)</span> au seuil <span class="math inline">\(\alpha\)</span> si <span class="math inline">\(|t_i| &gt; t_{n-p}(1-\alpha/2)\)</span> le quantile d’ordre <span class="math inline">\(1-\alpha/2\)</span> de la loi <span class="math inline">\(\mathcal{T}_{n-p}\)</span>.</p>
-Ici, les coefficients associés aux variables <em>Heures_Travail</em> et <em>Temperature</em> ne sont pas signifcativeùent non nuls.
+<p>Ici, les coefficients associés aux variables <em>Heures_Travail</em> et <em>Temperature</em> ne sont pas signifcativeùent non nuls.</p>
 </details>
 <ol start="4" type="1">
 <li>Réaliser un test de modèles emboîtés afin de tester la nullité simultanée de ces coefficients. Quel est la statistique de test utilisée ici ?</li>
@@ -559,7 +559,7 @@ Model 2: Rendement ~ Engrais + Irrigation + Qualite_Sol
 2     76 0.79376 -2 -0.029669 1.4367 0.2443</code></pre>
 </div>
 </div>
-Ici, on ne rejette pas l’hypothèse nulle <em>(<span class="math inline">\(p\)</span>-value égale à 0.2443)</em>.
+<p>Ici, on ne rejette pas l’hypothèse nulle <em>(</em><span class="math inline">\(p\)</span>-value égale à 0.2443).</p>
 </details>
 <ol start="5" type="1">
 <li>Comme dans l’exercice précédent, on souhaite comparer la capacité prédictive des deux modèles construits.</li>
@@ -647,7 +647,7 @@ Réponse
 2 rsq     standard   0.412     10  0.0807 pre0_mod0_post0</code></pre>
 </div>
 </div>
-Le modèle réduit semble ainsi légèrement plus performant que le modèle complet pour effectuer des pévisions.
+<p>Le modèle réduit semble ainsi légèrement plus performant que le modèle complet pour effectuer des pévisions.</p>
 </details>
 
 
