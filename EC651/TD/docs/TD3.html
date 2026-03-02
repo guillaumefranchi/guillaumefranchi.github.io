@@ -195,6 +195,18 @@ window.Quarto = {
  <span class="menu-text">TD3 : Régression non linéaire</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TD4 : Validation du modèle</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./TD5.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">TD5 : Sélection de variables</span></a>
+  </div>
+</li>
     </ul>
     </div>
 </nav>
@@ -307,7 +319,7 @@ sample estimates:
 </div>
 </div>
 <p>Ici, le coefficient de corrélation est significativement non nul. Néanmoins, la forme du nuage de points ne montre absolument pas de tendance linéaire, mais plutôt une tendance polynomiale.</p>
-Un modèle linéaire ne semble donc pas adapté.
+<p>Un modèle linéaire ne semble donc pas adapté.</p>
 </details>
 <ol start="3" type="1">
 <li>On se propose de modéliser le rendement des champs par un modèle polynomial de degré 4 :</li>
@@ -324,22 +336,11 @@ Un modèle linéaire ne semble donc pas adapté.
 Voir le code
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.2
-✔ lubridate 1.9.4     ✔ tibble    3.3.0
-✔ purrr     1.1.0     ✔ tidyr     1.3.1
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>azote_ble <span class="ot">&lt;-</span> azote_ble <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Dose_Azote2 =</span> Dose_Azote<span class="sc">^</span><span class="dv">2</span>,</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">Dose_Azote3 =</span> Dose_Azote<span class="sc">^</span><span class="dv">3</span>,</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Dose_Azote4 =</span> Dose_Azote<span class="sc">^</span><span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>azote_ble <span class="ot">&lt;-</span> azote_ble <span class="sc">%&gt;%</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Dose_Azote2 =</span> Dose_Azote<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">Dose_Azote3 =</span> Dose_Azote<span class="sc">^</span><span class="dv">3</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">Dose_Azote4 =</span> Dose_Azote<span class="sc">^</span><span class="dv">4</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <ol start="4" type="1">
@@ -350,7 +351,7 @@ Voir le code
 Voir le code
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lm_ble <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span>.)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>lm_ble <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span>.)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <ol start="5" type="1">
@@ -362,7 +363,7 @@ Réponse
 </summary>
 <p>On dresse un résumé du modèle :</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_ble)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_ble)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -387,19 +388,26 @@ Multiple R-squared:  0.8784,    Adjusted R-squared:  0.8728
 F-statistic: 157.1 on 4 and 87 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
-Ici, les coefficients associés aux puissances 2, 3 et 4 de la dose d’azote ne semblent, à première vue, pas significatifs. On va voir plus loin que ce n’est pas si clair…
+<p>Ici, les coefficients associés aux puissances 2, 3 et 4 de la dose d’azote ne semblent, à première vue, pas significatifs. On va voir plus loin que ce n’est pas si clair…</p>
 </details>
 <ol start="6" type="1">
-<li>Effectuer un ou plusieurs tests de modèles emboîtés afin de déterminer les coefficients significativement non nuls du modèle. Quel modèle est finalement retenu ?</li>
+<li>Effectuer la succession de tests suivante :</li>
 </ol>
+<ul>
+<li><span class="math inline">\(H0: \beta_2=\beta_3=\beta_4 = 0\)</span> contre <span class="math inline">\(H_1: \beta_2\neq0\)</span> ou <span class="math inline">\(\beta_3 \neq 0\)</span> ou <span class="math inline">\(\beta_4\neq 0\)</span>.</li>
+<li><span class="math inline">\(H_0' : \beta_3=\beta_4=0\)</span> contre <span class="math inline">\(H_1': \beta_3 \neq 0\)</span> ou <span class="math inline">\(\beta_4 \neq 0\)</span>.</li>
+<li><span class="math inline">\(H_0'': \beta_4 =0\)</span> contre <span class="math inline">\(H_1'': \beta_4 \neq 0\)</span>.</li>
+</ul>
+<p>On s’arrête dès qu’un test n’est pas rejeté. On vérifiera, à chaque étape, si les coefficients sont significativement non nuls dans la régression effectuée.</p>
+<p>Sélectionner alors le modèle linéaire semblant le plue pertinent suite à cette procédure.</p>
 <details class="mydetails">
 <summary>
 Réponse
 </summary>
 <p>On va tout d’abord tester la nullité des coefficients <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\beta_3\)</span> et <span class="math inline">\(\beta_4\)</span> associés aux puissances 2, 3 et 4 de la dose d’azote.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span> Dose_Azote)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span> Dose_Azote)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -414,8 +422,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>D’après ce test, au moins l’un des coefficients <span class="math inline">\(\beta_2, \beta_3\)</span> ou <span class="math inline">\(\beta_4\)</span> est non nul. Pour déterminer lesquels, on va ensuite tester la nullité simultanée de <span class="math inline">\(\beta_3\)</span> et <span class="math inline">\(\beta_4\)</span>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span>Dose_Azote <span class="sc">+</span> Dose_Azote2)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mod2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula =</span> Rendement<span class="sc">~</span>Dose_Azote <span class="sc">+</span> Dose_Azote2)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -437,7 +445,7 @@ Residual standard error: 0.3946 on 89 degrees of freedom
 Multiple R-squared:  0.8347,    Adjusted R-squared:  0.831 
 F-statistic: 224.8 on 2 and 89 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod2)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -452,9 +460,9 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>On voit ici que le coefficient <span class="math inline">\(\beta_2\)</span> est significativement non nul. De plus, l’un des deux coefficients <span class="math inline">\(\beta_3\)</span> ou <span class="math inline">\(\beta_4\)</span> est aussi non nul. On va tester lequel.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>mod3<span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula=</span>Rendement<span class="sc">~</span>Dose_Azote<span class="sc">+</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>            Dose_Azote2<span class="sc">+</span>Dose_Azote3)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod3)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mod3<span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>azote_ble,<span class="at">formula=</span>Rendement<span class="sc">~</span>Dose_Azote<span class="sc">+</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>            Dose_Azote2<span class="sc">+</span>Dose_Azote3)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod3)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -478,7 +486,7 @@ Residual standard error: 0.3432 on 88 degrees of freedom
 Multiple R-squared:  0.8764,    Adjusted R-squared:  0.8722 
 F-statistic:   208 on 3 and 88 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod3)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lm_ble,mod3)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -490,7 +498,7 @@ Model 2: Rendement ~ Dose_Azote + Dose_Azote2 + Dose_Azote3
 </div>
 </div>
 <p>On a enfin notre réponse : seul le coefficient <span class="math inline">\(\beta_4\)</span> n’est pas significativement non nul.</p>
-Finalement, on retient le modèle <span class="math display">\[Y = \beta_0 + \beta_1 X + \beta_2 X^2 +\beta_3 X^3 + \varepsilon.\]</span>
+<p>Par la suite, on va retenir le modèle <span class="math display">\[Y = \beta_0 + \beta_1 X + \beta_2 X^2 +\beta_3 X^3 + \varepsilon.\]</span></p>
 </details>
 <ol start="7" type="1">
 <li>Tracer le nuage de points représentant les données, et y ajouter les différents intervalles de confiance au niveau 95% pour les prédictions faites par le modèle.</li>
@@ -500,34 +508,34 @@ Finalement, on retient le modèle <span class="math display">\[Y = \beta_0 + \be
 Voir le code
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On calcule les valeurs ajustées par le modèle et leur intervalle de prédiction</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod3,<span class="at">newdata =</span> azote_ble,<span class="at">interval =</span> <span class="st">"prediction"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ici, on rajoute l'intervalle de confiance pour les valeurs moyennes des prévisions</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>pred_moy <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod3,<span class="at">newdata =</span> azote_ble,<span class="at">interval =</span> <span class="st">"confidence"</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(azote_ble)<span class="sc">+</span><span class="fu">aes</span>(<span class="at">x=</span>Dose_Azote,<span class="at">y=</span>Rendement)<span class="sc">+</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred_moy<span class="sc">$</span>fit,<span class="at">linetype=</span><span class="st">"Prévisions"</span>),</span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">color=</span><span class="st">"blue4"</span>,<span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> pred_moy<span class="sc">$</span>lwr,</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax=</span>pred_moy<span class="sc">$</span>upr,</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fill=</span><span class="st">"Intervalle de confiance pour les valeurs moyennes (95%)"</span>),</span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span><span class="fl">0.2</span>)<span class="sc">+</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="st">"blue2"</span>)<span class="sc">+</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred<span class="sc">$</span>lwr,</span>
-<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">linetype=</span><span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
-<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred<span class="sc">$</span>upr,</span>
-<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>                <span class="at">linetype=</span><span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
-<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"dotted"</span>,<span class="st">"dashed"</span>))<span class="sc">+</span></span>
-<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,<span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box =</span> <span class="st">"vertical"</span>)<span class="sc">+</span></span>
-<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Rendement d'un champ de blé en fonction de la dose d'azote"</span>,</span>
-<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Dose d'azote (en kg/ha)"</span>,</span>
-<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Rendement (en T/ha)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On calcule les valeurs ajustées par le modèle et leur intervalle de prédiction</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod3,<span class="at">newdata =</span> azote_ble,<span class="at">interval =</span> <span class="st">"prediction"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ici, on rajoute l'intervalle de confiance pour les valeurs moyennes des prévisions</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>pred_moy <span class="ot">&lt;-</span> <span class="fu">predict</span>(mod3,<span class="at">newdata =</span> azote_ble,<span class="at">interval =</span> <span class="st">"confidence"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(azote_ble)<span class="sc">+</span><span class="fu">aes</span>(<span class="at">x=</span>Dose_Azote,<span class="at">y=</span>Rendement)<span class="sc">+</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred_moy<span class="sc">$</span>fit,<span class="at">linetype=</span><span class="st">"Prévisions"</span>),</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">color=</span><span class="st">"blue4"</span>,<span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> pred_moy<span class="sc">$</span>lwr,</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>                  <span class="at">ymax=</span>pred_moy<span class="sc">$</span>upr,</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>                  <span class="at">fill=</span><span class="st">"Intervalle de confiance pour les valeurs moyennes (95%)"</span>),</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">alpha=</span><span class="fl">0.2</span>)<span class="sc">+</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values=</span><span class="st">"blue2"</span>)<span class="sc">+</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred<span class="sc">$</span>lwr,</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">linetype=</span><span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>pred<span class="sc">$</span>upr,</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>                <span class="at">linetype=</span><span class="st">"Intervalle de confiance pour les prévisions (95%)"</span>))<span class="sc">+</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"dotted"</span>,<span class="st">"dashed"</span>))<span class="sc">+</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>,<span class="at">legend.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.box =</span> <span class="st">"vertical"</span>)<span class="sc">+</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Rendement d'un champ de blé en fonction de la dose d'azote"</span>,</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Dose d'azote (en kg/ha)"</span>,</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span> <span class="st">"Rendement (en T/ha)"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -556,8 +564,8 @@ Voir le code
 Voir le code
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>life_expectancy <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"life_expectancy.csv"</span>, <span class="at">row.names=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">continent =</span> <span class="fu">as.factor</span>(continent))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>life_expectancy <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"life_expectancy.csv"</span>, <span class="at">row.names=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">continent =</span> <span class="fu">as.factor</span>(continent))</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <ol start="2" type="1">
@@ -570,15 +578,15 @@ Réponse
 <p>Ici, la variable <em>country</em> n’est pas utilisée, car elle sert simplement à nommer chaque observation. La variable <em>continent</em> est, quant à elle, qualitative.</p>
 <p>On note ci-dessous :</p>
 <ul>
-<li><p><span class="math inline">\(Y\)</span> la variable <em>lifeExp</em> <em>(observations <span class="math inline">\(y_1,\ldots,y_n\)</span>)</em>;</p></li>
-<li><p><span class="math inline">\(X_1\)</span> la variable <em>continent</em> <em>(observations <span class="math inline">\(x_{1,1},\ldots,x_{n,1}\)</span>)</em>;</p></li>
-<li><p><span class="math inline">\(X_2\)</span> la variable <em>pop</em> <em>(observations <span class="math inline">\(x_{1,2},\ldots,x_{n,2}\)</span>)</em>;</p></li>
-<li><p><span class="math inline">\(X_3\)</span> la variable <em>gdpPercap</em> <em>(observations <span class="math inline">\(x_{1,3},\ldots,x_{n,3}\)</span>)</em>.</p>
+<li><p><span class="math inline">\(Y\)</span> la variable <em>lifeExp</em> <em>(observations</em> <span class="math inline">\(y_1,\ldots,y_n\)</span>);</p></li>
+<li><p><span class="math inline">\(X_1\)</span> la variable <em>continent</em> <em>(observations</em> <span class="math inline">\(x_{1,1},\ldots,x_{n,1}\)</span>);</p></li>
+<li><p><span class="math inline">\(X_2\)</span> la variable <em>pop</em> <em>(observations</em> <span class="math inline">\(x_{1,2},\ldots,x_{n,2}\)</span>);</p></li>
+<li><p><span class="math inline">\(X_3\)</span> la variable <em>gdpPercap</em> <em>(observations</em> <span class="math inline">\(x_{1,3},\ldots,x_{n,3}\)</span>).</p>
 <p>Le modèle envisagé est donné pour tout <span class="math inline">\(i \in \{1,\ldots,n\}\)</span> par <span class="math display">\[{\small y_i = \beta_0 + \beta_1^{Americas} \mathbf{1}_{Americas}(x_{i,1}) + \beta_1^{Asia} \mathbf{1}_{Asia}(x_{i,1}) +\beta_1^{Europe}\mathbf{1}_{Europe}(x_{i,1}) + \beta_1^{Oceania} \mathbf{1}_{Oceania}(x_{i,1}) + \beta_2 x_{i,2} + \beta_3 x_{i,3} + \varepsilon_i }\]</span> où les <span class="math inline">\(\varepsilon_i\)</span> sont i.i.d. de loi <span class="math inline">\(\mathcal{N}(0,\sigma^2)\)</span>.</p>
 <p><strong><em>Remarque :</em></strong> Le modèle ne contient ici pas de coefficient <span class="math inline">\(\beta_1^{Africa}\)</span> pour des raisons d’<strong>identifiabilité</strong>. En d’autres termes, si on intégrait ce coeffcient dans le modèle, différentes valeurs des coefficients aboutiraient aux mêmes valeurs réponses, ce qui poseraient un souci quant à la bonne définition du problème.</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>lm_life <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp <span class="sc">~</span> continent <span class="sc">+</span> pop <span class="sc">+</span> gdpPercap)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>lm_life <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp <span class="sc">~</span> continent <span class="sc">+</span> pop <span class="sc">+</span> gdpPercap)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <ol start="3" type="1">
@@ -589,7 +597,7 @@ Réponse
 Réponse
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -616,7 +624,7 @@ Multiple R-squared:  0.7141,    Adjusted R-squared:  0.7014
 F-statistic:  56.2 on 6 and 135 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
-Ce modèle explique 71,41% de la variance.
+<p>Ce modèle explique 71,41% de la variance.</p>
 </details>
 <ol start="4" type="1">
 <li>Ré-ajuster le modèle afin de ne conserver que les coefficients significativement non nuls.</li>
@@ -627,8 +635,8 @@ Réponse
 </summary>
 <p>Ici, on ne supprime que la variable <em>pop</em>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>lm_life_reduit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp <span class="sc">~</span>continent <span class="sc">+</span> gdpPercap)</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>lm_life_reduit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp <span class="sc">~</span>continent <span class="sc">+</span> gdpPercap)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -658,6 +666,7 @@ F-statistic:  67.9 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
 <ol start="5" type="1">
 <li>Un modèle linéaire n’est pas tout à fait adapté ici. On va utiliser un modèle non linéaire en utilisant une transformation logarithmique sur les données de PIB par habitant.</li>
 </ol>
+<!-- -->
 <ol type="a">
 <li>Ecrire mathématiquement le modèle considéré.</li>
 <li>Créer une nouvelle variable donnant le logarithme du PIB par habitant.</li>
@@ -669,13 +678,13 @@ F-statistic:  67.9 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
 <summary>
 Réponse
 </summary>
-<p>Le modèle considéré ici est, en reprenant les notations précédentes <span class="math display">\[\small{y_i = \beta_0 + \beta_1^{Americas} \mathbf{1}_{Americas}(x_{i,1}) + \beta_1^{Asia} \mathbf{1}_{Asia}(x_{i,1}) +\beta_1^{Europe}\mathbf{1}_{Europe}(x_{i,1}) + \beta_1^{Oceania} \mathbf{1}_{Oceania}(x_{i,1}) + \beta_3 \ln( x_{i,3}) + \varepsilon_i.}\]</span> <em>Remarque : on rappelle que, dans un soucie de parcimonie, on n’a pas conservé la variable <span class="math inline">\(X_2\)</span>.</em></p>
+<p>Le modèle considéré ici est, en reprenant les notations précédentes <span class="math display">\[\small{y_i = \beta_0 + \beta_1^{Americas} \mathbf{1}_{Americas}(x_{i,1}) + \beta_1^{Asia} \mathbf{1}_{Asia}(x_{i,1}) +\beta_1^{Europe}\mathbf{1}_{Europe}(x_{i,1}) + \beta_1^{Oceania} \mathbf{1}_{Oceania}(x_{i,1}) + \beta_3 \ln( x_{i,3}) + \varepsilon_i.}\]</span> <em>Remarque : on rappelle que, dans un souci de parcimonie, on n’a pas conservé la variable</em> <span class="math inline">\(X_2\)</span>.</p>
 <p>On transforme dorénavant les données et on les représente.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>life_expectancy <span class="ot">&lt;-</span> life_expectancy <span class="sc">%&gt;%</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_gdpPercap =</span> <span class="fu">log</span>(gdpPercap))</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(life_expectancy[,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>life_expectancy <span class="ot">&lt;-</span> life_expectancy <span class="sc">%&gt;%</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_gdpPercap =</span> <span class="fu">log</span>(gdpPercap))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(life_expectancy[,<span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>])</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -686,8 +695,8 @@ Réponse
 </div>
 <p>On ajuste ensuite notre modèle.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>lm_life_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp<span class="sc">~</span>continent <span class="sc">+</span> log_gdpPercap)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>lm_life_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>life_expectancy,<span class="at">formula =</span> lifeExp<span class="sc">~</span>continent <span class="sc">+</span> log_gdpPercap)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -713,11 +722,12 @@ Multiple R-squared:  0.7674,    Adjusted R-squared:  0.7588
 F-statistic: 89.72 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
-On voit ici que ce dernier modèle explique 5% de variance en plus que le précédent.
+<p>On voit ici que ce dernier modèle explique 5% de variance en plus que le précédent.</p>
 </details>
 <ol start="6" type="1">
 <li>On souhaite dorénavant comparer les deux modèles construits.</li>
 </ol>
+<!-- -->
 <ol type="a">
 <li>Dans un premier temps, comparer les coefficients de détermination <span class="math inline">\(R^2\)</span> et <span class="math inline">\(R_a^2\)</span>.</li>
 <li>On compare ensuite les critères <span class="math inline">\(AIC\)</span> <em>(Akaike Information Criterion)</em> des deux modèles : <span class="math display">\[AIC = 2p-2\ln(L)\]</span> où</li>
@@ -744,7 +754,7 @@ Réponse
 <li>Comparons les <span class="math inline">\(R^2\)</span> et <span class="math inline">\(R_a^2\)</span> :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -769,7 +779,7 @@ Residual standard error: 6.574 on 136 degrees of freedom
 Multiple R-squared:  0.714, Adjusted R-squared:  0.7035 
 F-statistic:  67.9 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -800,11 +810,11 @@ F-statistic: 89.72 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
 <li>Comparons ensuite les AIC :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 945.6641</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">AIC</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 916.3339</code></pre>
 </div>
@@ -814,11 +824,11 @@ F-statistic: 89.72 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
 <li>Maintenant, comparons les BIC :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(lm_life_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 966.3549</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">BIC</span>(lm_life_log)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 937.0247</code></pre>
 </div>
@@ -828,28 +838,28 @@ F-statistic: 89.72 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
 <li>Comparons enfin les performances prédictives des deux modèles via une validation croisée 10 blocs :</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">333</span>)</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des 10 blocs</span></span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="at">data=</span>life_expectancy,<span class="at">v =</span> <span class="dv">10</span>) </span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle linéaire utilisé</span></span>
-<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode=</span><span class="st">"regression"</span>,<span class="at">engine=</span><span class="st">"lm"</span>)</span>
-<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision des modèles utilisés dans un workflow</span></span>
-<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>lm_workflow1 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(lifeExp<span class="sc">~</span>continent <span class="sc">+</span> gdpPercap)</span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>lm_workflow2 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(lifeExp<span class="sc">~</span>continent <span class="sc">+</span> log_gdpPercap)</span>
-<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
-<span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>lm_cv1 <span class="ot">&lt;-</span> lm_workflow1 <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
-<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>lm_cv2 <span class="ot">&lt;-</span> lm_workflow2 <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
-<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
-<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv1 <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv1)</span>
-<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv2 <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv2)</span>
-<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv1</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">333</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Création des 10 blocs</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(<span class="at">data=</span>life_expectancy,<span class="at">v =</span> <span class="dv">10</span>) </span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Spécification du modèle linéaire utilisé</span></span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">mode=</span><span class="st">"regression"</span>,<span class="at">engine=</span><span class="st">"lm"</span>)</span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Précision des modèles utilisés dans un workflow</span></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a>lm_workflow1 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(lifeExp<span class="sc">~</span>continent <span class="sc">+</span> gdpPercap)</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-13"><a href="#cb42-13" aria-hidden="true" tabindex="-1"></a>lm_workflow2 <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> <span class="fu">add_model</span>(lm_spec) <span class="sc">%&gt;%</span> <span class="fu">add_formula</span>(lifeExp<span class="sc">~</span>continent <span class="sc">+</span> log_gdpPercap)</span>
+<span id="cb42-14"><a href="#cb42-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-15"><a href="#cb42-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajustement du modèle pour chaque bloc</span></span>
+<span id="cb42-16"><a href="#cb42-16" aria-hidden="true" tabindex="-1"></a>lm_cv1 <span class="ot">&lt;-</span> lm_workflow1 <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
+<span id="cb42-17"><a href="#cb42-17" aria-hidden="true" tabindex="-1"></a>lm_cv2 <span class="ot">&lt;-</span> lm_workflow2 <span class="sc">%&gt;%</span> <span class="fu">fit_resamples</span>(<span class="at">resamples =</span> folds)</span>
+<span id="cb42-18"><a href="#cb42-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-19"><a href="#cb42-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des métriques d'évaluation obtenues par validation croisée</span></span>
+<span id="cb42-20"><a href="#cb42-20" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv1 <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv1)</span>
+<span id="cb42-21"><a href="#cb42-21" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv2 <span class="ot">&lt;-</span> <span class="fu">collect_metrics</span>(lm_cv2)</span>
+<span id="cb42-22"><a href="#cb42-22" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv1</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 6
   .metric .estimator  mean     n std_err .config        
@@ -857,7 +867,7 @@ F-statistic: 89.72 on 5 and 136 DF,  p-value: &lt; 2.2e-16</code></pre>
 1 rmse    standard   6.31     10  0.677  pre0_mod0_post0
 2 rsq     standard   0.729    10  0.0494 pre0_mod0_post0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>metrics_lm_cv2</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 6
   .metric .estimator  mean     n std_err .config        
