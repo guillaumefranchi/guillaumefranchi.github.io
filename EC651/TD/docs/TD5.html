@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -247,31 +282,656 @@ window.Quarto = {
 <li><em>housekeeping_expression</em> : unités d’ARN relatives (unités arbitraires)</li>
 </ul>
 <ol type="1">
-<li><p>Importer les données, les représenter graphiquement, et en dresser un bref résumé statistique.</p></li>
-<li><p>Ajuster un modèle linéaire sur ces données. Préciser le coefficient de détermination <span class="math inline">\(R^2\)</span> obtenu.</p></li>
-<li><p>Préciser les coefficients du modèle qui semblent significativement non nuls. Que peut-on dire des autres coefficients ?</p></li>
-<li><p>Afin d’expliquer au mieux la variable <em>yield</em>, on va appliquer la méthode de sélection “forward” à ce modèle linéaire.</p></li>
+<li>Importer les données, les représenter graphiquement, et en dresser un bref résumé statistique.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>bioreac <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"bioreactor_data.csv"</span>,<span class="at">row.names =</span> <span class="dv">1</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(bioreac)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     yield        temperature          pH            oxygen     
+ Min.   :148.6   Min.   :34.69   Min.   :6.649   Min.   :33.57  
+ 1st Qu.:252.0   1st Qu.:36.36   1st Qu.:6.896   1st Qu.:53.02  
+ Median :298.0   Median :36.94   Median :7.005   Median :60.09  
+ Mean   :288.4   Mean   :36.98   Mean   :7.019   Mean   :59.54  
+ 3rd Qu.:322.0   3rd Qu.:37.58   3rd Qu.:7.134   3rd Qu.:66.58  
+ Max.   :401.3   Max.   :39.19   Max.   :7.648   Max.   :85.71  
+    glucose            iptg          agitation      growth_rate     
+ Min.   : 4.380   Min.   :0.2195   Min.   :249.8   Min.   :0.03601  
+ 1st Qu.: 8.901   1st Qu.:0.7805   1st Qu.:288.0   1st Qu.:0.51590  
+ Median :10.181   Median :0.9979   Median :302.1   Median :0.68884  
+ Mean   :10.128   Mean   :0.9913   Mean   :301.2   Mean   :0.71285  
+ 3rd Qu.:11.469   3rd Qu.:1.1976   3rd Qu.:315.6   3rd Qu.:0.87860  
+ Max.   :14.860   Max.   :1.8075   Max.   :353.7   Max.   :1.42469  
+  plasmid_copy    promoter_strength protein_stability       mg        
+ Min.   : 8.113   Min.   :2.686     Min.   :23.05     Min.   :0.5503  
+ 1st Qu.:16.584   1st Qu.:4.266     1st Qu.:44.08     1st Qu.:0.8939  
+ Median :19.732   Median :4.930     Median :53.00     Median :1.0108  
+ Mean   :20.050   Mean   :4.943     Mean   :50.77     Mean   :1.0189  
+ 3rd Qu.:22.845   3rd Qu.:5.623     3rd Qu.:57.54     3rd Qu.:1.1697  
+ Max.   :35.920   Max.   :8.390     Max.   :72.84     Max.   :1.6581  
+       ca          sensor_drift      manganese_trace  housekeeping_expression
+ Min.   :0.3904   Min.   :-2.32076   Min.   :0.3746   Min.   :21.51          
+ 1st Qu.:0.8614   1st Qu.:-0.66182   1st Qu.:0.4692   1st Qu.:43.05          
+ Median :1.0016   Median :-0.06476   Median :0.4948   Median :49.69          
+ Mean   :1.0018   Mean   :-0.04402   Mean   :0.4956   Mean   :49.79          
+ 3rd Qu.:1.1585   3rd Qu.: 0.58321   3rd Qu.:0.5237   3rd Qu.:56.32          
+ Max.   :1.5155   Max.   : 2.05850   Max.   :0.6141   Max.   :80.22          </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(bioreac)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+<ol start="2" type="1">
+<li>Ajuster un modèle linéaire sur ces données. Préciser le coefficient de détermination <span class="math inline">\(R^2\)</span> obtenu.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>mod_complet <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> bioreac,<span class="at">formula =</span> yield<span class="sc">~</span>.)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_complet)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = yield ~ ., data = bioreac)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-68.794 -13.671  -0.961  12.618  59.211 
+
+Coefficients:
+                          Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)             -141.91979  151.67701  -0.936 0.351126    
+temperature                1.42063    2.48508   0.572 0.568508    
+pH                         0.42456   12.08486   0.035 0.972027    
+oxygen                     0.02743    0.21308   0.129 0.897781    
+glucose                   -0.27845    1.27386  -0.219 0.827303    
+iptg                      -2.04058    6.80519  -0.300 0.764751    
+agitation                  0.13058    0.10464   1.248 0.214221    
+growth_rate              -12.54935   10.43807  -1.202 0.231380    
+plasmid_copy               1.91336    0.43510   4.397 2.21e-05 ***
+promoter_strength          7.85342    2.24496   3.498 0.000636 ***
+protein_stability          3.93733    0.22154  17.772  &lt; 2e-16 ***
+mg                         4.49762   11.10956   0.405 0.686239    
+ca                         1.92003   10.61796   0.181 0.856776    
+sensor_drift              -0.84862    2.33783  -0.363 0.717179    
+manganese_trace           85.60581   48.47194   1.766 0.079658 .  
+housekeeping_expression    0.43360    0.21936   1.977 0.050136 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 25.05 on 134 degrees of freedom
+Multiple R-squared:  0.7588,    Adjusted R-squared:  0.7318 
+F-statistic: 28.11 on 15 and 134 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>On remarque que l’on ne peut pas rejeter l’hypothèse de nullité pour un grand nombre de coefficients.</p>
+Le coefficient de détermination obtenu est <span class="math inline">\(R^2 = 0.7588\)</span>.
+</details>
+<ol start="3" type="1">
+<li>Préciser les coefficients du modèle qui semblent significativement non nuls. Que peut-on dire des autres coefficients ?</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>Les coefficients du modèle significativement non nuls sont ceux associés aux variables <em>plasmid_copy</em>, <em>promoter_strength</em> et <em>protein_stability</em>. Les autres variables semblent donc rien n’apporter de plus que celles-ci dans le calcul du rendement final. On va tester la nullité simultanée des coefficients associés à ces dernières variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mod_reduit <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data =</span> bioreac,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">formula =</span> yield<span class="sc">~</span>plasmid_copy<span class="sc">+</span>promoter_strength<span class="sc">+</span>protein_stability<span class="sc">+</span><span class="dv">0</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Ajouter le +0 indique que l'on ne prend pas de constante (Intercept) dans le modèle.</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(mod_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = yield ~ plasmid_copy + promoter_strength + protein_stability + 
+    0, data = bioreac)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-68.413 -15.606  -1.276  15.716  59.909 
+
+Coefficients:
+                  Estimate Std. Error t value Pr(&gt;|t|)    
+plasmid_copy        2.1102     0.3778   5.586 1.10e-07 ***
+promoter_strength   8.2808     1.6238   5.100 1.03e-06 ***
+protein_stability   4.0388     0.1668  24.221  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 24.84 on 147 degrees of freedom
+Multiple R-squared:  0.9929,    Adjusted R-squared:  0.9928 
+F-statistic:  6881 on 3 and 147 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(mod_complet,mod_reduit)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Analysis of Variance Table
+
+Model 1: yield ~ temperature + pH + oxygen + glucose + iptg + agitation + 
+    growth_rate + plasmid_copy + promoter_strength + protein_stability + 
+    mg + ca + sensor_drift + manganese_trace + housekeeping_expression
+Model 2: yield ~ plasmid_copy + promoter_strength + protein_stability + 
+    0
+  Res.Df   RSS  Df Sum of Sq      F Pr(&gt;F)
+1    134 84056                            
+2    147 90677 -13     -6621 0.8119 0.6467</code></pre>
+</div>
+</div>
+Ici, on ne peut effectivement pas rejeter l’hypothèse comme quoi tous ces coefficients son nuls, y compris l’intercept.
+</details>
+<ol start="4" type="1">
+<li>Afin d’expliquer au mieux la variable <em>yield</em>, on va appliquer la méthode de sélection “forward” à ce modèle linéaire.</li>
 </ol>
 <ol type="a">
 <li>A l’aide de la fonction <code>regsubsets()</code> du package <code>leaps</code>, appliquer la procédure “forward” au jeu de données.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(leaps)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>list_forward <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(<span class="at">x=</span>yield<span class="sc">~</span>.,<span class="at">data=</span>bioreac,<span class="at">method=</span><span class="st">"forward"</span>,<span class="at">nvmax=</span><span class="fu">ncol</span>(bioreac))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># nvmax correspond au nombre maximal de variables que le procédé va sélectionner.</span></span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="2" type="a">
 <li>Représenter graphiquement dans quel ordre les variables sont sélectionnées.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(list_forward,<span class="at">scale=</span><span class="st">"r2"</span>,<span class="at">main=</span><span class="st">"Suite de variables sélectionnées par la méthode forward"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+<ol start="3" type="a">
 <li>Stocker le résumé de la procédure dans un objet <code>summary_forward</code>. A partir de cet objet, et des fonctions <code>AIC()</code>, <code>BIC()</code> et <code>lm()</code>, récupérer les <span class="math inline">\(AIC\)</span>, <span class="math inline">\(BIC\)</span> et <span class="math inline">\(R_a^2\)</span> pour chaque modèle de la procédure.</li>
+</ol>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>summary_forward <span class="ot">&lt;-</span> <span class="fu">summary</span>(list_forward)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Récupération des R^2 ajustés (et des critères BIC ?)</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>adjr2_forward <span class="ot">&lt;-</span> summary_forward<span class="sc">$</span>adjr2</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># bic_forward &lt;-summary_forward$bic </span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Cette dernière ligne est commentée. Il ne s'agit pas exactement des "vrais" critères BIC</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dans la fonction regsubsets(), mais ils sont égaux à une constante près...</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># On pourrait donc les utiliser aussi sans changer la procédure.</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Pour le critère AIC, on va devoir ajuster un modèle linéaire pour chaque modèle,</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="co"># puis récupérer l'AIC.</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># On crée d'abord un vecteur vide où on va stocker les AIC ensuite.</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>aic_forward <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">length</span>(adjr2_forward))</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>bic_forward <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>,<span class="fu">length</span>(aic_forward))</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(aic_forward)){</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># On crée la formule à utiliser pour ajuster le modèle linéaire</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Dans summary_foraward$which, on récupère les noms de variables sélectionnées </span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># à chaque étape de la méthode forward.</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  formula_i <span class="ot">&lt;-</span> <span class="fu">as.formula</span>(<span class="fu">paste0</span>(<span class="st">"yield~"</span>,<span class="fu">paste</span>(<span class="fu">names</span>(<span class="fu">which</span>(summary_forward<span class="sc">$</span>which[i,<span class="sc">-</span><span class="dv">1</span>])),<span class="at">collapse =</span> <span class="st">"+"</span>)))</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  lm_i <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>bioreac,<span class="at">formula =</span> formula_i)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  aic_forward[i] <span class="ot">&lt;-</span> <span class="fu">AIC</span>(lm_i)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  bic_forward[i] <span class="ot">&lt;-</span> <span class="fu">BIC</span>(lm_i)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="4" type="a">
 <li>Représenter ces différents critères sur un graphique ayant :</li>
 </ol>
 <ul>
 <li>en abscisses le nombre de variables utilisées;</li>
 <li>en ordonnées la valeur du critère étudié.</li>
 </ul>
+<details>
+<summary>
+Voir le code
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df_forward <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Nvar=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(aic_forward),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">R2a =</span> adjr2_forward,</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">AIC=</span>aic_forward,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                         <span class="at">BIC=</span>bic_forward)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_forward) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>Nvar,<span class="at">y=</span>R2a)<span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"skyblue4"</span>,<span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"skyblue4"</span>)<span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Courbe des R2 ajustés pour la méthode forward"</span>,</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Nombre de variables"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_forward) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>Nvar,<span class="at">y=</span>AIC)<span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"tomato4"</span>,<span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"tomato4"</span>)<span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Courbe des AIC pour la méthode forward"</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Nombre de variables"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-8-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_forward) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>Nvar,<span class="at">y=</span>BIC)<span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color=</span><span class="st">"springgreen4"</span>,<span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"springgreen4"</span>)<span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title=</span><span class="st">"Courbe des AIC pour la méthode forward"</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Nombre de variables"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-8-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
 <ol start="5" type="a">
 <li>Quel modèle retient-on finalement ?</li>
 </ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>Tout dépend du critère retenu :</p>
+<ul>
+<li>On retient le modèle à 7 variables avec le critère <span class="math inline">\(R_a^2\)</span>, donc on conserve les variables :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>summary_forward<span class="sc">$</span>which[<span class="dv">7</span>,]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept)             temperature                      pH 
+                   TRUE                   FALSE                   FALSE 
+                 oxygen                 glucose                    iptg 
+                  FALSE                   FALSE                   FALSE 
+              agitation             growth_rate            plasmid_copy 
+                   TRUE                    TRUE                    TRUE 
+      promoter_strength       protein_stability                      mg 
+                   TRUE                    TRUE                   FALSE 
+                     ca            sensor_drift         manganese_trace 
+                  FALSE                   FALSE                    TRUE 
+housekeeping_expression 
+                   TRUE </code></pre>
+</div>
+</div>
+<ul>
+<li>On retient le modèle à 5 variables avec le critère <span class="math inline">\(AIC\)</span> :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>summary_forward<span class="sc">$</span>which[<span class="dv">5</span>,]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept)             temperature                      pH 
+                   TRUE                   FALSE                   FALSE 
+                 oxygen                 glucose                    iptg 
+                  FALSE                   FALSE                   FALSE 
+              agitation             growth_rate            plasmid_copy 
+                  FALSE                   FALSE                    TRUE 
+      promoter_strength       protein_stability                      mg 
+                   TRUE                    TRUE                   FALSE 
+                     ca            sensor_drift         manganese_trace 
+                  FALSE                   FALSE                    TRUE 
+housekeeping_expression 
+                   TRUE </code></pre>
+</div>
+</div>
+<ul>
+<li>On retient enfin le modèle à 3 variables avec le critère <span class="math inline">\(BIC\)</span> :</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>summary_forward<span class="sc">$</span>which[<span class="dv">3</span>,]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept)             temperature                      pH 
+                   TRUE                   FALSE                   FALSE 
+                 oxygen                 glucose                    iptg 
+                  FALSE                   FALSE                   FALSE 
+              agitation             growth_rate            plasmid_copy 
+                  FALSE                   FALSE                    TRUE 
+      promoter_strength       protein_stability                      mg 
+                   TRUE                    TRUE                   FALSE 
+                     ca            sensor_drift         manganese_trace 
+                  FALSE                   FALSE                   FALSE 
+housekeeping_expression 
+                  FALSE </code></pre>
+</div>
+</div>
+<strong><em>Remarque : tous ces modèles contiennent la constante (Intercept).</em></strong>
+</details>
 <ol start="5" type="1">
-<li><p>Refaire la question précédente, mais en utilisant cette fois-ci la méthode de sélection “backward”.</p></li>
-<li><p>Quel modèle peut-on finalement retenir ? Préciser le critère utilisé.</p></li>
-<li><p>Effectuer l’analyse des résidus du modèle finalement retenu. Commenter.</p></li>
-<li><p>Etudier les points leviers du modèle finalement retenu. Commenter.</p></li>
-<li><p>Etudier les distances de Cook du modèle finalement retenu. Commenter.</p></li>
+<li>Refaire la question précédente, mais en utilisant cette fois-ci la méthode de sélection “backward”.</li>
 </ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>list_backward <span class="ot">&lt;-</span> <span class="fu">regsubsets</span>(<span class="at">x=</span>yield<span class="sc">~</span>.,<span class="at">data=</span>bioreac,<span class="at">method=</span><span class="st">"backward"</span>,<span class="at">nvmax=</span><span class="fu">ncol</span>(bioreac))</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(list_backward,<span class="at">scale=</span><span class="st">"r2"</span>,<span class="at">main=</span><span class="st">"Suite de variables sélectionnées par la méthode backward"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(list_forward,<span class="at">scale=</span><span class="st">"r2"</span>,<span class="at">main=</span><span class="st">"Suite de variables sélectionnées par la méthode forward"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Les deux graphiques étant strictement identiques, nul besoin de poursuivre l’étude, on aura les mêmes modèles, et don les mêmes résultats que précédemment.</p>
+<strong><em>Remarque : attention, ce n’est pas toujours le cas !</em></strong>
+</details>
+<ol start="6" type="1">
+<li>Quel modèle peut-on finalement retenir ? Préciser le critère utilisé.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p>Il n’y a pas vraiment de bonne ou de mauvaise réponse ici, il faut simplement préciser le critère choisi.</p>
+<p>On va prendre le critère <span class="math inline">\(BIC\)</span>, qui était beaucoup plus parcimonieux en termes de variables utilisées, et qui correspond de plus aux tests de significativité qu’on a pu réaliser précédemment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>mod_choisi <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="at">data=</span>bioreac,<span class="at">formula =</span> yield<span class="sc">~</span>plasmid_copy <span class="sc">+</span> promoter_strength<span class="sc">+</span>protein_stability)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<ol start="7" type="1">
+<li>Effectuer l’analyse des résidus du modèle finalement retenu. Commenter.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<ul>
+<li>On calcule tout d’abord les résidus studentisés.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>res_stud <span class="ot">&lt;-</span> <span class="fu">rstudent</span>(mod_choisi)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>On analyse d’abord les possibles valeurs aberrantes.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>df_stud <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Index=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(res_stud),<span class="at">Residus =</span> res_stud)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="at">p=</span><span class="fl">0.975</span>,<span class="at">df=</span><span class="fu">nrow</span>(bioreac)<span class="sc">-</span><span class="dv">5</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># les résidus studentisés suivent une loi de Student avec n-p-1 ddl, où p est le</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nombre de paramètres à estimer.</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_stud) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>Index,<span class="at">y=</span>Residus)<span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"violetred4"</span>)<span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="fu">c</span>(<span class="sc">-</span>q,q),<span class="at">color=</span><span class="st">"tomato4"</span>,<span class="at">linetype=</span><span class="st">"dashed"</span>)<span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Résidus studentisés"</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">title=</span><span class="st">"Recherche de valeurs aberrantes"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>On peut également calculer la proportion de valeurs aberrantes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">abs</span>(res_stud) <span class="sc">&gt;</span> q) </span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.06666667</code></pre>
+</div>
+</div>
+<p>On rappelle que les valeurs aberrantes sont les observations mal prédites par le modèle. Ici, on ne devrait pas dépasser 5% de valeurs aberrantes. Si l’on dépasse un peu ce taux, on ne le dépasse pas de beaucoup, et on voit sur le graphique qu’aucun résidu ne s’éloigne trop des bornes fixés.</p>
+<p><strong>En bref :</strong> Rien n’attire notre attention pour l’instant.</p>
+<ul>
+<li>On analyse ensuite l’hypothèse de normalité du modèle par un <em>Q-Q plot</em>.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_stud) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">sample=</span>Residus)<span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq</span>(<span class="at">color=</span><span class="st">"tan"</span>)<span class="sc">+</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_qq_line</span>(<span class="at">linetype=</span><span class="st">"dashed"</span>,<span class="at">color=</span><span class="st">"tan3"</span>,<span class="at">lwd=</span><span class="dv">1</span>)<span class="sc">+</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Quantiles théoriques"</span>,</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Quantiles empiriques"</span>,</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Q-Q plot des résidus studentisés"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Les points sont bien alignés avec la droite, on valide donc l’hypothèse de normalité.</p>
+<ul>
+<li>Enfin, on va analyser brièvement la structure des résidus.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># On récupère les valeurs ajustées du modèle</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>df_stud<span class="sc">$</span>pred <span class="ot">&lt;-</span> mod_reduit<span class="sc">$</span>fitted.values</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_stud) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>pred,<span class="at">y=</span>Residus)<span class="sc">+</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color=</span><span class="st">"peru"</span>)<span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Structure des résidus"</span>,</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">x=</span><span class="st">"Valeurs ajustées"</span>,</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y=</span><span class="st">"Résidus studentisés"</span>)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Aucune strucutre particulière ne se dégage ici. On peut valider l’hypothèse d’homoscédasticité <em>(les bruits ont tous la même variance)</em>.</p>
+<p><strong><em>En résumé :l’analyse des résidus n’a pas montré de valeurs particulièrement aberrantes ni exhibé une structure remettant en cause notre modèle linéaire. Cela ne siginfie pas que notre modèle est juste, simplement que l’on n’a pas détecté de faille particulière.</em></strong></p>
+</details>
+<ol start="8" type="1">
+<li>Etudier les points leviers du modèle finalement retenu. Commenter.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p><strong><em>Rappel : un levier correspond au poid qu’a une observation sur sa propre prévision par le modèle.</em></strong></p>
+<p>On récupère d’abord ces leviers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>leviers <span class="ot">&lt;-</span> <span class="fu">hatvalues</span>(mod_choisi)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>df_leviers <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Index=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(leviers),<span class="at">Leviers=</span>leviers)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>On les représente ensuite par un diagramme en barres, avec les seuils <span class="math inline">\(2p/n\)</span> et <span class="math inline">\(3p/n\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_leviers) <span class="sc">+</span> <span class="fu">aes</span>(<span class="at">x=</span>Index,<span class="at">y=</span>Leviers)<span class="sc">+</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>,<span class="at">fill=</span><span class="st">"skyblue3"</span>)<span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="dv">8</span><span class="sc">/</span><span class="fu">nrow</span>(bioreac),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype=</span><span class="st">"Seuil 2p/n"</span>),</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">color=</span><span class="st">"tomato4"</span>)<span class="sc">+</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="dv">12</span><span class="sc">/</span><span class="fu">nrow</span>(bioreac),</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                 <span class="at">linetype=</span><span class="st">"Seuil 3p/n"</span>),<span class="at">color=</span><span class="st">"tomato4"</span>)<span class="sc">+</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"dashed"</span>,<span class="st">"dotted"</span>))<span class="sc">+</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Poids H_ii"</span>,</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Recherche des points leviers"</span>)<span class="sc">+</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>On constate un certains nombre de points leviers, que l’on peut investiguer davantage.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>bioreac[leviers<span class="sc">&gt;</span><span class="dv">8</span><span class="sc">/</span><span class="fu">nrow</span>(bioreac),]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       yield temperature       pH   oxygen   glucose      iptg agitation
+17  300.6369    37.49785 7.127314 58.94329 11.481800 0.8640407  325.5316
+23  306.9330    35.97400 6.993187 46.61226  7.354098 1.2539309  309.1492
+36  229.9010    37.68864 6.960565 39.47777 11.557720 0.4171131  288.1401
+42  251.3472    36.79208 6.935063 69.59005 12.808101 1.0813200  281.7287
+63  235.2732    36.66679 7.246495 62.73766 11.764930 1.5898744  298.4465
+76  387.4770    38.02557 7.011950 54.10519 11.100088 0.4114877  288.1622
+85  148.5600    36.77951 6.885122 64.76133 13.891702 0.6874933  296.1645
+89  258.2510    36.67407 7.064861 55.64355  8.782886 0.9036025  301.1243
+98  213.4633    38.53261 6.728032 68.45732 11.278984 0.9707646  320.9061
+122 289.8229    36.05253 7.192506 62.86424  7.087068 0.4815086  302.8725
+124 325.3996    36.74391 6.720945 72.72267 10.640805 0.5412068  318.0703
+142 298.1752    36.73780 7.210836 64.54769 10.929936 1.2970787  311.2408
+    growth_rate plasmid_copy promoter_strength protein_stability        mg
+17    1.1130075    14.554274          2.825875          63.05262 0.9448219
+23    0.4577970    14.872289          2.835453          62.95426 0.8817966
+36    0.7316665    14.881882          3.065556          30.31338 1.1978116
+42    0.7476183     8.112965          5.806109          39.26357 1.0558322
+63    0.7862664    32.122446          4.737329          38.30793 1.0077047
+76    0.6378635    35.920222          5.229395          65.80432 1.1639256
+85    1.1750156    14.885081          3.635168          23.04671 0.8414777
+89    0.3948330    27.895728          3.008462          45.46086 1.3538732
+98    0.6469902    25.985388          4.129423          30.07414 1.3945407
+122   0.4270206    26.708201          3.005921          36.80874 1.6581035
+124   0.8861103    20.833906          8.390371          48.55389 1.2841151
+142   0.8415031    30.323521          6.459966          38.91672 0.9048770
+           ca sensor_drift manganese_trace housekeeping_expression
+17  1.2087783   0.87643126       0.4807601                53.76475
+23  0.9928120  -0.22412600       0.5415721                60.32128
+36  1.1250703  -0.60862162       0.4916211                48.30740
+42  0.6497396   0.92551124       0.4168320                50.04160
+63  0.7733080   0.44129312       0.4468094                57.78107
+76  0.5812721  -0.82351673       0.4753058                39.40876
+85  0.8020936  -0.90793470       0.5000604                44.41486
+89  0.9558631   1.08919224       0.4694631                48.22028
+98  0.9280036  -0.02100754       0.4538396                47.52226
+122 0.9868432  -0.29448179       0.5455245                42.89583
+124 1.0965478  -0.63569453       0.3850987                66.41784
+142 0.7863990   0.17558835       0.5025026                42.25685</code></pre>
+</div>
+</div>
+<strong><em>Des valeurs importantes de certaines variables peuvent expliquer le poids d’une observation, mais cela ne signifie pas pour autant que celle-ci est anormale.</em></strong>
+</details>
+<ol start="9" type="1">
+<li>Etudier les distances de Cook du modèle finalement retenu. Commenter.</li>
+</ol>
+<details class="mydetails">
+<summary>
+Réponse
+</summary>
+<p><strong><em>Rappel : la distance de Cook mesure l’influence des observatiosn sur l’estimation des paramètres du modèle.</em></strong></p>
+<p>On récupère les distances de Cook afin de les représenter par un diagramme en barres. On représente dans un premier temps le seuil <span class="math inline">\(4/n\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>cook <span class="ot">&lt;-</span> <span class="fu">cooks.distance</span>(mod_choisi)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>df_cook <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Index=</span><span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(cook),<span class="at">Cook=</span>cook)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_cook)<span class="sc">+</span><span class="fu">aes</span>(<span class="at">x=</span>Index,<span class="at">y=</span>Cook)<span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>,<span class="at">fill=</span><span class="st">"skyblue"</span>)<span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="dv">4</span><span class="sc">/</span><span class="fu">nrow</span>(bioreac),</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"Seuil 4/n"</span>),</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>             <span class="at">color=</span><span class="st">"tomato4"</span>)<span class="sc">+</span></span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values=</span><span class="st">"dashed"</span>)<span class="sc">+</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Distance de Cook c_i"</span>,</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Représentation des distances de Cook"</span>)<span class="sc">+</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Un certain nombre d’observations ont une distance de Cook importante. On peut enquêter un peu plus sur ces derniers.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>bioreac[cook<span class="sc">&gt;</span><span class="dv">4</span><span class="sc">/</span><span class="fu">nrow</span>(bioreac),]</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       yield temperature       pH   oxygen   glucose      iptg agitation
+8   183.2303    35.73494 6.925512 62.11980  9.030025 0.5763923  295.9708
+11  326.4029    38.22408 7.210542 73.01176 11.743930 0.8808908  310.7958
+32  380.4778    36.70493 7.252637 48.11566 10.628115 0.4433285  318.0887
+36  229.9010    37.68864 6.960565 39.47777 11.557720 0.4171131  288.1401
+111 319.4340    36.42465 6.895777 64.92229  8.332313 1.3183286  318.2242
+122 289.8229    36.05253 7.192506 62.86424  7.087068 0.4815086  302.8725
+140 334.3360    35.55611 7.033613 72.35693  7.366979 1.3057471  307.9059
+143 230.3564    35.42786 7.229053 66.59903 11.681080 1.7148780  277.6717
+    growth_rate plasmid_copy promoter_strength protein_stability        mg
+8     0.5152814    20.272766          6.107995          35.04173 0.8250437
+11    1.4246946    27.409670          5.201837          69.00136 0.9523503
+32    0.4334500    21.663109          6.953668          54.21885 1.0852029
+36    0.7316665    14.881882          3.065556          30.31338 1.1978116
+111   1.1185592    22.551366          6.342624          41.31776 1.2288525
+122   0.4270206    26.708201          3.005921          36.80874 1.6581035
+140   0.7883974     9.005384          4.561437          59.69434 1.0855733
+143   0.6090535    30.967950          4.417940          42.13764 1.3233155
+           ca sensor_drift manganese_trace housekeeping_expression
+8   1.0069055    0.3769622       0.4789851                47.27943
+11  1.2046404   -1.4284596       0.4938191                49.70322
+32  1.1659148    1.4250983       0.4788328                47.18376
+36  1.1250703   -0.6086216       0.4916211                48.30740
+111 0.7858859    1.1129151       0.5053249                54.04691
+122 0.9868432   -0.2944818       0.5455245                42.89583
+140 1.0109586   -0.7967689       0.4475450                53.50256
+143 1.3131629   -1.0438446       0.5102815                57.30816</code></pre>
+</div>
+</div>
+<p>Des valeurs extrêmes peuvent mettre la puce à l’oreille si une observation est anormale ou non.</p>
+<p>On peut utiliser les seuils préconisés par Cook pour voir si ces observations sont préoccupantes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df_cook)<span class="sc">+</span><span class="fu">aes</span>(<span class="at">x=</span>Index,<span class="at">y=</span>Cook)<span class="sc">+</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>(<span class="at">stat=</span><span class="st">"identity"</span>,<span class="at">fill=</span><span class="st">"skyblue"</span>)<span class="sc">+</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> <span class="fu">qf</span>(<span class="fl">0.1</span>,<span class="dv">4</span>,<span class="fu">nrow</span>(bioreac)<span class="sc">-</span><span class="dv">4</span>),</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">linetype =</span> <span class="st">"Seuil f(0.1)"</span>),</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">color=</span><span class="st">"tomato4"</span>)<span class="sc">+</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_linetype_manual</span>(<span class="at">values=</span><span class="st">"dashed"</span>)<span class="sc">+</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y=</span><span class="st">"Distance de Cook c_i"</span>,</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Représentation des distances de Cook"</span>)<span class="sc">+</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>())</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TD5_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Aucune observation ne semble posséder une trop grande influence sur l’estimation des paramètres.</p>
+<p><strong><em>En résumé : sur l’ensemble des dernières questions, rien n’a semblé remettre l’étude statisique en cause. On peut donc valider le modèle assez sereinement.</em></strong></p>
+<p><strong><em>Remarque : encore une fois, cela ne signifie pas que notre modèle est juste, mais on n’a rien détecté de particulièrement étrange.</em></strong></p>
+<p><strong><em>On aurait pu néanmoins trouver des observations anormales par les dernières procédures. Dans un tel cas, il convient de déterminer avec le responsable de l’expérience ce qui a pu se produire pour une telle observation, et la retirer le cas échéant. Il n’appartient cependant pas au statisticien seul de retirer une donnée observée, simplement pour justifier son modèle !</em></strong></p>
+</details>
 
 
 </section>
