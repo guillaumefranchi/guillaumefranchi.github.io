@@ -8,3 +8,17 @@
   color: black;
   font-weight: bold;
 }
+
+.mylist1 ul {
+  list-style-type: square;
+}
+
+.mylist2 ul {
+  list-style-type: disc;
+  color: darkblue;
+}
+
+.mylist3 ul {
+  list-style-type: circle;
+  color:black;
+}

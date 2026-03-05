@@ -8,7 +8,7 @@
 
 <meta name="author" content="Guillaume Franchi">
 
-<title>EC651 et 56/53 : Modélisation statistique (Régression linéaire)</title>
+<title>TD6 : Projet – EC651 et 56/53 : Modélisation statistique (Régression linéaire)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -69,6 +104,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -82,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Avant-Propos</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./TD6.html">TD6 : Projet</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Basculer la barre latérale" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Recherche" onclick="window.quartoOpenSearch();">
@@ -109,7 +173,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Avant-Propos</span></a>
   </div>
 </li>
@@ -145,7 +209,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./TD6.html" class="sidebar-item-text sidebar-link">
+  <a href="./TD6.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">TD6 : Projet</span></a>
   </div>
 </li>
@@ -159,7 +223,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Sur cette page</h2>
    
   <ul>
-  <li><a href="#avant-propos" id="toc-avant-propos" class="nav-link active" data-scroll-target="#avant-propos">Avant-Propos</a></li>
+  <li><a href="#présentation-du-projet" id="toc-présentation-du-projet" class="nav-link active" data-scroll-target="#présentation-du-projet">Présentation du projet</a></li>
+  <li><a href="#présentation-des-données" id="toc-présentation-des-données" class="nav-link" data-scroll-target="#présentation-des-données">Présentation des données</a></li>
+  <li><a href="#problème" id="toc-problème" class="nav-link" data-scroll-target="#problème">Problème</a></li>
+  <li><a href="#une-indication-de-code" id="toc-une-indication-de-code" class="nav-link" data-scroll-target="#une-indication-de-code">Une indication de code…</a></li>
   </ul>
 </nav>
     </div>
@@ -168,7 +235,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">EC651 et 56/53 : Modélisation statistique (Régression linéaire)</h1>
+<h1 class="title">TD6 : Projet</h1>
 </div>
 
 
@@ -191,16 +258,103 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="avant-propos" class="level1 unnumbered">
-<h1 class="unnumbered">Avant-Propos</h1>
-<p>Ce notebook contient les exercices liés à la première partie du cours de modélisation statistique, concernant la régression linéaire.</p>
-<p>Vous trouverez, sur la barre de navigation à gauche, le menu vous permettant d’accéder aux différents TDs.</p>
-<p>Vous trouverez ci-dessous des liens utiles pour ce cours et ces TDS :</p>
+<section id="présentation-du-projet" class="level1 unnumbered">
+<h1 class="unnumbered">Présentation du projet</h1>
+<p>Dans le cadre d’une étude qualité d’une pâte à tartiner, un service R&amp;D souhaite mieux comprendre les facteurs influençant la viscosité du produit final. Celle-ci est une caractéristique essentielle car elle impacte :</p>
+<div class="mylist1">
 <ul>
-<li>Les <a href="https://guillaumefranchi.github.io/EC651/Cours/Cours.pdf" target="&quot;_blank">slides de cours</a>;</li>
-<li>Le <a href="https://perso.lpsm.paris/~aguyader/files/teaching/Regression.pdf" target="_blank">polycopié</a> d’Arnaud Guyader;</li>
-<li>Le <a href="https://r-stat-sc-donnees.github.io/" target="_blank">lien</a> vers le site du livre <strong>R pour la statistique et la science des données</strong>, sous la direction de F.Husson.</li>
+<li>la “tartinabilité”,</li>
+<li>la perception sensorielle,</li>
+<li>la stabilité au stockage,</li>
+<li>le comportement lors du conditionnement industriel.</li>
 </ul>
+</div>
+<p>Afin d’identifier les variables influençant cette propriété, 250 essais expérimentaux ont été réalisés en faisant varier :</p>
+<div class="mylist1">
+<ul>
+<li>la formulation (ingrédients),</li>
+<li>les paramètres de fabrication,</li>
+<li>certaines caractéristiques physico-chimiques,</li>
+<li>les lots de noisettes.</li>
+</ul>
+</div>
+<p>L’objectif est de construire un modèle statistique explicatif de la viscosité et d’identifier les variables réellement influentes.</p>
+<p><em>Remarque : les données utilisées ici ont été simulées de façon à des fins pédagogiques, et ne reflètent pas nécessairement la réalité industrielle.</em></p>
+<p>Par binôme, vous devrez rendre sur connect pour le <strong>vendredi 3 avril 23h59</strong> :</p>
+<ul>
+<li>un compte-rendu <em>(format CR_nombinome1_nombinome2.pdf)</em>,</li>
+<li>un script R <em>(format script_nombinome1_nombinome2.R)</em>,</li>
+</ul>
+<p>permettant de répondre au problème posé. Vous vous appuierez sur les méthodes présentées en cours.</p>
+</section>
+<section id="présentation-des-données" class="level1 unnumbered">
+<h1 class="unnumbered">Présentation des données</h1>
+<p>Le jeu de données <a href="./pates_tartiner.csv" download=""> “pates_tartiner.csv” </a>, disponible sur connect, contient donc les résultats de 250 expériences sur différentes formulations de pâtes à tartiner. On présente ci-dessous les variables présentes dans le dataset <em>(les valeurs sont données pour 100g de produit fini)</em>.</p>
+<div class="mylist2">
+<ul>
+<li><p>Variable réponse :</p>
+<div class="mylist3">
+<ul>
+<li><em>viscosite</em> : viscosité mesurée du produit final (en Pa<span class="math inline">\(\cdot\)</span>s);</li>
+</ul>
+</div></li>
+<li><p>Variables de formulation :</p>
+<div class="mylist3">
+<ul>
+<li><em>sucres</em> : quantité de sucre utilisée (en g/100g);</li>
+<li><em>noisettes</em> : quantité de noisettes utilisée (en g/100g);</li>
+<li><em>cacao</em> : quantité de cacao utilisée (en g/100g);</li>
+<li><em>poudre_lait</em> : quantité de lait en poudre utilisée (en g/100g);</li>
+<li><em>proteines</em> : teneur en protéines (en g/100g);</li>
+</ul>
+</div></li>
+<li><p>Variables de procédé :</p>
+<div class="mylist3">
+<ul>
+<li><em>temperature_fabrication</em> : température lors du mélange (en <span class="math inline">\(^{\circ}\)</span>C);</li>
+<li><em>temps_melange</em> : durée du mélange (en min);</li>
+<li><em>vitesse_melange</em> : vitesse d’agitation (en tr/min);</li>
+<li><em>pression_homogeneisation</em> : pression d’homogénéisation (en bar);</li>
+<li><em>lot_noisettes</em> : numéro du lot de provenance des noisettes;</li>
+</ul>
+</div></li>
+<li><p>Variables physico-chimiques :</p>
+<div class="mylist3">
+<ul>
+<li><em>pH</em> : pH du produit;</li>
+<li><em>granulometrie</em> : taille moyenne des particules (en <span class="math inline">\(\mu\)</span>m);</li>
+<li><em>humidite_stockage</em> : humidité relative du lieu de stockage (en %).</li>
+</ul>
+</div></li>
+</ul>
+</div>
+</section>
+<section id="problème" class="level1 unnumbered">
+<h1 class="unnumbered">Problème</h1>
+<p>Ajuster un modèle statistique permettant d’expliquer et de prédire la viscosité d’une pâte à tartiner en fonction des autres variables.</p>
+<p>Pour ce faire, on ajustera un modèle linéaire le plus judicieux possible. On trouvera ci-dessous une liste non exhaustive d’éléments attendus dans cette étude.</p>
+<div class="mylist2">
+<ul>
+<li>Etude des corrélations.</li>
+<li>Modèle linéaire et tests de significativité.</li>
+<li>Sélection de variables.</li>
+<li>Analyse des résidus et validation du modèle.</li>
+</ul>
+</div>
+<p>Le jeu de données <a href="./pates_tartiner_extra.csv" download=""> “pates_tartiner_extra” </a>, disponible sur connect, contient les données pour 20 pâtes à tartiner supplémentaires. On pourra tester la qualité prédictive du modèle ajusté sur ces données <em>(en étudiant le <span class="math inline">\(MSE\)</span> par exemple)</em>.</p>
+</section>
+<section id="une-indication-de-code" class="level1 unnumbered">
+<h1 class="unnumbered">Une indication de code…</h1>
+<p>Afin de simplifier le traitement de la variable qualitative <em>lot_noisettes</em>, on pourra se servir du code ci-dessous.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pates_tartiner <span class="ot">&lt;-</span> pates_tartiner <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">val=</span><span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> lot_noisettes,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_from =</span> val,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">values_fill =</span><span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>Lot_1)</span></code><button title="Copier vers le presse-papier" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
