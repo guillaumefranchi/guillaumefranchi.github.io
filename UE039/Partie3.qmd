@@ -1,0 +1,465 @@
+---
+title: "Partie 3 : Pour aller plus loin"
+author: Guillaume Franchi
+number-sections: true
+number-depth: 2
+number-offset: 0
+---
+
+# Exercice 1 : {.unnumbered}
+
+On s'intéresse ici à expliquer une variable réponse $Y$ en fonction de variables explicatives $X_1,\ldots,X_{p-1}$, mais de façon non linéaire
+$$ Y = f(X_1,\ldots,X_{p-1})$$
+
+où $f$ peut-être une fonction quelconque, non nécessairement linéaire en ses arguments.
+
+Si une multitude de méthodes existe, on se contentera ici de revenir à une régression linéaire après avoir transformé une ou plusieurs variables du jeu de données *(une transformation logarithmique par exemple)*.
+
+Le jeu de données `mammals` du package `MASS` contient les masses moyennes de 62 espèces de mammifères terrestres, provenant de données publiées par @allison1976. Chaque observation représente une espèce. Les deux variables sont `body`, la masse corporelle en kg, et `brain`, la masse cérébrale en g.
+
+1) Importer le jeu de données et en dresser un rapide résumé.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+#| message: false
+
+# Importation des packages
+library(tidyverse)
+#Importation des données
+data(mammals,package = "MASS")
+```
+
+
+</details>
+
+2) Faire un résumé statistique de chacune des variables, et représenter graphiquement leur distribution.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+# Type des variables
+str(mammals)
+# Indicateurs de position
+summary(mammals)
+# Indicateur de dispersion : écart-type
+apply(X = mammals,MARGIN = 2,FUN=sd)
+# Boxplots
+ggplot(mammals)+aes(x="",y=body)+
+  geom_boxplot(width=0.3)+
+  theme_minimal()+
+  labs(x="",y="Masse corporelle (kg)",
+       title = "Distribution des masses corporelles",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic"))
+
+ggplot(mammals)+aes(x="",y=brain)+
+  geom_boxplot(width=0.3)+
+  theme_minimal()+
+  labs(x="",y="Masse cérébrale (g)",
+       title = "Distribution des masses cérébrales",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.8)))
+
+# Histogrammes
+n_class <- ceiling(1 + 3.3*log10(nrow(mammals)))
+ggplot(mammals)+aes(x=body)+
+  geom_histogram(bins = n_class,fill="skyblue",colour = "grey20")+
+  theme_minimal()+
+  labs(x="Masse corporelle (kg)",y="Effectif",
+       title = "Distribution des masses corporelles",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.8)))
+
+ggplot(mammals)+aes(x=brain)+
+  geom_histogram(bins = n_class,fill="skyblue",colour = "grey20")+
+  theme_minimal()+
+  labs(x="Masse cérébrale (g)",y="Effectif",
+       title = "Distribution des masses cérébrales",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.8)))
+```
+
+
+</details>
+
+
+3) Dessiner le nuage de points du jeu de données, où la masse corporelle est représentée en abscisses, et la masse cérébrale en ordonnées.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+ggplot(mammals) + aes(x=body,y=brain)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Masse corporelle (kg)",
+       y="Masse cérébrale (g)",
+       title = "Masse cérébrale VS Masse corporelle",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.8)))
+```
+
+
+</details>
+
+
+4) Les deux variables semblent-elles linéairement corrélées ? Justifier.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+Les deux variables sont clairement corrélées de façon positive.
+
+```{r}
+cor.test(x=mammals$body,y=mammals$brain)
+```
+Cela ne se voit pas bien sur le graphique, car quelques valeurs extrêmes écrasent le nuage de points. Si on rrestreint aux plus petites valeurs, la corrélation devient légèrement plus claire.
+
+```{r}
+ggplot(mammals) + aes(x=body,y=brain)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Masse corporelle (kg)",
+       y="Masse cérébrale (g)",
+       title = "Masse cérébrale VS Masse corporelle",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères (valeurs extrêmes retirées)")+
+  xlim(c(0,10))+
+  ylim(c(0,100))+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.8)))
+```
+
+
+</details>
+
+:::lesson
+Sur le graphique précédent, on observe toutefois un "cône de dispersion" plutôt qu'une croissance linéaire de la masse cérébrale en fonction de la masse corporelle. En général, cela indique qu'une transformation logarithmique d'une, ou plusieurs variables, est nécessaire.
+:::
+
+
+5) A l'aide de la fonction `mutate()`, importée avec le package `tidyverse`, créer deux nouvelles variables `log_body`et `log_brain`, comprenant les logarithmes des deux quantités étudiées pour chaque individu.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+mammals <- mammals %>%
+  mutate(log_body = log(body),
+         log_brain = log(brain))
+```
+
+
+</details>
+
+
+6) Dessiner à nouveau le nuage de points représentant ces deux variables, ainsi que leur coefficient de corrélation. Celui-ci est-il significativement non nul ?
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+Le coefficiient de corrélation entre ces nouvelles variables est significativement non nul au seuil de 5% *(et même à un seuil bien inférieur, avec une p-value $< 2.2\mathrm{e}^{-16}$).
+
+```{r}
+cor.test(x=mammals$log_body,y=mammals$log_brain)
+
+ggplot(mammals) + aes(x=log_body,y=log_brain)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Log de la masse corporelle (en kg)",
+       y="Log de la masse cérébrale (en g)",
+       title = "Log de la masse cérébrale VS Log de la masse corporelle",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.8)))
+```
+:::notabene
+Le fait d'être passé en échelle logarithmique a naturellement rendu les valeurs extrêmes moins extrêmes, et un ajustement linéaire semble dorénavant plus adapté.
+:::
+
+</details>
+
+
+7) Ajuster un modèle linéaire permettant d'expliquer la variable `log_brain` à partir de `log_body`. Commenter.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+mod_lm <- lm(data=mammals,formula = log_brain~log_body)
+summary(mod_lm)
+```
+Les paramètres estimés dans la régression sont significativement non nuls. D'autre part, le modèle explique environ 92% de la variance, ce qui témoigne d'un excellent ajustement.
+
+</details>
+
+
+8) Représenter un intervalle de confiance au niveau 95% pour les prédictions de ce modèle sur un graphique.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+# On effecue les prédictions
+pred_lm <- predict(mod_lm,newdata = mammals,interval = "prediction")
+
+# On ajoute ces prédictions, ainsi que les bornes de l'intervalle de confiance dans
+# le dataframe d'origine
+mammals <- mammals %>%
+  mutate(logfit = pred_lm[,1],
+         loglwr = pred_lm[,2],
+         logupr = pred_lm[,3])
+
+# On affiche le graphique avec les échelles logarithmiques
+ggplot(mammals) + aes(x=log_body,y=log_brain)+
+  geom_line(aes(y=logfit),colour="tomato",linetype = "dashed",linewidth = 0.8)+
+  geom_ribbon(aes(ymin = loglwr,ymax=logupr),fill="tomato",alpha=0.3)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Log de la masse corporelle (en kg)",
+       y="Log de la masse cérébrale (en g)",
+       title = "Log de la masse cérébrale VS Log de la masse corporelle",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères, avec la prédiction par le modèle, et son intervalle de confiance à 95%")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.7)))
+```
+
+Si $Y$ désigne la masse cérabrale et $X$ la masse corporelle, on a ajusté le modèle
+$$\log(Y) = \beta_0 + \beta_1\times \log(X) + \varepsilon$$
+et donc
+$$Y = \exp \left( \beta_0 + \beta_1\times \log(X) + \varepsilon \right)$$
+On peut donc représenter nos prédictions dans les échelles originales.
+
+```{r}
+mammals <- mammals %>%
+  mutate(fit = exp(logfit),
+         lwr = exp(loglwr),
+         upr = exp(logupr))
+
+ggplot(mammals) + aes(x=body,y=brain)+
+  geom_line(aes(y=fit),colour="tomato",linetype = "dashed",linewidth = 0.8)+
+  geom_ribbon(aes(ymin = lwr,ymax=upr),fill="tomato",alpha=0.3)+
+  geom_point()+
+  theme_minimal()+
+  labs(x="Masse corporelle (en kg)",
+       y="Masse cérébrale (en g)",
+       title = "Masse cérébrale VS Masse corporelle",
+       subtitle = "Valeurs moyennes pour 62 espèces de mammifères, avec la prédiction par le modèle, et son intervalle de confiance à 95%")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.7)))
+```
+
+
+</details>
+
+
+9) Estimer avec le modèle proposé la masse cérébrale pour les individus dont la masse corporelle est définie ci-dessous, et comparer avec les vraies valeurs.
+
+```{r}
+#| echo: false
+nouveaux_mammiferes <- data.frame(
+  espece = c("Chien domestique","Mangouste rayée", "Furet",
+             "Dauphin commun", "Grand dauphin", "Orque"),
+  body = c(19.7,1.5,0.8,75, 186, 2409),
+  brain = c(86.5,14.3,5.4,783, 1559, 6215)
+)
+
+knitr::kable(
+  nouveaux_mammiferes)
+```
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+new_mammals <- data.frame(
+  espece = c("Dauphin commun", "Grand dauphin", "Orque"),
+  espece = c("Chien domestique","Mangouste rayée", "Furet",
+             "Dauphin commun", "Grand dauphin", "Orque"),
+  body = c(19.7,1.5,0.8,75, 186, 2409),
+  brain = c(86.5,14.3,5.4,783, 1559, 6215)
+) %>%
+  mutate(log_body = log(body),
+         log_brain = log(brain))
+
+# On regarde les prédictions
+exp(predict(mod_lm,newdata = new_mammals,interval="prediction"))
+```
+Si les prédictions faites par le modèle sont assez proches des données réelles pour le chien domestique, la mangouste rayée et le furet, ce n'est pas le cas pour les mammifères marins.
+
+Toutefois, les vraies valeurs de la masse cérébrale sont toujours contenues dans l'intervalle de confiance calculé.
+
+</details>
+
+# Exercice 2 {.unnumbered}
+
+On considère maintenant le jeu de données `possum` disponible ici <a href="possum.Rdata"
+   download> ici </a>.
+   
+Celui-ci contient les données de 104 phalangers à queue en brosse, des marsupiaux capturés sur sept sites australiens, avec 3 mensurations corporelles ainsi que le sexe. Les observations proviennent d’une étude morphologique publiée par @lindenmayer1995.
+
+Les variables considérées sont :
+
+  *`totlngth` la longueur totale en cm,
+  *`hdlngth` la longueur de la tête en mm,
+  *`chest` le périmètre thoracique en cm,
+  *`belly` le périmètre abdominal en cm,
+  *`sex` le sexe de l'individu.
+
+On cherche à répondre à la question suivante :
+
+***Comment la longueur totale de l’animal varie-t-elle avec la longueur de sa tête, son périmètre thoracique, son périmètre abdominal et son sexe ?***
+
+1) Importer les données en R, et en dresser un rapide résumé statistique.
+
+```{r}
+load("possum.Rdata")
+
+summary(possum)
+```
+2) Représenter les distributions des variables quantitatives par des boxplots, en faisant la distinction par sexe.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+On va d'abord créer un nouveau jeu de données nous permettant de mieux représenter les données.
+
+```{r}
+possum_plot <- possum %>%
+  pivot_longer(cols = c(1,2,3,5),     # La fonction pivot_longer() permet de regrouper
+               names_to = "Variable", # les colonnes sélectionnées en une seule.
+               values_to = "Valeur")
+
+library(RColorBrewer) # package à installer pour de plus jolies couleurs  
+  
+ggplot(possum_plot) + aes(x=sex,y=Valeur,fill=Variable)+
+  geom_boxplot(width=0.4)+
+  scale_fill_brewer(palette = "Set2",
+                    labels = c(belly = "Périmètre abdominal",     # Pour une meilleure
+                               hdlngth = "Longueur de la tête",   # annotation dans la
+                               totlngth = "Longueur totale",      # légende
+                               chest = "Périmètre thoracique"))+
+  theme_minimal()+
+  labs(x="Sexe",y="Valeur",
+       title = "Distribution des variables",
+       subtitle = "Valeurs observées sur 104 opposums.")+
+  theme(plot.title = element_text(face="bold",size=rel(1.2)),
+        plot.subtitle = element_text(face="italic",size=rel(0.8)))
+```
+
+
+</details>
+
+3) A l'aide de la fonction `ggpairs()`du package `GGally`, représenter les nuages de points des opossums par paire de variables.
+
+</details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+#| message: false
+
+library(GGally)
+
+ggpairs(possum)+
+  theme_minimal()+
+  labs(title = "Nuages de points des variables")
+```
+
+La forme des nuages de points, ainsi que la corrélation significativement non nulle entre les variables, semblent indiquer qu'un modèle linéaire serait adapté afin de répondre à la question initiale.
+
+Cette corrélation entre les variables explicatives peut aussi poser un problème : les estimations pourraient être moins précises et les prédictions plus instables.
+
+</details>
+
+
+:::lesson
+On souhaite ajuster un modèle linéaire à ces données, afin d'expliquer la longueur totale de l'animal. Toutefois, la variable `sex` est qualitative *(c'est un facteur à deux modalités)*.
+
+La régression linéaire peut prendre en compte cette possibilité.
+
+  * On choisit une modalité de référence : *ici sex = f*.
+  * On transforme la variable en indicatrice : *elle vaut 1 si sex = m, 0 sinon*.
+  * On associe un coefficient à cette indicatrice.
+
+Le modèle porposé dans notre cas est alors, pour chaque individu $i$
+$$\mathrm{totlngth}_i = \beta_0 + \beta_1 \mathrm{hdlngth}_i + \beta_2 \mathrm{chest}_i + \beta_3 \mathrm{belly}_i + \beta_4 \mathbb{1}_{\mathrm{sex_i = m}}+ \varepsilon_i$$
+
+où les $\varepsilon_i$ sont i.i.d. de loi $\mathcal{N}(0,\sigma^2)$.
+
+::::::notabene
+Le coefficient $\beta_4$ correspond en fait à la différence de taille moyenne entre les individus mâles et les individus femelles, toutes les autres variables étant égales par ailleurs.
+::::::
+
+:::
+
+4) Ajuster le modèle linéaire proposer, et le commenter.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+lm_possum <- lm(data = possum,formula = totlngth ~.)
+summary(lm_possum)
+```
+Le modèle explique envrion 55% de la variance de la variable réponse *(longueur totale)*. Si le sexe et la longueur de la tête semblent être des variables explicatives, cela ne semble pas être le cas du périmètre thoracique et du périmètre abdominal.
+
+:::notabene
+Ici, la constante $\beta_0$ n'est pas significativement non nulle non plus.
+:::
+
+</details>
+
+5) Ajuster un modèle restreint ne considérant que le sexe et la longueur de la tête comme variables explicatives, et en effectuer un résumé.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+```{r}
+lm_possum_restreint <- lm(data = possum, formula = totlngth ~ hdlngth + sex)
+summary(lm_possum_restreint)
+```
+Le modèle explique cette fois-ci 53% de la variance. La décroissance du coefficient $R^2$ est infime.
+
+</details>
+
+6) Réaliser le test
+$$H_0 : \beta_2 = \beta_3 =0 \quad \text{contre} \quad H_1 : \beta_2 \neq 0 \ \text{ou} \ \beta_3 \neq 0.$$
+
+et conclure sur le problème énoncé en début d'exercice.
+
+<details>
+
+<summary> Voir la réponse </summary>
+
+On va effectuer un test de Fisher.
+
+```{r}
+anova(lm_possum,lm_possum_restreint)
+```
+On ne rejette pas $H_0$. En conclusion, seuls la longueur de la tête et le sexe de l'individu semblent expliquer sa longueur totale. On ne rejette pas l'hypothèse stipulant que le périmètre abdominal, ainsi que thoracique, n'interviennent pas dans le modèle proposé.
+</details>
+
+# Références {.unnumbered}
+
+::: {#refs}
+:::
