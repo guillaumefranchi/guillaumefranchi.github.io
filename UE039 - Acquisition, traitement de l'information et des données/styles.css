@@ -1,0 +1,45 @@
+details:open {
+  border: 2px solid #a5c2a3;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+details > summary {
+  color: black;
+  font-weight: bold;
+}
+
+.mylist1 ul {
+  list-style-type: square;
+}
+
+.mylist2 ul {
+  list-style-type: disc;
+  color: darkblue;
+}
+
+.mylist3 ul {
+  list-style-type: circle;
+  color:black;
+}
+
+.lesson {
+  border: 2px solid #ffa62b;
+  padding: 10px;
+  border-radius: 6px;
+  margin: 1em 0;
+}
+
+.notabene {
+  background-color: #cbe3f8;
+  padding: 10px;
+  border-radius: 6px;
+  margin: 1em 0;
+}
+
+.notabene::before {
+  content: "Nota bene :";
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}

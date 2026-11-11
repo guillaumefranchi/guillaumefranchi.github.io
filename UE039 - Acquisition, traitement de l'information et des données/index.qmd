@@ -1,0 +1,20 @@
+---
+title: "UE 039 : Acquisition, traitement de l'information et des données"
+subtitle: "Régression Linéaire"
+author: Guillaume Franchi
+number-sections: true
+number-depth: 2
+number-offset: 0
+---
+
+# Avant-Propos {.unnumbered}
+
+Ce notebook contient les éléments de cours et les exercices abordant la partie "Régression linéaire" de l'UE.
+
+Vous trouverez, sur la barre de navigation à gauche, le menu vous permettant d'accéder aux différentes parties traitées dans ce TD.
+
+Vous trouverez ci-dessous des compléments de cours :
+
+- Des [slides de cours](https://guillaumefranchi.github.io/EC651/Cours/Cours.pdf){target="\"_blank"} ;
+- Le [polycopié](https://perso.lpsm.paris/~aguyader/files/teaching/Regression.pdf){target="_blank"} très complet d'Arnaud Guyader ;
+- Le [lien](https://r-stat-sc-donnees.github.io/){target="_blank"} vers le site du livre **R pour la statistique et la science des données**, sous la direction de F.Husson.
